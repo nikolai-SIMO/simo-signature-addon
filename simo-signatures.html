@@ -252,57 +252,28 @@
 </head>
 <body>
     <div class="header">
-        <h1>📧 SIMO Email Signatures</h1>
+        <h1>SIMO Email Signatures</h1>
         <p>Manage your professional email signatures</p>
     </div>
 
     <div class="container">
         <div class="status-bar loading" id="status">
             <div class="spinner"></div>
-            <span>Loading user information...</span>
+            <span>Loading signatures...</span>
         </div>
 
         <div id="userBadge" class="user-badge" style="display: none;"></div>
 
-        <!-- Outlook (client-side) signatures -->
         <div class="section">
             <div class="section-header">
-                💻 Outlook (client-side) signatures (2)
+                Outlook (client-side) signatures
             </div>
-
-            <div class="signature-item">
-                <div class="signature-preview">
-                    <img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" alt="SIMO Logo">
-                </div>
-                <div class="signature-details">
-                    <div class="signature-name">Default</div>
-                    <div class="signature-description">Standard SIMO employee signature with contact details and social media icons</div>
-                    <div class="signature-meta">Last edited: 7/7/2025, 12:46:47 AM</div>
-                    <button class="btn btn-primary" onclick="applySignature('default')" id="btnDefault">
-                        Apply Signature
-                    </button>
-                </div>
-            </div>
-
-            <div class="signature-item">
-                <div class="signature-preview">
-                    <img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" alt="SIMO Logo">
-                </div>
-                <div class="signature-details">
-                    <div class="signature-name">All Mail Signature</div>
-                    <div class="signature-description">Company-wide signature for official SIMO communications</div>
-                    <div class="signature-meta">Last edited: 7/7/2025, 12:46:05 AM</div>
-                    <button class="btn btn-primary" onclick="applySignature('allmail')" id="btnAllMail">
-                        Apply Signature
-                    </button>
-                </div>
-            </div>
+            <div id="signaturesList"></div>
         </div>
 
-        <!-- Custom signature builder -->
         <div class="section">
             <div class="section-header">
-                🎨 Custom Signature Builder
+                Custom Signature Builder
             </div>
 
             <div class="signature-item">
@@ -313,7 +284,7 @@
                     <div class="signature-name">Create Custom Signature</div>
                     <div class="signature-description">Build a personalized signature based on your preferences</div>
                     <div class="action-buttons">
-                        <button class="btn btn-secondary" onclick="toggleCustomForm()" id="btnCustomToggle">
+                        <button class="btn btn-secondary" onclick="toggleCustomForm()">
                             Customize Options
                         </button>
                     </div>
@@ -346,7 +317,7 @@
                     </label>
                 </div>
                 <div style="margin-top: 16px;">
-                    <button class="btn btn-primary" onclick="applySignature('custom')">
+                    <button class="btn btn-primary" onclick="applyCustomSignature()">
                         Apply Custom Signature
                     </button>
                 </div>
@@ -356,19 +327,26 @@
 
     <script>
         let userData = {};
+        let signatures = [];
 
         Office.onReady((info) => {
             if (info.host === Office.HostType.Outlook) {
-                loadUserData();
+                initializeApp();
             }
         });
 
-        async function loadUserData() {
+        async function initializeApp() {
             try {
-                const statusEl = document.getElementById('status');
-                statusEl.className = 'status-bar loading';
-                statusEl.innerHTML = '<div class="spinner"></div><span>Fetching your information from Microsoft 365...</span>';
+                loadUserData();
+                await loadSignaturesFromJSON();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showError('Failed to load signatures');
+            }
+        }
 
+        function loadUserData() {
+            try {
                 const userEmail = Office.context.mailbox.userProfile.emailAddress;
                 const displayName = Office.context.mailbox.userProfile.displayName;
 
@@ -381,121 +359,176 @@
                 };
 
                 const userBadge = document.getElementById('userBadge');
-                userBadge.innerHTML = `
-                    ✓ <strong>Connected as:</strong> ${userData.displayName} (${userData.email})
-                `;
+                userBadge.innerHTML = `Connected as: <strong>${userData.displayName}</strong> (${userData.email})`;
                 userBadge.style.display = 'block';
-
-                statusEl.className = 'status-bar ready';
-                statusEl.innerHTML = '✓ Ready! Select a signature to apply to your email';
 
             } catch (error) {
                 console.error('Error loading user data:', error);
-                const statusEl = document.getElementById('status');
-                statusEl.className = 'status-bar error';
-                statusEl.innerHTML = '⚠ Warning: Could not load all user data. Using defaults.';
-                
-                userData = {
-                    displayName: 'User Name',
-                    email: 'user@simo-online.com',
-                    jobTitle: 'Employee',
-                    phone: '+49 6021 4390',
-                    mobile: '+49 160 1234567'
-                };
             }
+        }
+
+        async function loadSignaturesFromJSON() {
+            try {
+                const statusEl = document.getElementById('status');
+                statusEl.className = 'status-bar loading';
+                statusEl.innerHTML = '<div class="spinner"></div><span>Loading signatures...</span>';
+
+                const response = await fetch('https://nikolai-SIMO.github.io/simo-signature-addon/signatures.json');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load signatures');
+                }
+
+                const data = await response.json();
+                signatures = data.signatures.filter(sig => sig.isActive);
+
+                displaySignatures();
+
+                statusEl.className = 'status-bar ready';
+                statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
+
+            } catch (error) {
+                console.error('Error loading signatures:', error);
+                showError('Failed to load signatures from server');
+            }
+        }
+
+        function displaySignatures() {
+            const listContainer = document.getElementById('signaturesList');
+            
+            if (signatures.length === 0) {
+                listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #6a737d;">No signatures available</div>';
+                return;
+            }
+
+            listContainer.innerHTML = signatures.map((sig, index) => `
+                <div class="signature-item">
+                    <div class="signature-preview">
+                        <img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" alt="SIMO Logo">
+                    </div>
+                    <div class="signature-details">
+                        <div class="signature-name">${sig.title}</div>
+                        <div class="signature-description">${sig.description}</div>
+                        <div class="signature-meta">Category: ${sig.category}</div>
+                        <button class="btn btn-primary" onclick="applySignature(${index})">
+                            Apply Signature
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function toggleCustomForm() {
             const form = document.getElementById('customOptions');
             form.classList.toggle('active');
-            const btn = document.getElementById('btnCustomToggle');
-            btn.textContent = form.classList.contains('active') ? 'Hide Options' : 'Customize Options';
         }
 
-        function generateSignatureHTML(type) {
-            const includePhone = type === 'custom' ? document.getElementById('includePhone').checked : true;
-            const includeMobile = type === 'custom' ? document.getElementById('includeMobile').checked : true;
-            const includeLinkedIn = type === 'custom' ? document.getElementById('includeLinkedIn').checked : true;
-            const includeTeams = type === 'custom' ? document.getElementById('includeTeams').checked : true;
-
+        function replaceVariables(html, customOptions = {}) {
             const nameParts = userData.displayName.split(' ');
             const firstName = nameParts[0] || 'First';
             const lastName = nameParts.slice(1).join(' ') || 'Last';
 
-            let phoneSection = '';
-            if (includePhone) {
-                phoneSection += `phone. <a href="tel:${userData.phone}" style="color: #9a9a9a; text-decoration: none;">${userData.phone}</a><br>`;
+            let processed = html
+                .replace(/\{First name\}/g, firstName)
+                .replace(/\{Last name\}/g, lastName)
+                .replace(/\{Title\}/g, userData.jobTitle)
+                .replace(/\{E-mail\}/g, userData.email)
+                .replace(/\{Phone\}/g, userData.phone)
+                .replace(/\{Mobile\}/g, userData.mobile);
+
+            if (customOptions.includePhone === false) {
+                processed = processed.replace(/phone\.\s*<a[^>]*>.*?<\/a><br>/gi, '');
             }
-            if (includeMobile) {
-                phoneSection += `mobile. <a href="tel:${userData.mobile}" style="color: #9a9a9a; text-decoration: none;">${userData.mobile}</a><br>`;
+            if (customOptions.includeMobile === false) {
+                processed = processed.replace(/mobile\.\s*<a[^>]*>.*?<\/a><br>/gi, '');
+            }
+            if (customOptions.includeLinkedIn === false) {
+                processed = processed.replace(/<a[^>]*class="sociallink"[^>]*>.*?<\/a>/gi, '');
+            }
+            if (customOptions.includeTeams === false) {
+                processed = processed.replace(/<a[^>]*class="meetinglink"[^>]*>.*?<\/a>/gi, '');
             }
 
-            let socialIcons = '';
-            if (includeLinkedIn) {
-                socialIcons += `<a href="https://www.linkedin.com/company/simo-online" class="sociallink"><img src="https://cdn.codetwo.com/images/linkedin_32x32_894bf414-ce53-4d72-89bc-f3aa315a3876.png" border="0" width="32" height="32" style="border: 0; display: inline-block; margin-right: 8px;"></a>`;
-            }
-            if (includeTeams) {
-                socialIcons += `<a href="callto:${userData.email}" class="meetinglink"><img src="https://cdn.codetwo.com/images/teams_32x32_ecb5b458-a4e1-402d-b530-34e1b9c62f67.png" border="0" width="32" height="32" style="border: 0; display: inline-block;"></a>`;
-            }
-
-            return `
-<p style="FONT-SIZE: 10pt; MARGIN-BOTTOM: 5pt; FONT-FAMILY: ARIAL; MARGIN-TOP: 0px"></p>
-<table style="WIDTH: 508px" cellspacing="0" cellpadding="0" border="0">
-<tbody>
-<tr>
-<td style="FONT-SIZE: 10pt; FONT-FAMILY: Arial; WIDTH: 120px; PADDING-BOTTOM: 10px; PADDING-RIGHT: 0px; height:93px" valign="top" class="" width=""><br><br></td>
-<td style="FONT-SIZE: 10pt; FONT-FAMILY: Arial; WIDTH: 15px; PADDING-BOTTOM: 10px" valign="top" class=""><span data-codetwo-visible="Name" style="font-size: 10pt;"><span style="FONT-SIZE: 14pt"><strong><font color="#3d3c3f" style="color: rgb(21, 41, 122);"><strong>${firstName}</strong> ${lastName}</font></strong></span><br></span><span style="font-size: 13.3333px;"><br></span><span data-codetwo-visible="Job title" style=""><font color="#9a9a9a" style=""><span style="font-size: 10pt;">${userData.jobTitle}</span><br></font></span><span style="font-size: 9pt;"><font color="#9a9a9a"><span data-codetwo-visible="Phone" style="">${phoneSection}</span><span data-codetwo-visible="E-mail">email. &nbsp; <a href="mailto:${userData.email}" style="color: #9a9a9a; text-decoration: none;">${userData.email}</a></span></font></span></td>
-</tr>
-</tbody>
-</table>
-<br>
-<table cellspacing="0" cellpadding="0" border="0" style="font-size: 12px; text-align: left; WIDTH: 508px">
-<tbody>
-<tr>
-<td valign="top" style="FONT-SIZE: 10pt; padding-bottom: 10px; padding-top: 10px; WIDTH: 190px" colspan="1" class=""><span data-codetwo-visible="Logo" style="color: rgb(154, 154, 154); font-size: 12px; width: 190px; padding: 10px 2px;"><a class="sociallink" href="https://www.simo-online.com/" style="background-color: rgb(255, 255, 255); font-size: 12px; width: 190px; padding: 10px 2px;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" border="0" width="150" height="49" id="0.jmw5m2j8gd4" alt="SIMO logo" style="max-width: 150px;"></a></span></td>
-</tr>
-<tr>
-<td valign="top" style="FONT-SIZE: 10pt; padding-bottom: 10px; padding-top: 10px; WIDTH: 190px" colspan="1" class=""><span style="color: rgb(154, 154, 154); font-size: 12px; WIDTH: 190px; padding: 10px 2px;">${socialIcons}</span></td>
-</tr>
-<tr>
-<td valign="middle" style="FONT-SIZE: 10pt; padding-bottom: 0px; WIDTH: 150px; height: 48px" class="" rowspan="1" colspan="1"><span style="color: rgb(154, 154, 154); font-size: 12px;">Würzburger Straße 152<br>63743 Aschaffenburg<br>Bavaria - Germany</span></td>
-</tr>
-</tbody>
-</table>
-            `.trim();
+            return processed;
         }
 
-        async function applySignature(type) {
+        async function applySignature(index) {
             try {
                 const statusEl = document.getElementById('status');
                 statusEl.className = 'status-bar loading';
-                statusEl.innerHTML = '<div class="spinner"></div><span>Applying signature to your email...</span>';
+                statusEl.innerHTML = '<div class="spinner"></div><span>Applying signature...</span>';
 
-                const signatureHTML = generateSignatureHTML(type);
+                const signature = signatures[index];
+                const processedHTML = replaceVariables(signature.html);
 
                 Office.context.mailbox.item.body.setSignatureAsync(
-                    signatureHTML,
+                    processedHTML,
                     { coercionType: Office.CoercionType.Html },
                     (result) => {
                         if (result.status === Office.AsyncResultStatus.Succeeded) {
                             statusEl.className = 'status-bar ready';
-                            statusEl.innerHTML = '✓ Signature applied successfully!';
+                            statusEl.innerHTML = `Signature "${signature.title}" applied successfully!`;
                             setTimeout(() => {
-                                statusEl.innerHTML = '✓ Ready! Select a signature to apply to your email';
+                                statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
                             }, 3000);
                         } else {
-                            statusEl.className = 'status-bar error';
-                            statusEl.innerHTML = '⚠ Error applying signature: ' + result.error.message;
+                            throw new Error(result.error.message);
                         }
                     }
                 );
 
             } catch (error) {
                 console.error('Error applying signature:', error);
-                const statusEl = document.getElementById('status');
-                statusEl.className = 'status-bar error';
-                statusEl.innerHTML = '⚠ Error: ' + error.message;
+                showError('Failed to apply signature');
             }
+        }
+
+        async function applyCustomSignature() {
+            try {
+                const customOptions = {
+                    includePhone: document.getElementById('includePhone').checked,
+                    includeMobile: document.getElementById('includeMobile').checked,
+                    includeLinkedIn: document.getElementById('includeLinkedIn').checked,
+                    includeTeams: document.getElementById('includeTeams').checked
+                };
+
+                if (signatures.length === 0) {
+                    throw new Error('No signatures available');
+                }
+
+                const baseSignature = signatures[0].html;
+                const processedHTML = replaceVariables(baseSignature, customOptions);
+
+                const statusEl = document.getElementById('status');
+                statusEl.className = 'status-bar loading';
+                statusEl.innerHTML = '<div class="spinner"></div><span>Applying custom signature...</span>';
+
+                Office.context.mailbox.item.body.setSignatureAsync(
+                    processedHTML,
+                    { coercionType: Office.CoercionType.Html },
+                    (result) => {
+                        if (result.status === Office.AsyncResultStatus.Succeeded) {
+                            statusEl.className = 'status-bar ready';
+                            statusEl.innerHTML = 'Custom signature applied successfully!';
+                            setTimeout(() => {
+                                statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
+                            }, 3000);
+                        } else {
+                            throw new Error(result.error.message);
+                        }
+                    }
+                );
+
+            } catch (error) {
+                console.error('Error applying custom signature:', error);
+                showError('Failed to apply custom signature');
+            }
+        }
+
+        function showError(message) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = 'status-bar error';
+            statusEl.innerHTML = message;
         }
     </script>
 </body>
