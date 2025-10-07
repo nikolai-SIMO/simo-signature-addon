@@ -38,7 +38,7 @@
 
         .container {
             padding: 20px;
-            padding-bottom: 60px;
+            padding-bottom: 70px;
         }
 
         .status-bar {
@@ -86,9 +86,6 @@
             font-weight: 600;
             font-size: 15px;
             color: #24292e;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .signature-item {
@@ -125,7 +122,7 @@
 
         .signature-preview img {
             max-width: 120px;
-            max-height: 80px;
+            max-height: 60px;
             object-fit: contain;
         }
 
@@ -402,67 +399,139 @@
 
         <div id="userBadge" class="user-badge" style="display: none;"></div>
 
-        <!-- Signatures Section -->
-        <div class="section">
-            <div class="section-header">
-                Outlook (client-side) signatures
-            </div>
-            <div id="signaturesList"></div>
-        </div>
-
-        <!-- Custom Signature Builder -->
-        <div class="section">
-            <div class="section-header">
-                Custom Signature Builder
-            </div>
-
-            <div class="signature-item">
-                <div class="signature-preview">
-                    <div style="font-size: 32px;">✏️</div>
+        <!-- Signatures View -->
+        <div id="signaturesView" class="view active">
+            <div class="section">
+                <div class="section-header">
+                    Outlook (client-side) signatures
                 </div>
-                <div class="signature-details">
-                    <div class="signature-name">Create Custom Signature</div>
-                    <div class="signature-description">Build a personalized signature based on your preferences</div>
-                    <div class="action-buttons">
-                        <button class="btn btn-secondary" onclick="toggleCustomForm()">
-                            Customize Options
+                <div id="signaturesList"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    Custom Signature Builder
+                </div>
+
+                <div class="signature-item">
+                    <div class="signature-preview">
+                        <div style="font-size: 32px;">✏️</div>
+                    </div>
+                    <div class="signature-details">
+                        <div class="signature-name">Create Custom Signature</div>
+                        <div class="signature-description">Build a personalized signature based on your preferences</div>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="toggleCustomForm()">
+                                Customize Options
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-options" id="customOptions">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="includePhone" checked>
+                            Include phone number
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="includeMobile" checked>
+                            Include mobile number
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="includeLinkedIn" checked>
+                            Include LinkedIn icon
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="includeTeams" checked>
+                            Include Microsoft Teams icon
+                        </label>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button class="btn btn-primary" onclick="applyCustomSignature()">
+                            Apply Custom Signature
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="custom-options" id="customOptions">
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="includePhone" checked>
-                        Include phone number
-                    </label>
+        <!-- Settings View -->
+        <div id="settingsView" class="view">
+            <div class="settings-section">
+                <h3>Personal Information</h3>
+                
+                <div class="setting-item">
+                    <label>Phone Number</label>
+                    <input type="text" id="settingPhone" placeholder="+49 6021 4390">
+                    <div class="setting-help">This will be used if not found in your Microsoft 365 profile</div>
                 </div>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="includeMobile" checked>
-                        Include mobile number
-                    </label>
+
+                <div class="setting-item">
+                    <label>Mobile Number</label>
+                    <input type="text" id="settingMobile" placeholder="+49 152 0123456">
+                    <div class="setting-help">This will be used if not found in your Microsoft 365 profile</div>
                 </div>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="includeLinkedIn" checked>
-                        Include LinkedIn icon
-                    </label>
-                </div>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="includeTeams" checked>
-                        Include Microsoft Teams icon
-                    </label>
-                </div>
-                <div style="margin-top: 16px;">
-                    <button class="btn btn-primary" onclick="applyCustomSignature()">
-                        Apply Custom Signature
-                    </button>
+
+                <div class="setting-item">
+                    <label>Job Title</label>
+                    <input type="text" id="settingJobTitle" placeholder="Employee">
+                    <div class="setting-help">Override your Microsoft 365 job title</div>
                 </div>
             </div>
+
+            <div class="settings-section">
+                <h3>Signature Appearance</h3>
+
+                <div class="setting-item">
+                    <label>Name Color</label>
+                    <input type="color" id="settingNameColor" value="#152979">
+                    <span class="color-preview" id="nameColorPreview" style="background-color: #152979;"></span>
+                    <div class="setting-help">Color of your name in the signature</div>
+                </div>
+
+                <div class="setting-item">
+                    <label>Font Size</label>
+                    <select id="settingFontSize">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium (Default)</option>
+                        <option value="large">Large</option>
+                    </select>
+                    <div class="setting-help">Overall signature text size</div>
+                </div>
+
+                <div class="setting-item">
+                    <label>Logo Size</label>
+                    <select id="settingLogoSize">
+                        <option value="small">Small (100px)</option>
+                        <option value="medium" selected>Medium (150px)</option>
+                        <option value="large">Large (200px)</option>
+                    </select>
+                    <div class="setting-help">Size of the SIMO logo</div>
+                </div>
+            </div>
+
+            <button class="save-settings-btn" onclick="saveSettings()">
+                Save Settings
+            </button>
         </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="switchView('signatures')" id="navSignatures">
+            <span class="nav-icon">✉️</span>
+            <span>Signatures</span>
+        </button>
+        <button class="nav-btn" onclick="switchView('settings')" id="navSettings">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
     </div>
 
     <script>
@@ -483,184 +552,88 @@
                 await loadSignaturesFromJSON();
             } catch (error) {
                 console.error('Initialization error:', error);
-                showError('Failed to load signatures');
+                showError('Failed to initialize: ' + error.message);
             }
         }
 
         function loadSettings() {
-            // Load settings from localStorage
-            const saved = localStorage.getItem('simoSignatureSettings');
-            if (saved) {
-                userSettings = JSON.parse(saved);
-                // Populate settings form
-                if (userSettings.phone) document.getElementById('settingPhone').value = userSettings.phone;
-                if (userSettings.mobile) document.getElementById('settingMobile').value = userSettings.mobile;
-                if (userSettings.jobTitle) document.getElementById('settingJobTitle').value = userSettings.jobTitle;
-                if (userSettings.nameColor) {
-                    document.getElementById('settingNameColor').value = userSettings.nameColor;
-                    document.getElementById('nameColorPreview').style.backgroundColor = userSettings.nameColor;
+            try {
+                const saved = localStorage.getItem('simoSignatureSettings');
+                if (saved) {
+                    userSettings = JSON.parse(saved);
+                    if (userSettings.phone) document.getElementById('settingPhone').value = userSettings.phone;
+                    if (userSettings.mobile) document.getElementById('settingMobile').value = userSettings.mobile;
+                    if (userSettings.jobTitle) document.getElementById('settingJobTitle').value = userSettings.jobTitle;
+                    if (userSettings.nameColor) {
+                        document.getElementById('settingNameColor').value = userSettings.nameColor;
+                        document.getElementById('nameColorPreview').style.backgroundColor = userSettings.nameColor;
+                    }
+                    if (userSettings.fontSize) document.getElementById('settingFontSize').value = userSettings.fontSize;
+                    if (userSettings.logoSize) document.getElementById('settingLogoSize').value = userSettings.logoSize;
+                } else {
+                    userSettings = {
+                        nameColor: '#152979',
+                        fontSize: 'medium',
+                        logoSize: 'medium'
+                    };
                 }
-                if (userSettings.fontSize) document.getElementById('settingFontSize').value = userSettings.fontSize;
-                if (userSettings.logoSize) document.getElementById('settingLogoSize').value = userSettings.logoSize;
-                
-                document.getElementById('settingDefaultPhone').checked = userSettings.defaultPhone !== false;
-                document.getElementById('settingDefaultMobile').checked = userSettings.defaultMobile !== false;
-                document.getElementById('settingDefaultSocial').checked = userSettings.defaultSocial !== false;
-            } else {
-                // Default settings
-                userSettings = {
-                    nameColor: '#152979',
-                    fontSize: 'medium',
-                    logoSize: 'medium',
-                    defaultPhone: true,
-                    defaultMobile: true,
-                    defaultSocial: true
-                };
-            }
 
-            // Update color preview on change
-            document.getElementById('settingNameColor').addEventListener('input', (e) => {
-                document.getElementById('nameColorPreview').style.backgroundColor = e.target.value;
-            });
-        }
-
-        function saveSettings() {
-            userSettings = {
-                phone: document.getElementById('settingPhone').value,
-                mobile: document.getElementById('settingMobile').value,
-                jobTitle: document.getElementById('settingJobTitle').value,
-                nameColor: document.getElementById('settingNameColor').value,
-                fontSize: document.getElementById('settingFontSize').value,
-                logoSize: document.getElementById('settingLogoSize').value,
-                defaultPhone: document.getElementById('settingDefaultPhone').checked,
-                defaultMobile: document.getElementById('settingDefaultMobile').checked,
-                defaultSocial: document.getElementById('settingDefaultSocial').checked
-            };
-
-            localStorage.setItem('simoSignatureSettings', JSON.stringify(userSettings));
-
-            // Update userData with saved settings
-            if (userSettings.phone && !userData.phone) userData.phone = userSettings.phone;
-            if (userSettings.mobile && !userData.mobile) userData.mobile = userSettings.mobile;
-            if (userSettings.jobTitle) userData.jobTitle = userSettings.jobTitle;
-
-            const statusEl = document.getElementById('status');
-            statusEl.className = 'status-bar ready';
-            statusEl.innerHTML = '✓ Settings saved successfully!';
-            setTimeout(() => {
-                statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
-            }, 3000);
-
-            switchView('signatures');
-        }
-
-        function switchView(view) {
-            // Hide all views
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-
-            // Show selected view
-            if (view === 'signatures') {
-                document.getElementById('signaturesView').classList.add('active');
-                document.getElementById('navSignatures').classList.add('active');
-            } else if (view === 'settings') {
-                document.getElementById('settingsView').classList.add('active');
-                document.getElementById('navSettings').classList.add('active');
+                document.getElementById('settingNameColor').addEventListener('input', (e) => {
+                    document.getElementById('nameColorPreview').style.backgroundColor = e.target.value;
+                });
+            } catch (error) {
+                console.error('Error loading settings:', error);
+                userSettings = {};
             }
         }
 
         function loadUserData() {
             try {
-                // Get basic user data from Office.js
                 const userProfile = Office.context.mailbox.userProfile;
-                
-                // Try to get as much info as possible
                 const displayName = userProfile.displayName || '';
                 const emailAddress = userProfile.emailAddress || '';
-                
-                // Office.js doesn't provide phone numbers directly, so we'll check if they exist
-                // and fall back to empty strings with placeholders
                 
                 userData = {
                     displayName: displayName,
                     email: emailAddress,
-                    jobTitle: '', // Office.js doesn't provide this in Outlook add-ins
-                    phone: '', // Not available via Office.js
-                    mobile: '' // Not available via Office.js
+                    jobTitle: '',
+                    phone: '',
+                    mobile: ''
                 };
 
-                // Try to get additional data from Microsoft Graph API if available
-                // This requires additional authentication which we'll attempt
                 tryGetGraphData();
 
                 const userBadge = document.getElementById('userBadge');
                 if (displayName && emailAddress) {
                     userBadge.innerHTML = `Connected as: <strong>${displayName}</strong> (${emailAddress})`;
                     userBadge.style.display = 'block';
-                } else {
-                    userBadge.innerHTML = 'Connected to Outlook';
-                    userBadge.style.display = 'block';
                 }
-
             } catch (error) {
                 console.error('Error loading user data:', error);
-                userData = {
-                    displayName: '',
-                    email: '',
-                    jobTitle: '',
-                    phone: '',
-                    mobile: ''
-                };
             }
         }
 
         async function tryGetGraphData() {
             try {
-                // Attempt to get access token for Microsoft Graph
                 Office.context.auth.getAccessTokenAsync({ forceConsent: false }, async (result) => {
                     if (result.status === Office.AsyncResultStatus.Succeeded) {
                         const accessToken = result.value;
-                        
-                        // Call Microsoft Graph to get user profile data
                         const response = await fetch('https://graph.microsoft.com/v1.0/me', {
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken
-                            }
+                            headers: { 'Authorization': 'Bearer ' + accessToken }
                         });
 
                         if (response.ok) {
                             const graphData = await response.json();
-                            
-                            // Update userData with Graph API data
-                            if (graphData.jobTitle) {
-                                userData.jobTitle = graphData.jobTitle;
-                            }
+                            if (graphData.jobTitle) userData.jobTitle = graphData.jobTitle;
                             if (graphData.businessPhones && graphData.businessPhones.length > 0) {
                                 userData.phone = graphData.businessPhones[0];
                             }
-                            if (graphData.mobilePhone) {
-                                userData.mobile = graphData.mobilePhone;
-                            }
-
-                            // Update the user badge to show more info
-                            const userBadge = document.getElementById('userBadge');
-                            let badgeText = `Connected as: <strong>${userData.displayName}</strong> (${userData.email})`;
-                            if (userData.jobTitle) {
-                                badgeText += `<br>Title: ${userData.jobTitle}`;
-                            }
-                            if (userData.phone || userData.mobile) {
-                                badgeText += '<br>📞 Phone numbers loaded from profile';
-                            }
-                            userBadge.innerHTML = badgeText;
+                            if (graphData.mobilePhone) userData.mobile = graphData.mobilePhone;
                         }
-                    } else {
-                        console.log('Could not get access token for Graph API. Using basic profile data only.');
-                        // This is normal - not all deployments have Graph API access configured
                     }
                 });
             } catch (error) {
-                console.log('Graph API not available. Using basic profile data only.');
-                // This is expected in many cases - continue with basic data
+                console.log('Graph API not available');
             }
         }
 
@@ -725,25 +698,21 @@
             const firstName = nameParts[0] || '[First Name]';
             const lastName = nameParts.slice(1).join(' ') || '[Last Name]';
 
-            // Use settings for phone/mobile if MS365 profile doesn't have them
             const phone = userData.phone || userSettings.phone || '';
             const mobile = userData.mobile || userSettings.mobile || '';
             const jobTitle = userData.jobTitle || userSettings.jobTitle || '';
 
-            // Replace name and email
             let processed = html
                 .replace(/\{First name\}/g, firstName)
                 .replace(/\{Last name\}/g, lastName)
                 .replace(/\{E-mail\}/g, userData.email || '[Your Email]');
 
-            // Replace job title - if empty, show placeholder
             if (jobTitle) {
                 processed = processed.replace(/\{Title\}/g, jobTitle);
             } else {
                 processed = processed.replace(/\{Title\}/g, '<span style="background-color: #fff3cd; color: #856404; padding: 2px 4px;">[Enter job title]</span>');
             }
 
-            // Replace phone - keep placeholder if empty
             if (phone) {
                 processed = processed.replace(/\[Enter phone number\]/g, phone);
             }
@@ -752,7 +721,6 @@
                 processed = processed.replace(/phone\.\s*[^<\n]+<br>/gi, '');
             }
 
-            // Replace mobile - keep placeholder if empty
             if (mobile) {
                 processed = processed.replace(/\[Enter mobile number\]/g, mobile);
             }
@@ -761,12 +729,10 @@
                 processed = processed.replace(/mobile\.\s*[^<\n]+<br>/gi, '');
             }
 
-            // Apply color settings
             if (userSettings.nameColor) {
                 processed = processed.replace(/#152979/g, userSettings.nameColor);
             }
 
-            // Apply font size settings
             if (userSettings.fontSize === 'small') {
                 processed = processed.replace(/FONT-SIZE: 14pt/g, 'FONT-SIZE: 12pt');
                 processed = processed.replace(/font-size: 10pt/g, 'font-size: 9pt');
@@ -775,14 +741,12 @@
                 processed = processed.replace(/font-size: 10pt/g, 'font-size: 11pt');
             }
 
-            // Apply logo size settings
             if (userSettings.logoSize === 'small') {
                 processed = processed.replace(/width="150" height="49"/g, 'width="100" height="33"');
             } else if (userSettings.logoSize === 'large') {
                 processed = processed.replace(/width="150" height="49"/g, 'width="200" height="65"');
             }
 
-            // Handle social icons
             if (customOptions.includeLinkedIn === false) {
                 processed = processed.replace(/<a[^>]*linkedin[^>]*>.*?<\/a>/gi, '');
             }
@@ -802,9 +766,7 @@
                 const signature = signatures[index];
                 const processedHTML = replaceVariables(signature.html);
 
-                // Check if this is the legal footer (by ID)
                 if (signature.id === 'legalfooter') {
-                    // Append legal footer to the END of the email body
                     Office.context.mailbox.item.body.getAsync(
                         Office.CoercionType.Html,
                         (getResult) => {
@@ -833,42 +795,22 @@
                         }
                     );
                 } else {
-                    // Apply as signature (replaces existing signature)
                     Office.context.mailbox.item.body.setSignatureAsync(
                         processedHTML,
                         { coercionType: Office.CoercionType.Html },
                         (result) => {
                             if (result.status === Office.AsyncResultStatus.Succeeded) {
                                 statusEl.className = 'status-bar ready';
-                                
-                                // Check if placeholders still exist
-                                const hasPhonePlaceholder = !userData.phone;
-                                const hasMobilePlaceholder = !userData.mobile;
-                                const hasTitlePlaceholder = !userData.jobTitle;
-                                
-                                if (hasPhonePlaceholder || hasMobilePlaceholder || hasTitlePlaceholder) {
-                                    let reminderText = `✓ Signature "${signature.title}" applied! `;
-                                    let placeholders = [];
-                                    if (hasTitlePlaceholder) placeholders.push('job title');
-                                    if (hasPhonePlaceholder) placeholders.push('phone number');
-                                    if (hasMobilePlaceholder) placeholders.push('mobile number');
-                                    
-                                    reminderText += `<strong>Please replace highlighted placeholders: ${placeholders.join(', ')}</strong>`;
-                                    statusEl.innerHTML = reminderText;
-                                } else {
-                                    statusEl.innerHTML = `✓ Signature "${signature.title}" applied successfully with your profile information!`;
-                                }
-                                
+                                statusEl.innerHTML = `✓ Signature "${signature.title}" applied!`;
                                 setTimeout(() => {
                                     statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
-                                }, 8000);
+                                }, 3000);
                             } else {
                                 throw new Error(result.error.message);
                             }
                         }
                     );
                 }
-
             } catch (error) {
                 console.error('Error applying signature:', error);
                 showError('Failed to apply signature');
@@ -914,6 +856,45 @@
             } catch (error) {
                 console.error('Error applying custom signature:', error);
                 showError('Failed to apply custom signature');
+            }
+        }
+
+        function saveSettings() {
+            userSettings = {
+                phone: document.getElementById('settingPhone').value,
+                mobile: document.getElementById('settingMobile').value,
+                jobTitle: document.getElementById('settingJobTitle').value,
+                nameColor: document.getElementById('settingNameColor').value,
+                fontSize: document.getElementById('settingFontSize').value,
+                logoSize: document.getElementById('settingLogoSize').value
+            };
+
+            localStorage.setItem('simoSignatureSettings', JSON.stringify(userSettings));
+
+            if (userSettings.phone && !userData.phone) userData.phone = userSettings.phone;
+            if (userSettings.mobile && !userData.mobile) userData.mobile = userSettings.mobile;
+            if (userSettings.jobTitle) userData.jobTitle = userSettings.jobTitle;
+
+            const statusEl = document.getElementById('status');
+            statusEl.className = 'status-bar ready';
+            statusEl.innerHTML = '✓ Settings saved successfully!';
+            setTimeout(() => {
+                statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
+            }, 3000);
+
+            switchView('signatures');
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (view === 'signatures') {
+                document.getElementById('signaturesView').classList.add('active');
+                document.getElementById('navSignatures').classList.add('active');
+            } else if (view === 'settings') {
+                document.getElementById('settingsView').classList.add('active');
+                document.getElementById('navSettings').classList.add('active');
             }
         }
 
