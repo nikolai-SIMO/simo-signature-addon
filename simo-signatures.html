@@ -504,29 +504,48 @@
 
         function replaceVariables(html, customOptions = {}) {
             const nameParts = userData.displayName.split(' ');
-            const firstName = nameParts[0] || 'First';
-            const lastName = nameParts.slice(1).join(' ') || 'Last';
+            const firstName = nameParts[0] || '[First Name]';
+            const lastName = nameParts.slice(1).join(' ') || '[Last Name]';
 
+            // Replace name and email
             let processed = html
                 .replace(/\{First name\}/g, firstName)
                 .replace(/\{Last name\}/g, lastName)
-                .replace(/\{Title\}/g, userData.jobTitle)
-                .replace(/\{E-mail\}/g, userData.email)
-                .replace(/\{Phone\}/g, userData.phone)
-                .replace(/\{Mobile\}/g, userData.mobile);
+                .replace(/\{E-mail\}/g, userData.email || '[Your Email]');
 
-            // Handle custom options for phone/mobile
+            // Replace job title - if empty, show placeholder
+            if (userData.jobTitle) {
+                processed = processed.replace(/\{Title\}/g, userData.jobTitle);
+            } else {
+                processed = processed.replace(/\{Title\}/g, '<span style="background-color: #fff3cd; color: #856404; padding: 2px 4px;">[Enter job title]</span>');
+            }
+
+            // Replace phone - keep placeholder if empty
+            if (userData.phone) {
+                processed = processed.replace(/\[Enter phone number\]/g, userData.phone);
+            }
+            // If still placeholder and user wants to hide it in custom mode
             if (customOptions.includePhone === false) {
-                processed = processed.replace(/phone\.\s*<a[^>]*>.*?<\/a><br>/gi, '');
+                processed = processed.replace(/phone\.\s*<span[^>]*>\[Enter phone number\]<\/span><br>/gi, '');
+                processed = processed.replace(/phone\.\s*[^<\n]+<br>/gi, '');
             }
+
+            // Replace mobile - keep placeholder if empty
+            if (userData.mobile) {
+                processed = processed.replace(/\[Enter mobile number\]/g, userData.mobile);
+            }
+            // If still placeholder and user wants to hide it in custom mode
             if (customOptions.includeMobile === false) {
-                processed = processed.replace(/mobile\.\s*<a[^>]*>.*?<\/a><br>/gi, '');
+                processed = processed.replace(/mobile\.\s*<span[^>]*>\[Enter mobile number\]<\/span><br>/gi, '');
+                processed = processed.replace(/mobile\.\s*[^<\n]+<br>/gi, '');
             }
+
+            // Handle social icons
             if (customOptions.includeLinkedIn === false) {
-                processed = processed.replace(/<a[^>]*class="sociallink"[^>]*>.*?<\/a>/gi, '');
+                processed = processed.replace(/<a[^>]*linkedin[^>]*>.*?<\/a>/gi, '');
             }
             if (customOptions.includeTeams === false) {
-                processed = processed.replace(/<a[^>]*class="meetinglink"[^>]*>.*?<\/a>/gi, '');
+                processed = processed.replace(/<a[^>]*teams[^>]*>.*?<\/a>/gi, '');
             }
 
             return processed;
@@ -541,21 +560,72 @@
                 const signature = signatures[index];
                 const processedHTML = replaceVariables(signature.html);
 
-                Office.context.mailbox.item.body.setSignatureAsync(
-                    processedHTML,
-                    { coercionType: Office.CoercionType.Html },
-                    (result) => {
-                        if (result.status === Office.AsyncResultStatus.Succeeded) {
-                            statusEl.className = 'status-bar ready';
-                            statusEl.innerHTML = `✓ Signature "${signature.title}" applied! <strong>Remember to replace [Enter phone number] and [Enter mobile number] with your actual numbers.</strong>`;
-                            setTimeout(() => {
-                                statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
-                            }, 8000);
-                        } else {
-                            throw new Error(result.error.message);
+                // Check if this is the legal footer (by ID)
+                if (signature.id === 'legalfooter') {
+                    // Append legal footer to the END of the email body
+                    Office.context.mailbox.item.body.getAsync(
+                        Office.CoercionType.Html,
+                        (getResult) => {
+                            if (getResult.status === Office.AsyncResultStatus.Succeeded) {
+                                const currentBody = getResult.value;
+                                const newBody = currentBody + processedHTML;
+                                
+                                Office.context.mailbox.item.body.setAsync(
+                                    newBody,
+                                    { coercionType: Office.CoercionType.Html },
+                                    (setResult) => {
+                                        if (setResult.status === Office.AsyncResultStatus.Succeeded) {
+                                            statusEl.className = 'status-bar ready';
+                                            statusEl.innerHTML = '✓ Legal footer added to the bottom of your email!';
+                                            setTimeout(() => {
+                                                statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
+                                            }, 3000);
+                                        } else {
+                                            throw new Error(setResult.error.message);
+                                        }
+                                    }
+                                );
+                            } else {
+                                throw new Error(getResult.error.message);
+                            }
                         }
-                    }
-                );
+                    );
+                } else {
+                    // Apply as signature (replaces existing signature)
+                    Office.context.mailbox.item.body.setSignatureAsync(
+                        processedHTML,
+                        { coercionType: Office.CoercionType.Html },
+                        (result) => {
+                            if (result.status === Office.AsyncResultStatus.Succeeded) {
+                                statusEl.className = 'status-bar ready';
+                                
+                                // Check if placeholders still exist
+                                const hasPhonePlaceholder = !userData.phone;
+                                const hasMobilePlaceholder = !userData.mobile;
+                                const hasTitlePlaceholder = !userData.jobTitle;
+                                
+                                if (hasPhonePlaceholder || hasMobilePlaceholder || hasTitlePlaceholder) {
+                                    let reminderText = `✓ Signature "${signature.title}" applied! `;
+                                    let placeholders = [];
+                                    if (hasTitlePlaceholder) placeholders.push('job title');
+                                    if (hasPhonePlaceholder) placeholders.push('phone number');
+                                    if (hasMobilePlaceholder) placeholders.push('mobile number');
+                                    
+                                    reminderText += `<strong>Please replace highlighted placeholders: ${placeholders.join(', ')}</strong>`;
+                                    statusEl.innerHTML = reminderText;
+                                } else {
+                                    statusEl.innerHTML = `✓ Signature "${signature.title}" applied successfully with your profile information!`;
+                                }
+                                
+                                setTimeout(() => {
+                                    statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
+                                }, 8000);
+                            } else {
+                                throw new Error(result.error.message);
+                            }
+                        }
+                    );
+                }
 
             } catch (error) {
                 console.error('Error applying signature:', error);
