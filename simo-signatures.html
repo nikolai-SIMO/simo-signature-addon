@@ -108,17 +108,18 @@
         }
 
         .signature-preview {
-            width: 140px;
-            height: 100px;
+            width: 100%;
+            max-width: 200px;
+            height: 80px;
             border: 1px solid #e1e4e8;
             border-radius: 4px;
             background: white;
-            flex-shrink: 0;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 8px;
+            margin: 0 auto;
         }
 
         .signature-preview img {
@@ -139,9 +140,10 @@
         }
 
         .signature-description {
-            font-size: 13px;
+            font-size: 12px;
             color: #586069;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            line-height: 1.4;
         }
 
         .signature-meta {
@@ -351,23 +353,96 @@
 
         function loadUserData() {
             try {
-                const userEmail = Office.context.mailbox.userProfile.emailAddress;
-                const displayName = Office.context.mailbox.userProfile.displayName;
-
+                // Get basic user data from Office.js
+                const userProfile = Office.context.mailbox.userProfile;
+                
+                // Try to get as much info as possible
+                const displayName = userProfile.displayName || '';
+                const emailAddress = userProfile.emailAddress || '';
+                
+                // Office.js doesn't provide phone numbers directly, so we'll check if they exist
+                // and fall back to empty strings with placeholders
+                
                 userData = {
-                    displayName: displayName || 'User Name',
-                    email: userEmail || 'user@simo-online.com',
-                    jobTitle: 'Employee',
-                    phone: '+49 6021 4390',
-                    mobile: '+49 160 1234567'
+                    displayName: displayName,
+                    email: emailAddress,
+                    jobTitle: '', // Office.js doesn't provide this in Outlook add-ins
+                    phone: '', // Not available via Office.js
+                    mobile: '' // Not available via Office.js
                 };
 
+                // Try to get additional data from Microsoft Graph API if available
+                // This requires additional authentication which we'll attempt
+                tryGetGraphData();
+
                 const userBadge = document.getElementById('userBadge');
-                userBadge.innerHTML = `Connected as: <strong>${userData.displayName}</strong> (${userData.email})`;
-                userBadge.style.display = 'block';
+                if (displayName && emailAddress) {
+                    userBadge.innerHTML = `Connected as: <strong>${displayName}</strong> (${emailAddress})`;
+                    userBadge.style.display = 'block';
+                } else {
+                    userBadge.innerHTML = 'Connected to Outlook';
+                    userBadge.style.display = 'block';
+                }
 
             } catch (error) {
                 console.error('Error loading user data:', error);
+                userData = {
+                    displayName: '',
+                    email: '',
+                    jobTitle: '',
+                    phone: '',
+                    mobile: ''
+                };
+            }
+        }
+
+        async function tryGetGraphData() {
+            try {
+                // Attempt to get access token for Microsoft Graph
+                Office.context.auth.getAccessTokenAsync({ forceConsent: false }, async (result) => {
+                    if (result.status === Office.AsyncResultStatus.Succeeded) {
+                        const accessToken = result.value;
+                        
+                        // Call Microsoft Graph to get user profile data
+                        const response = await fetch('https://graph.microsoft.com/v1.0/me', {
+                            headers: {
+                                'Authorization': 'Bearer ' + accessToken
+                            }
+                        });
+
+                        if (response.ok) {
+                            const graphData = await response.json();
+                            
+                            // Update userData with Graph API data
+                            if (graphData.jobTitle) {
+                                userData.jobTitle = graphData.jobTitle;
+                            }
+                            if (graphData.businessPhones && graphData.businessPhones.length > 0) {
+                                userData.phone = graphData.businessPhones[0];
+                            }
+                            if (graphData.mobilePhone) {
+                                userData.mobile = graphData.mobilePhone;
+                            }
+
+                            // Update the user badge to show more info
+                            const userBadge = document.getElementById('userBadge');
+                            let badgeText = `Connected as: <strong>${userData.displayName}</strong> (${userData.email})`;
+                            if (userData.jobTitle) {
+                                badgeText += `<br>Title: ${userData.jobTitle}`;
+                            }
+                            if (userData.phone || userData.mobile) {
+                                badgeText += '<br>📞 Phone numbers loaded from profile';
+                            }
+                            userBadge.innerHTML = badgeText;
+                        }
+                    } else {
+                        console.log('Could not get access token for Graph API. Using basic profile data only.');
+                        // This is normal - not all deployments have Graph API access configured
+                    }
+                });
+            } catch (error) {
+                console.log('Graph API not available. Using basic profile data only.');
+                // This is expected in many cases - continue with basic data
             }
         }
 
