@@ -107,8 +107,8 @@
         }
 
         .signature-preview {
-            width: 140px;
-            height: 100px;
+            width: 180px;
+            height: 120px;
             border: 1px solid #e1e4e8;
             border-radius: 4px;
             background: white;
@@ -117,6 +117,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 10px;
         }
 
         .signature-preview img {
@@ -264,6 +265,7 @@
 
         <div id="userBadge" class="user-badge" style="display: none;"></div>
 
+        <!-- Signatures Section -->
         <div class="section">
             <div class="section-header">
                 Outlook (client-side) signatures
@@ -271,6 +273,7 @@
             <div id="signaturesList"></div>
         </div>
 
+        <!-- Custom Signature Builder -->
         <div class="section">
             <div class="section-header">
                 Custom Signature Builder
@@ -436,6 +439,7 @@
                 .replace(/\{Phone\}/g, userData.phone)
                 .replace(/\{Mobile\}/g, userData.mobile);
 
+            // Handle custom options for phone/mobile
             if (customOptions.includePhone === false) {
                 processed = processed.replace(/phone\.\s*<a[^>]*>.*?<\/a><br>/gi, '');
             }
@@ -467,10 +471,10 @@
                     (result) => {
                         if (result.status === Office.AsyncResultStatus.Succeeded) {
                             statusEl.className = 'status-bar ready';
-                            statusEl.innerHTML = `Signature "${signature.title}" applied successfully!`;
+                            statusEl.innerHTML = `✓ Signature "${signature.title}" applied! <strong>Remember to replace [Enter phone number] and [Enter mobile number] with your actual numbers.</strong>`;
                             setTimeout(() => {
                                 statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
-                            }, 3000);
+                            }, 8000);
                         } else {
                             throw new Error(result.error.message);
                         }
