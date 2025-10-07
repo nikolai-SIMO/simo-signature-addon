@@ -38,6 +38,7 @@
 
         .container {
             padding: 20px;
+            padding-bottom: 60px;
         }
 
         .status-bar {
@@ -252,6 +253,139 @@
             display: flex;
             gap: 8px;
         }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 2px solid #e1e4e8;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #586069;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-btn:hover {
+            background: #f6f8fa;
+            color: #0366d6;
+        }
+
+        .nav-btn.active {
+            color: #0366d6;
+            background: #f1f8ff;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .settings-section {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .settings-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .setting-item {
+            margin-bottom: 16px;
+        }
+
+        .setting-item label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 6px;
+        }
+
+        .setting-item input[type="text"],
+        .setting-item input[type="number"],
+        .setting-item select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .setting-item input[type="color"] {
+            width: 60px;
+            height: 38px;
+            padding: 2px;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .color-preview {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid #e1e4e8;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .setting-help {
+            font-size: 12px;
+            color: #6a737d;
+            margin-top: 4px;
+        }
+
+        .save-settings-btn {
+            width: 100%;
+            padding: 10px;
+            background: #0366d6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .save-settings-btn:hover {
+            background: #0256c4;
+        }
     </style>
 </head>
 <body>
@@ -334,6 +468,7 @@
     <script>
         let userData = {};
         let signatures = [];
+        let userSettings = {};
 
         Office.onReady((info) => {
             if (info.host === Office.HostType.Outlook) {
@@ -343,11 +478,94 @@
 
         async function initializeApp() {
             try {
+                loadSettings();
                 loadUserData();
                 await loadSignaturesFromJSON();
             } catch (error) {
                 console.error('Initialization error:', error);
                 showError('Failed to load signatures');
+            }
+        }
+
+        function loadSettings() {
+            // Load settings from localStorage
+            const saved = localStorage.getItem('simoSignatureSettings');
+            if (saved) {
+                userSettings = JSON.parse(saved);
+                // Populate settings form
+                if (userSettings.phone) document.getElementById('settingPhone').value = userSettings.phone;
+                if (userSettings.mobile) document.getElementById('settingMobile').value = userSettings.mobile;
+                if (userSettings.jobTitle) document.getElementById('settingJobTitle').value = userSettings.jobTitle;
+                if (userSettings.nameColor) {
+                    document.getElementById('settingNameColor').value = userSettings.nameColor;
+                    document.getElementById('nameColorPreview').style.backgroundColor = userSettings.nameColor;
+                }
+                if (userSettings.fontSize) document.getElementById('settingFontSize').value = userSettings.fontSize;
+                if (userSettings.logoSize) document.getElementById('settingLogoSize').value = userSettings.logoSize;
+                
+                document.getElementById('settingDefaultPhone').checked = userSettings.defaultPhone !== false;
+                document.getElementById('settingDefaultMobile').checked = userSettings.defaultMobile !== false;
+                document.getElementById('settingDefaultSocial').checked = userSettings.defaultSocial !== false;
+            } else {
+                // Default settings
+                userSettings = {
+                    nameColor: '#152979',
+                    fontSize: 'medium',
+                    logoSize: 'medium',
+                    defaultPhone: true,
+                    defaultMobile: true,
+                    defaultSocial: true
+                };
+            }
+
+            // Update color preview on change
+            document.getElementById('settingNameColor').addEventListener('input', (e) => {
+                document.getElementById('nameColorPreview').style.backgroundColor = e.target.value;
+            });
+        }
+
+        function saveSettings() {
+            userSettings = {
+                phone: document.getElementById('settingPhone').value,
+                mobile: document.getElementById('settingMobile').value,
+                jobTitle: document.getElementById('settingJobTitle').value,
+                nameColor: document.getElementById('settingNameColor').value,
+                fontSize: document.getElementById('settingFontSize').value,
+                logoSize: document.getElementById('settingLogoSize').value,
+                defaultPhone: document.getElementById('settingDefaultPhone').checked,
+                defaultMobile: document.getElementById('settingDefaultMobile').checked,
+                defaultSocial: document.getElementById('settingDefaultSocial').checked
+            };
+
+            localStorage.setItem('simoSignatureSettings', JSON.stringify(userSettings));
+
+            // Update userData with saved settings
+            if (userSettings.phone && !userData.phone) userData.phone = userSettings.phone;
+            if (userSettings.mobile && !userData.mobile) userData.mobile = userSettings.mobile;
+            if (userSettings.jobTitle) userData.jobTitle = userSettings.jobTitle;
+
+            const statusEl = document.getElementById('status');
+            statusEl.className = 'status-bar ready';
+            statusEl.innerHTML = '✓ Settings saved successfully!';
+            setTimeout(() => {
+                statusEl.innerHTML = `${signatures.length} signature(s) loaded. Select one to apply`;
+            }, 3000);
+
+            switchView('signatures');
+        }
+
+        function switchView(view) {
+            // Hide all views
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Show selected view
+            if (view === 'signatures') {
+                document.getElementById('signaturesView').classList.add('active');
+                document.getElementById('navSignatures').classList.add('active');
+            } else if (view === 'settings') {
+                document.getElementById('settingsView').classList.add('active');
+                document.getElementById('navSettings').classList.add('active');
             }
         }
 
@@ -507,6 +725,11 @@
             const firstName = nameParts[0] || '[First Name]';
             const lastName = nameParts.slice(1).join(' ') || '[Last Name]';
 
+            // Use settings for phone/mobile if MS365 profile doesn't have them
+            const phone = userData.phone || userSettings.phone || '';
+            const mobile = userData.mobile || userSettings.mobile || '';
+            const jobTitle = userData.jobTitle || userSettings.jobTitle || '';
+
             // Replace name and email
             let processed = html
                 .replace(/\{First name\}/g, firstName)
@@ -514,30 +737,49 @@
                 .replace(/\{E-mail\}/g, userData.email || '[Your Email]');
 
             // Replace job title - if empty, show placeholder
-            if (userData.jobTitle) {
-                processed = processed.replace(/\{Title\}/g, userData.jobTitle);
+            if (jobTitle) {
+                processed = processed.replace(/\{Title\}/g, jobTitle);
             } else {
                 processed = processed.replace(/\{Title\}/g, '<span style="background-color: #fff3cd; color: #856404; padding: 2px 4px;">[Enter job title]</span>');
             }
 
             // Replace phone - keep placeholder if empty
-            if (userData.phone) {
-                processed = processed.replace(/\[Enter phone number\]/g, userData.phone);
+            if (phone) {
+                processed = processed.replace(/\[Enter phone number\]/g, phone);
             }
-            // If still placeholder and user wants to hide it in custom mode
             if (customOptions.includePhone === false) {
                 processed = processed.replace(/phone\.\s*<span[^>]*>\[Enter phone number\]<\/span><br>/gi, '');
                 processed = processed.replace(/phone\.\s*[^<\n]+<br>/gi, '');
             }
 
             // Replace mobile - keep placeholder if empty
-            if (userData.mobile) {
-                processed = processed.replace(/\[Enter mobile number\]/g, userData.mobile);
+            if (mobile) {
+                processed = processed.replace(/\[Enter mobile number\]/g, mobile);
             }
-            // If still placeholder and user wants to hide it in custom mode
             if (customOptions.includeMobile === false) {
                 processed = processed.replace(/mobile\.\s*<span[^>]*>\[Enter mobile number\]<\/span><br>/gi, '');
                 processed = processed.replace(/mobile\.\s*[^<\n]+<br>/gi, '');
+            }
+
+            // Apply color settings
+            if (userSettings.nameColor) {
+                processed = processed.replace(/#152979/g, userSettings.nameColor);
+            }
+
+            // Apply font size settings
+            if (userSettings.fontSize === 'small') {
+                processed = processed.replace(/FONT-SIZE: 14pt/g, 'FONT-SIZE: 12pt');
+                processed = processed.replace(/font-size: 10pt/g, 'font-size: 9pt');
+            } else if (userSettings.fontSize === 'large') {
+                processed = processed.replace(/FONT-SIZE: 14pt/g, 'FONT-SIZE: 16pt');
+                processed = processed.replace(/font-size: 10pt/g, 'font-size: 11pt');
+            }
+
+            // Apply logo size settings
+            if (userSettings.logoSize === 'small') {
+                processed = processed.replace(/width="150" height="49"/g, 'width="100" height="33"');
+            } else if (userSettings.logoSize === 'large') {
+                processed = processed.replace(/width="150" height="49"/g, 'width="200" height="65"');
             }
 
             // Handle social icons
