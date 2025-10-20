@@ -38,11 +38,50 @@
 
         .container {
             padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px 16px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: #f6f8fa;
+        }
+
+        .tab-btn.active {
+            color: #3d5875;
+            border-bottom-color: #3d5875;
+            background: #fafbfc;
         }
 
         /* Views */
         .view {
             display: none;
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
         }
 
         .view.active {
@@ -51,7 +90,7 @@
 
         /* Signature Section */
         .section {
-            background: white;
+            background: #fafbfc;
             border: 1px solid #e1e4e8;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -61,9 +100,9 @@
         .section-header {
             background: #f6f8fa;
             border-bottom: 1px solid #e1e4e8;
-            padding: 12px 20px;
+            padding: 12px 16px;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         #signatureList {
@@ -75,7 +114,7 @@
             background: white;
             border: none;
             border-bottom: 1px solid #e1e4e8;
-            padding: 16px 20px;
+            padding: 16px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
@@ -156,6 +195,85 @@
             background: #f6f8fa;
         }
 
+        /* Settings View */
+        .settings-section {
+            margin-bottom: 24px;
+        }
+
+        .settings-section h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #3d5875;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .color-row {
+            display: grid;
+            grid-template-columns: 1fr 60px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type="color"] {
+            height: 38px;
+            cursor: pointer;
+        }
+
         /* Custom Builder Styles */
         .builder-container {
             display: flex;
@@ -164,7 +282,7 @@
         }
 
         .builder-section {
-            background: white;
+            background: #fafbfc;
             border: 1px solid #e1e4e8;
             border-radius: 8px;
             padding: 16px;
@@ -190,6 +308,7 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
+            background: white;
         }
 
         .template-card:hover {
@@ -227,6 +346,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
+            background: white;
         }
 
         .component-item:hover {
@@ -254,36 +374,9 @@
             border: 1px solid #e1e4e8;
             border-radius: 6px;
             padding: 16px;
-            background: #fafbfc;
+            background: white;
             max-height: 300px;
             overflow-y: auto;
-        }
-
-        .input-group {
-            margin-bottom: 12px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #333;
-        }
-
-        .input-group input,
-        .input-group textarea {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-            font-size: 13px;
-            font-family: inherit;
-        }
-
-        .input-group textarea {
-            resize: vertical;
-            min-height: 60px;
         }
 
         .button-group {
@@ -330,6 +423,24 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
+        .save-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -339,23 +450,35 @@
     </div>
 
     <div class="container">
-        <!-- Main Signature List View -->
-        <div id="mainView" class="view active">
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('signatures')">📧 Signatures</button>
+            <button class="tab-btn" onclick="switchTab('custom')">✨ Custom Builder</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ Settings</button>
+        </div>
+
+        <!-- Signatures View -->
+        <div id="signaturesView" class="view active">
+            <div class="section">
+                <div class="section-header">Preview</div>
+                <div style="padding: 16px;">
+                    <div class="preview-box" id="mainPreview">
+                        <!-- Preview will be rendered here -->
+                    </div>
+                    <small style="color: #666; display: block; margin-top: 8px;">Live preview of your signature with current settings</small>
+                </div>
+            </div>
+
             <div class="section">
                 <div class="section-header">Pre-configured Signatures</div>
                 <div id="signatureList">
                     <!-- Buttons will be added here by JavaScript -->
                 </div>
             </div>
-
-            <button class="btn-secondary" onclick="showCustomBuilder()">
-                <span>✨</span>
-                <span>Create Custom Signature</span>
-            </button>
         </div>
 
-        <!-- Custom Signature Builder View -->
-        <div id="builderView" class="view">
+        <!-- Custom Builder View -->
+        <div id="customView" class="view">
             <div id="builderStatus"></div>
 
             <div class="builder-container">
@@ -371,11 +494,11 @@
 
                 <div class="builder-section">
                     <h3>3. Customize Text (Optional)</h3>
-                    <div class="input-group">
+                    <div class="form-group">
                         <label>Custom Title/Tagline</label>
                         <input type="text" id="customTitle" placeholder="e.g., Innovation Starts Here">
                     </div>
-                    <div class="input-group">
+                    <div class="form-group">
                         <label>Additional Text</label>
                         <textarea id="customText" placeholder="e.g., Schedule a meeting with me"></textarea>
                     </div>
@@ -388,13 +511,137 @@
                     </div>
                 </div>
 
-                <div class="button-group">
-                    <button class="back-button" onclick="showMainView()">← Back</button>
-                    <button class="btn-primary" onclick="applyCustomSignature()">Apply Signature</button>
-                </div>
+                <button class="btn-primary" onclick="applyCustomSignature()">Apply Signature</button>
             </div>
         </div>
+
+        <!-- Settings View -->
+        <div id="settingsView" class="view">
+            <div id="settingsStatus"></div>
+
+            <!-- Contact Information -->
+            <div class="settings-section">
+                <h3>Contact Information</h3>
+                
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" id="settingJobTitle" placeholder="e.g., Senior Developer">
+                    <small>Override your default job title</small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="settingIncludePhone" onchange="saveSettings()">
+                    <label for="settingIncludePhone">Include phone number in signature</label>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="settingPhone" placeholder="+49 123 456789">
+                    <small>Format: +49 123 456789</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="tel" id="settingMobile" placeholder="+49 152 06348349">
+                    <small>Format: +49 152 06348349</small>
+                </div>
+            </div>
+
+            <!-- Typography -->
+            <div class="settings-section">
+                <h3>Typography</h3>
+                
+                <div class="form-group">
+                    <label>Font Family</label>
+                    <select id="settingFont" onchange="saveSettings()">
+                        <option value="Arial">Arial</option>
+                        <option value="Calibri">Calibri</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Verdana">Verdana</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Font Size (Name)</label>
+                    <select id="settingNameSize" onchange="saveSettings()">
+                        <option value="12pt">12pt - Small</option>
+                        <option value="14pt" selected>14pt - Medium</option>
+                        <option value="16pt">16pt - Large</option>
+                        <option value="18pt">18pt - Extra Large</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Font Size (Body Text)</label>
+                    <select id="settingBodySize" onchange="saveSettings()">
+                        <option value="8pt">8pt - Tiny</option>
+                        <option value="9pt">9pt - Small</option>
+                        <option value="10pt" selected>10pt - Medium</option>
+                        <option value="11pt">11pt - Large</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Colors -->
+            <div class="settings-section">
+                <h3>Colors</h3>
+                
+                <div class="form-group">
+                    <label>Name Color</label>
+                    <div class="color-row">
+                        <input type="text" id="settingNameColor" value="#152979" onchange="saveSettings()">
+                        <input type="color" id="settingNameColorPicker" value="#152979" onchange="updateColorText('settingNameColor', this.value); saveSettings();">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Job Title Color</label>
+                    <div class="color-row">
+                        <input type="text" id="settingTitleColor" value="#9a9a9a" onchange="saveSettings()">
+                        <input type="color" id="settingTitleColorPicker" value="#9a9a9a" onchange="updateColorText('settingTitleColor', this.value); saveSettings();">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Contact Info Color</label>
+                    <div class="color-row">
+                        <input type="text" id="settingContactColor" value="#9a9a9a" onchange="saveSettings()">
+                        <input type="color" id="settingContactColorPicker" value="#9a9a9a" onchange="updateColorText('settingContactColor', this.value); saveSettings();">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="settings-section">
+                <h3>Social Media</h3>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="settingShowLinkedIn" checked onchange="saveSettings()">
+                    <label for="settingShowLinkedIn">Show LinkedIn icon</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="settingShowTeams" checked onchange="saveSettings()">
+                    <label for="settingShowTeams">Show Microsoft Teams icon</label>
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <div class="settings-section">
+                <h3>Preview</h3>
+                <div class="preview-box" id="settingsPreview">
+                    <!-- Preview will be rendered here -->
+                </div>
+                <small style="color: #666; display: block; margin-top: 8px;">Settings preview - changes shown above in real-time</small>
+            </div>
+
+            <button class="btn-primary" onclick="resetSettings()">Reset to Defaults</button>
+        </div>
     </div>
+
+    <div class="save-indicator" id="saveIndicator">✓ Settings saved</div>
 
     <script>
         let userProfile = {};
@@ -408,6 +655,22 @@
             businessPhone: false,
             linkedin: false,
             teams: false
+        };
+
+        // Default settings
+        let userSettings = {
+            jobTitle: '',
+            includePhone: false,
+            phone: '',
+            mobile: '',
+            font: 'Arial',
+            nameSize: '14pt',
+            bodySize: '10pt',
+            nameColor: '#152979',
+            titleColor: '#9a9a9a',
+            contactColor: '#9a9a9a',
+            showLinkedIn: true,
+            showTeams: true
         };
 
         const templates = [
@@ -430,57 +693,151 @@
 
         // Initialize when Office is ready
         Office.onReady(function() {
+            loadSettings();
             getUserProfile();
             loadSignatures();
             renderTemplates();
             renderComponents();
+            populateSettingsForm();
         });
 
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update views
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+            if (tab === 'signatures') {
+                document.getElementById('signaturesView').classList.add('active');
+            } else if (tab === 'custom') {
+                document.getElementById('customView').classList.add('active');
+            } else if (tab === 'settings') {
+                document.getElementById('settingsView').classList.add('active');
+            }
+        }
+
         function getUserProfile() {
-            Office.context.mailbox.getUserIdentityTokenAsync(function(result) {
-                if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    // Parse the token to get user info
-                    try {
-                        const token = result.value;
-                        const base64Url = token.split('.')[1];
-                        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                        }).join(''));
-                        const payload = JSON.parse(jsonPayload);
-                        
-                        userProfile = {
-                            displayName: Office.context.mailbox.userProfile.displayName || '[Your Name]',
-                            email: Office.context.mailbox.userProfile.emailAddress || '[email@example.com]',
-                            givenName: '[First Name]',
-                            surname: '[Last Name]',
-                            jobTitle: '[Job Title]',
-                            mobilePhone: '',
-                            businessPhones: []
-                        };
-                    } catch (e) {
-                        console.error('Error parsing token:', e);
-                    }
-                }
-            });
+            userProfile = {
+                displayName: Office.context.mailbox.userProfile.displayName || '[Your Name]',
+                email: Office.context.mailbox.userProfile.emailAddress || '[email@example.com]',
+                givenName: '[First Name]',
+                surname: '[Last Name]'
+            };
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('simoSignatureSettings');
+            if (saved) {
+                userSettings = JSON.parse(saved);
+            }
+        }
+
+        function saveSettings() {
+            // Get values from form
+            userSettings.jobTitle = document.getElementById('settingJobTitle').value;
+            userSettings.includePhone = document.getElementById('settingIncludePhone').checked;
+            userSettings.phone = document.getElementById('settingPhone').value;
+            userSettings.mobile = document.getElementById('settingMobile').value;
+            userSettings.font = document.getElementById('settingFont').value;
+            userSettings.nameSize = document.getElementById('settingNameSize').value;
+            userSettings.bodySize = document.getElementById('settingBodySize').value;
+            userSettings.nameColor = document.getElementById('settingNameColor').value;
+            userSettings.titleColor = document.getElementById('settingTitleColor').value;
+            userSettings.contactColor = document.getElementById('settingContactColor').value;
+            userSettings.showLinkedIn = document.getElementById('settingShowLinkedIn').checked;
+            userSettings.showTeams = document.getElementById('settingShowTeams').checked;
+
+            // Save to localStorage
+            localStorage.setItem('simoSignatureSettings', JSON.stringify(userSettings));
+
+            // Update both previews
+            updateSettingsPreview();
+            updateMainPreview();
+
+            // Show save indicator
+            const indicator = document.getElementById('saveIndicator');
+            indicator.classList.add('show');
+            setTimeout(() => indicator.classList.remove('show'), 2000);
+        }
+
+        function populateSettingsForm() {
+            document.getElementById('settingJobTitle').value = userSettings.jobTitle;
+            document.getElementById('settingIncludePhone').checked = userSettings.includePhone;
+            document.getElementById('settingPhone').value = userSettings.phone;
+            document.getElementById('settingMobile').value = userSettings.mobile;
+            document.getElementById('settingFont').value = userSettings.font;
+            document.getElementById('settingNameSize').value = userSettings.nameSize;
+            document.getElementById('settingBodySize').value = userSettings.bodySize;
+            document.getElementById('settingNameColor').value = userSettings.nameColor;
+            document.getElementById('settingNameColorPicker').value = userSettings.nameColor;
+            document.getElementById('settingTitleColor').value = userSettings.titleColor;
+            document.getElementById('settingTitleColorPicker').value = userSettings.titleColor;
+            document.getElementById('settingContactColor').value = userSettings.contactColor;
+            document.getElementById('settingContactColorPicker').value = userSettings.contactColor;
+            document.getElementById('settingShowLinkedIn').checked = userSettings.showLinkedIn;
+            document.getElementById('settingShowTeams').checked = userSettings.showTeams;
+            
+            // Initial preview updates
+            updateSettingsPreview();
+            updateMainPreview();
+        }
+
+        function updateColorText(inputId, color) {
+            document.getElementById(inputId).value = color;
+        }
+
+        function resetSettings() {
+            if (confirm('Reset all settings to default values?')) {
+                localStorage.removeItem('simoSignatureSettings');
+                userSettings = {
+                    jobTitle: '',
+                    includePhone: false,
+                    phone: '',
+                    mobile: '',
+                    font: 'Arial',
+                    nameSize: '14pt',
+                    bodySize: '10pt',
+                    nameColor: '#152979',
+                    titleColor: '#9a9a9a',
+                    contactColor: '#9a9a9a',
+                    showLinkedIn: true,
+                    showTeams: true
+                };
+                populateSettingsForm();
+                updateSettingsPreview();
+                updateMainPreview();
+                showSettingsStatus('Settings reset to defaults', 'success');
+            }
+        }
+
+        function updateMainPreview() {
+            const preview = document.getElementById('mainPreview');
+            if (!preview) return;
+            
+            preview.innerHTML = getDefaultSignatureHTML();
+        }
+
+        function updateSettingsPreview() {
+            const preview = document.getElementById('settingsPreview');
+            if (!preview) return;
+            
+            preview.innerHTML = getDefaultSignatureHTML();
         }
 
         function loadSignatures() {
-            // Create signature buttons directly
             const signatureList = document.getElementById('signatureList');
             
             const signatures = [
                 {
                     name: 'Default Signature',
                     description: 'Standard SIMO employee signature',
-                    icon: '📧',
-                    html: getDefaultSignatureHTML()
+                    icon: '📧'
                 },
                 {
                     name: 'All Mail Signature',
                     description: 'Signature with legal disclaimer',
-                    icon: '📄',
-                    html: getAllMailSignatureHTML()
+                    icon: '📄'
                 }
             ];
 
@@ -496,12 +853,38 @@
         }
 
         function getDefaultSignatureHTML() {
-            return `<table style="WIDTH: 508px; FONT-SIZE: 10pt; FONT-FAMILY: Arial; MARGIN-TOP: 0px; MARGIN-BOTTOM: 5pt" cellspacing="0" cellpadding="0" border="0"><tbody><tr><td style="FONT-SIZE: 10pt; FONT-FAMILY: Arial; PADDING-BOTTOM: 10px" valign="top"><span style="FONT-SIZE: 14pt"><strong><font color="#152979">${userProfile.displayName || Office.context.mailbox.userProfile.displayName}</font></strong></span><br><span style="font-size: 10pt; color: #9a9a9a;">${userProfile.jobTitle || '[Job Title]'}</span><br><br><span style="font-size: 9pt; color: #9a9a9a;">email. <a href="mailto:${userProfile.email || Office.context.mailbox.userProfile.emailAddress}" style="color: #9a9a9a; text-decoration: none;">${userProfile.email || Office.context.mailbox.userProfile.emailAddress}</a></span></td></tr></tbody></table><table cellspacing="0" cellpadding="0" border="0" style="font-size: 10pt; WIDTH: 508px"><tbody><tr><td valign="top" style="padding-bottom: 10px; padding-top: 10px;"><a href="https://www.simo-online.com/"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" border="0" width="150" height="49" alt="SIMO logo" style="display: block;"></a></td></tr><tr><td valign="top" style="padding-bottom: 10px; padding-top: 10px;"><a href="https://www.linkedin.com/company/simo-online" style="text-decoration: none;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/linkedin-icon.png" border="0" width="32" height="32" alt="LinkedIn" style="display: inline-block; margin-right: 8px;"></a><a href="https://teams.microsoft.com/l/chat/0/0?users=${userProfile.email || Office.context.mailbox.userProfile.emailAddress}" style="text-decoration: none;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/teams-icon.png" border="0" width="32" height="32" alt="Microsoft Teams" style="display: inline-block;"></a></td></tr></tbody></table>`;
+            const jobTitle = userSettings.jobTitle || '[Job Title]';
+            const phone = userSettings.phone || '[Phone]';
+            const mobile = userSettings.mobile || '[Mobile]';
+            
+            let phoneHTML = '';
+            if (userSettings.includePhone) {
+                if (userSettings.phone) {
+                    phoneHTML += `phone. <a href="tel:${phone}" style="color: ${userSettings.contactColor}; text-decoration: none;">${phone}</a><br>`;
+                }
+                if (userSettings.mobile) {
+                    phoneHTML += `mobile. <a href="tel:${mobile}" style="color: ${userSettings.contactColor}; text-decoration: none;">${mobile}</a><br>`;
+                }
+            }
+
+            let socialHTML = '';
+            if (userSettings.showLinkedIn || userSettings.showTeams) {
+                socialHTML = '<tr><td valign="top" style="padding-bottom: 10px; padding-top: 10px;">';
+                if (userSettings.showLinkedIn) {
+                    socialHTML += '<a href="https://www.linkedin.com/company/simo-online" style="text-decoration: none;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/linkedin-icon.png" border="0" width="32" height="32" alt="LinkedIn" style="display: inline-block; margin-right: 8px;"></a>';
+                }
+                if (userSettings.showTeams) {
+                    socialHTML += `<a href="https://teams.microsoft.com/l/chat/0/0?users=${userProfile.email}" style="text-decoration: none;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/teams-icon.png" border="0" width="32" height="32" alt="Microsoft Teams" style="display: inline-block;"></a>`;
+                }
+                socialHTML += '</td></tr>';
+            }
+
+            return `<table style="WIDTH: 508px; FONT-SIZE: ${userSettings.bodySize}; FONT-FAMILY: ${userSettings.font}; MARGIN-TOP: 0px; MARGIN-BOTTOM: 5pt" cellspacing="0" cellpadding="0" border="0"><tbody><tr><td style="FONT-SIZE: ${userSettings.bodySize}; FONT-FAMILY: ${userSettings.font}; PADDING-BOTTOM: 10px" valign="top"><span style="FONT-SIZE: ${userSettings.nameSize}"><strong><font color="${userSettings.nameColor}">${userProfile.displayName}</font></strong></span><br><span style="font-size: ${userSettings.bodySize}; color: ${userSettings.titleColor};">${jobTitle}</span><br><br><span style="font-size: ${userSettings.bodySize}; color: ${userSettings.contactColor};">${phoneHTML}email. <a href="mailto:${userProfile.email}" style="color: ${userSettings.contactColor}; text-decoration: none;">${userProfile.email}</a></span></td></tr></tbody></table><table cellspacing="0" cellpadding="0" border="0" style="font-size: ${userSettings.bodySize}; WIDTH: 508px"><tbody><tr><td valign="top" style="padding-bottom: 10px; padding-top: 10px;"><a href="https://www.simo-online.com/"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" border="0" width="150" height="49" alt="SIMO logo" style="display: block;"></a></td></tr>${socialHTML}</tbody></table>`;
         }
 
         function getAllMailSignatureHTML() {
             const defaultSig = getDefaultSignatureHTML();
-            return defaultSig + `<hr style="color: rgb(197, 200, 203); margin-top: 20px;"><p style="color: rgb(197, 200, 203); font-size: 8pt; font-family: Arial; margin-top: 5pt;">Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen. Wenn Sie nicht der beabsichtigte Empfaenger sind, informieren Sie bitte sofort den Absender und loeschen Sie diese E-Mail. Das unbefugte Kopieren dieser E-Mail oder die unbefugte Weitergabe der enthaltenen Informationen ist nicht gestattet. /|/ The information contained in this message is confidential or protected by law. If you are not the intended recipient, please contact the sender and delete this message. Any unauthorised copying of this message or unauthorised distribution of the information contained herein is prohibited.</p><hr style="color: rgb(197, 200, 203);"><p style="color: rgb(197, 200, 203); font-size: 8pt; font-family: Arial; margin-top: 5pt;">Legally required information for business correspondence/ Gesetzliche Pflichtangaben fuer Geschaeftskorrespondenz<br>Unternehmen/Company: SIMO GmbH mit Sitz/with registered seat in Aschaffenburg, Amtsgericht/local court Aschaffenburg HRB 15769, Umsatzsteuer-Identifikationsnummer / VAT-ID DE335322803, Geschaeftsanschrift: Würzburger Straße 152, 63743 Aschaffenburg<br>Geschaeftsfuehrung/Management Board: Thomas Wassum und Andreas O. Schwan</p>`;
+            return defaultSig + `<hr style="color: rgb(197, 200, 203); margin-top: 20px;"><p style="color: rgb(197, 200, 203); font-size: 8pt; font-family: ${userSettings.font}; margin-top: 5pt;">Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen. Wenn Sie nicht der beabsichtigte Empfaenger sind, informieren Sie bitte sofort den Absender und loeschen Sie diese E-Mail. Das unbefugte Kopieren dieser E-Mail oder die unbefugte Weitergabe der enthaltenen Informationen ist nicht gestattet. /|/ The information contained in this message is confidential or protected by law. If you are not the intended recipient, please contact the sender and delete this message. Any unauthorised copying of this message or unauthorised distribution of the information contained herein is prohibited.</p><hr style="color: rgb(197, 200, 203);"><p style="color: rgb(197, 200, 203); font-size: 8pt; font-family: ${userSettings.font}; margin-top: 5pt;">Legally required information for business correspondence/ Gesetzliche Pflichtangaben fuer Geschaeftskorrespondenz<br>Unternehmen/Company: SIMO GmbH mit Sitz/with registered seat in Aschaffenburg, Amtsgericht/local court Aschaffenburg HRB 15769, Umsatzsteuer-Identifikationsnummer / VAT-ID DE335322803, Geschaeftsanschrift: Würzburger Straße 152, 63743 Aschaffenburg<br>Geschaeftsfuehrung/Management Board: Thomas Wassum und Andreas O. Schwan</p>`;
         }
 
         function applySignature(index) {
@@ -523,16 +906,6 @@
                     }
                 }
             );
-        }
-
-        function showCustomBuilder() {
-            document.getElementById('mainView').classList.remove('active');
-            document.getElementById('builderView').classList.add('active');
-        }
-
-        function showMainView() {
-            document.getElementById('builderView').classList.remove('active');
-            document.getElementById('mainView').classList.add('active');
         }
 
         function renderTemplates() {
@@ -585,46 +958,46 @@
         }
 
         function generateSignatureHTML(template, components, customTitle, customText) {
-            let html = '<table cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.5;">';
+            let html = `<table cellpadding="0" cellspacing="0" style="font-family: ${userSettings.font}; font-size: ${userSettings.bodySize}; line-height: 1.5;">`;
             
             if (components.logo) {
                 html += '<tr><td style="padding-bottom: 10px;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" alt="SIMO Logo" style="height: 40px; display: block;"></td></tr>';
             }
 
             if (customTitle) {
-                html += `<tr><td style="font-weight: bold; color: #3d5875; padding-bottom: 8px; font-size: 13px;">${customTitle}</td></tr>`;
+                html += `<tr><td style="font-weight: bold; color: ${userSettings.nameColor}; padding-bottom: 8px; font-size: ${userSettings.nameSize};">${customTitle}</td></tr>`;
             }
 
             if (components.name) {
-                html += `<tr><td style="font-weight: bold; font-size: 14px; color: #333; padding-bottom: 4px;">${userProfile.displayName || Office.context.mailbox.userProfile.displayName}</td></tr>`;
+                html += `<tr><td style="font-weight: bold; font-size: ${userSettings.nameSize}; color: ${userSettings.nameColor}; padding-bottom: 4px;">${userProfile.displayName}</td></tr>`;
             }
 
             if (components.jobTitle) {
-                html += `<tr><td style="color: #666; padding-bottom: 8px;">${userProfile.jobTitle || '[Job Title]'}</td></tr>`;
+                html += `<tr><td style="color: ${userSettings.titleColor}; padding-bottom: 8px;">${userSettings.jobTitle || '[Job Title]'}</td></tr>`;
             }
 
             if (components.email) {
-                html += `<tr><td style="padding-bottom: 4px;"><a href="mailto:${userProfile.email || Office.context.mailbox.userProfile.emailAddress}" style="color: #3d5875; text-decoration: none;">${userProfile.email || Office.context.mailbox.userProfile.emailAddress}</a></td></tr>`;
+                html += `<tr><td style="padding-bottom: 4px;"><a href="mailto:${userProfile.email}" style="color: ${userSettings.contactColor}; text-decoration: none;">${userProfile.email}</a></td></tr>`;
             }
 
-            if (components.mobilePhone && userProfile.mobilePhone) {
-                html += `<tr><td style="padding-bottom: 4px;">📱 ${userProfile.mobilePhone}</td></tr>`;
+            if (components.mobilePhone && userSettings.mobile) {
+                html += `<tr><td style="padding-bottom: 4px; color: ${userSettings.contactColor};">📱 ${userSettings.mobile}</td></tr>`;
             }
 
-            if (components.businessPhone && userProfile.businessPhones?.[0]) {
-                html += `<tr><td style="padding-bottom: 4px;">☎️ ${userProfile.businessPhones[0]}</td></tr>`;
+            if (components.businessPhone && userSettings.phone) {
+                html += `<tr><td style="padding-bottom: 4px; color: ${userSettings.contactColor};">☎️ ${userSettings.phone}</td></tr>`;
             }
 
             if (customText) {
-                html += `<tr><td style="padding-top: 8px; padding-bottom: 4px; font-style: italic; color: #666; font-size: 11px;">${customText}</td></tr>`;
+                html += `<tr><td style="padding-top: 8px; padding-bottom: 4px; font-style: italic; color: ${userSettings.contactColor}; font-size: ${userSettings.bodySize};">${customText}</td></tr>`;
             }
 
-            if (components.linkedin || components.teams) {
+            if ((components.linkedin && userSettings.showLinkedIn) || (components.teams && userSettings.showTeams)) {
                 html += '<tr><td style="padding-top: 10px;">';
-                if (components.linkedin) {
+                if (components.linkedin && userSettings.showLinkedIn) {
                     html += '<a href="https://linkedin.com/company/simo-gmbh" style="margin-right: 10px; text-decoration: none; color: #0077b5;">🔗 LinkedIn</a>';
                 }
-                if (components.teams) {
+                if (components.teams && userSettings.showTeams) {
                     html += '<span style="color: #6264A7;">💬 Teams</span>';
                 }
                 html += '</td></tr>';
@@ -650,7 +1023,6 @@
                 function(result) {
                     if (result.status === Office.AsyncResultStatus.Succeeded) {
                         showStatus('✓ Custom signature applied successfully!', 'success');
-                        setTimeout(showMainView, 2000);
                     } else {
                         showStatus('❌ Failed to apply signature', 'error');
                     }
@@ -664,6 +1036,12 @@
             setTimeout(() => status.innerHTML = '', 5000);
         }
 
+        function showSettingsStatus(message, type) {
+            const status = document.getElementById('settingsStatus');
+            status.innerHTML = `<div class="status-message ${type}">${message}</div>`;
+            setTimeout(() => status.innerHTML = '', 3000);
+        }
+
         // Event listeners for custom field updates
         setTimeout(() => {
             const customTitle = document.getElementById('customTitle');
@@ -671,6 +1049,19 @@
             
             if (customTitle) customTitle.addEventListener('input', updatePreview);
             if (customText) customText.addEventListener('input', updatePreview);
+
+            // Auto-save settings on input
+            const settingsInputs = document.querySelectorAll('#settingsView input, #settingsView select, #settingsView textarea');
+            settingsInputs.forEach(input => {
+                input.addEventListener('change', saveSettings);
+                // Also update both previews on text input
+                if (input.type === 'text' || input.type === 'tel' || input.tagName === 'TEXTAREA') {
+                    input.addEventListener('input', () => {
+                        updateSettingsPreview();
+                        updateMainPreview();
+                    });
+                }
+            });
         }, 100);
     </script>
 </body>
