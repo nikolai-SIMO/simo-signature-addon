@@ -16,7 +16,6 @@
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #f5f7fa;
             color: #333;
-            min-height: 100vh;
         }
 
         .header {
@@ -39,7 +38,6 @@
 
         .container {
             padding: 20px;
-            padding-bottom: 80px;
         }
 
         /* Views */
@@ -51,36 +49,7 @@
             display: block;
         }
 
-        /* Status Bar */
-        .status-bar {
-            background: white;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            text-align: center;
-        }
-
-        .status-bar.loading {
-            background: #fff9e6;
-            border-color: #ffd700;
-            color: #856404;
-        }
-
-        .status-bar.ready {
-            background: #e8f5e9;
-            border-color: #4caf50;
-            color: #2e7d32;
-        }
-
-        .status-bar.error {
-            background: #ffebee;
-            border-color: #f44336;
-            color: #c62828;
-        }
-
-        /* Signature List View */
+        /* Signature Section */
         .section {
             background: white;
             border: 1px solid #e1e4e8;
@@ -97,25 +66,33 @@
             font-size: 15px;
         }
 
-        .signature-card {
-            padding: 16px 20px;
+        #signatureList {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .signature-btn {
+            background: white;
+            border: none;
             border-bottom: 1px solid #e1e4e8;
+            padding: 16px 20px;
             cursor: pointer;
             transition: all 0.2s;
+            text-align: left;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .signature-card:last-child {
+        .signature-btn:last-child {
             border-bottom: none;
         }
 
-        .signature-card:hover {
+        .signature-btn:hover {
             background: #f6f8fa;
         }
 
-        .signature-card:active {
+        .signature-btn:active {
             background: #e8f4f8;
         }
 
@@ -128,14 +105,14 @@
             flex: 1;
         }
 
-        .signature-card h3 {
+        .signature-info h3 {
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 4px;
             color: #333;
         }
 
-        .signature-card p {
+        .signature-info p {
             font-size: 12px;
             color: #666;
         }
@@ -157,10 +134,6 @@
             background: #2a3f54;
         }
 
-        .btn-primary:active {
-            background: #1f2d3d;
-        }
-
         .btn-secondary {
             background: white;
             color: #3d5875;
@@ -172,7 +145,7 @@
             cursor: pointer;
             width: 100%;
             transition: all 0.2s;
-            margin-bottom: 12px;
+            margin-top: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -183,11 +156,7 @@
             background: #f6f8fa;
         }
 
-        .btn-secondary:active {
-            background: #e8f4f8;
-        }
-
-        /* Custom Builder View */
+        /* Custom Builder Styles */
         .builder-container {
             display: flex;
             flex-direction: column;
@@ -275,10 +244,6 @@
             cursor: pointer;
         }
 
-        .component-item.disabled input[type="checkbox"] {
-            cursor: not-allowed;
-        }
-
         .component-label {
             flex: 1;
             font-size: 13px;
@@ -292,10 +257,6 @@
             background: #fafbfc;
             max-height: 300px;
             overflow-y: auto;
-        }
-
-        .preview-box table {
-            font-size: 12px;
         }
 
         .input-group {
@@ -369,27 +330,6 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-
-        .status-message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3d5875;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
@@ -401,17 +341,10 @@
     <div class="container">
         <!-- Main Signature List View -->
         <div id="mainView" class="view active">
-            <div id="mainStatus" class="status-bar loading">
-                <span class="loading-spinner"></span> Loading signatures...
-            </div>
-
             <div class="section">
                 <div class="section-header">Pre-configured Signatures</div>
                 <div id="signatureList">
-                    <div style="padding: 20px; text-align: center; color: #666;">
-                        <div class="loading-spinner" style="margin: 0 auto 10px;"></div>
-                        <p>Loading signatures...</p>
-                    </div>
+                    <!-- Buttons will be added here by JavaScript -->
                 </div>
             </div>
 
@@ -426,19 +359,16 @@
             <div id="builderStatus"></div>
 
             <div class="builder-container">
-                <!-- Template Selection -->
                 <div class="builder-section">
                     <h3>1. Choose a Template</h3>
                     <div class="templates-grid" id="templatesList"></div>
                 </div>
 
-                <!-- Component Selection -->
                 <div class="builder-section">
                     <h3>2. Select Components</h3>
                     <div class="components-list" id="componentsList"></div>
                 </div>
 
-                <!-- Custom Fields -->
                 <div class="builder-section">
                     <h3>3. Customize Text (Optional)</h3>
                     <div class="input-group">
@@ -451,7 +381,6 @@
                     </div>
                 </div>
 
-                <!-- Preview -->
                 <div class="builder-section">
                     <h3>4. Preview</h3>
                     <div class="preview-box" id="signaturePreview">
@@ -459,7 +388,6 @@
                     </div>
                 </div>
 
-                <!-- Actions -->
                 <div class="button-group">
                     <button class="back-button" onclick="showMainView()">← Back</button>
                     <button class="btn-primary" onclick="applyCustomSignature()">Apply Signature</button>
@@ -469,8 +397,7 @@
     </div>
 
     <script>
-        let userInfo = {};
-        let signatures = [];
+        let userProfile = {};
         let selectedTemplate = null;
         let selectedComponents = {
             logo: true,
@@ -483,32 +410,11 @@
             teams: false
         };
 
-        // Template definitions
         const templates = [
-            {
-                id: 'minimal',
-                name: 'Minimal',
-                description: 'Clean & simple',
-                style: 'minimal'
-            },
-            {
-                id: 'professional',
-                name: 'Professional',
-                description: 'Classic corporate',
-                style: 'professional'
-            },
-            {
-                id: 'modern',
-                name: 'Modern',
-                description: 'Bold & contemporary',
-                style: 'modern'
-            },
-            {
-                id: 'social',
-                name: 'Social Focus',
-                description: 'Social media emphasis',
-                style: 'social'
-            }
+            { id: 'minimal', name: 'Minimal', description: 'Clean & simple', style: 'minimal' },
+            { id: 'professional', name: 'Professional', description: 'Classic corporate', style: 'professional' },
+            { id: 'modern', name: 'Modern', description: 'Bold & contemporary', style: 'modern' },
+            { id: 'social', name: 'Social Focus', description: 'Social media emphasis', style: 'social' }
         ];
 
         const components = [
@@ -522,110 +428,111 @@
             { id: 'teams', label: 'Microsoft Teams Icon', required: false }
         ];
 
-        Office.onReady((info) => {
-            if (info.host === Office.HostType.Outlook) {
-                initializeApp();
-            }
-        });
-
-        async function initializeApp() {
-            await loadUserProfile();
-            await loadSignatures();
+        // Initialize when Office is ready
+        Office.onReady(function() {
+            getUserProfile();
+            loadSignatures();
             renderTemplates();
             renderComponents();
-        }
+        });
 
-        async function loadUserProfile() {
-            try {
-                const token = await new Promise((resolve, reject) => {
-                    Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, (result) => {
-                        if (result.status === Office.AsyncResultStatus.Succeeded) {
-                            resolve(result.value);
-                        } else {
-                            reject(result.error);
-                        }
-                    });
-                });
-
-                const response = await fetch('https://graph.microsoft.com/v1.0/me', {
-                    headers: { 
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json'
+        function getUserProfile() {
+            Office.context.mailbox.getUserIdentityTokenAsync(function(result) {
+                if (result.status === Office.AsyncResultStatus.Succeeded) {
+                    // Parse the token to get user info
+                    try {
+                        const token = result.value;
+                        const base64Url = token.split('.')[1];
+                        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                        }).join(''));
+                        const payload = JSON.parse(jsonPayload);
+                        
+                        userProfile = {
+                            displayName: Office.context.mailbox.userProfile.displayName || '[Your Name]',
+                            email: Office.context.mailbox.userProfile.emailAddress || '[email@example.com]',
+                            givenName: '[First Name]',
+                            surname: '[Last Name]',
+                            jobTitle: '[Job Title]',
+                            mobilePhone: '',
+                            businessPhones: []
+                        };
+                    } catch (e) {
+                        console.error('Error parsing token:', e);
                     }
-                });
-                
-                if (response.ok) {
-                    userInfo = await response.json();
-                    console.log('User profile loaded:', userInfo);
                 }
-            } catch (error) {
-                console.error('Error loading profile:', error);
-                // Set fallback values
-                userInfo = {
-                    displayName: '[Your Name]',
-                    givenName: '[First]',
-                    surname: '[Last]',
-                    jobTitle: '[Job Title]',
-                    mail: '[email@example.com]',
-                    mobilePhone: '',
-                    businessPhones: []
-                };
-            }
+            });
         }
 
-        async function loadSignatures() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/nikolai-SIMO/simo-signature-addon/main/signatures.json');
-                if (!response.ok) {
-                    throw new Error('Failed to load signatures');
+        function loadSignatures() {
+            // Create signature buttons directly
+            const signatureList = document.getElementById('signatureList');
+            
+            const signatures = [
+                {
+                    name: 'Default Signature',
+                    description: 'Standard SIMO employee signature',
+                    icon: '📧',
+                    html: getDefaultSignatureHTML()
+                },
+                {
+                    name: 'All Mail Signature',
+                    description: 'Signature with legal disclaimer',
+                    icon: '📄',
+                    html: getAllMailSignatureHTML()
                 }
-                signatures = await response.json();
-                renderSignatures();
-                updateMainStatus('ready');
-            } catch (error) {
-                console.error('Error loading signatures:', error);
-                updateMainStatus('error');
-                document.getElementById('signatureList').innerHTML = `
-                    <div style="padding: 20px; text-align: center; color: #c62828;">
-                        <p style="margin-bottom: 10px;">❌ Failed to load signatures</p>
-                        <p style="font-size: 12px;">Please check your internet connection</p>
-                    </div>
-                `;
-            }
-        }
+            ];
 
-        function updateMainStatus(status) {
-            const statusEl = document.getElementById('mainStatus');
-            statusEl.className = `status-bar ${status}`;
-            
-            if (status === 'ready') {
-                statusEl.innerHTML = `✓ Ready - ${signatures.length} signature(s) available`;
-            } else if (status === 'error') {
-                statusEl.innerHTML = '❌ Error loading signatures';
-            }
-        }
-
-        function renderSignatures() {
-            const list = document.getElementById('signatureList');
-            
-            if (signatures.length === 0) {
-                list.innerHTML = `
-                    <div style="padding: 20px; text-align: center; color: #666;">
-                        <p>No signatures available</p>
-                    </div>
-                `;
-                return;
-            }
-
-            list.innerHTML = signatures.map((sig, index) => `
-                <div class="signature-card" onclick="applySignature(${index})">
-                    <div class="signature-icon">${sig.icon || '📧'}</div>
+            signatureList.innerHTML = signatures.map((sig, index) => `
+                <button class="signature-btn" onclick="applySignature(${index})">
+                    <div class="signature-icon">${sig.icon}</div>
                     <div class="signature-info">
                         <h3>${sig.name}</h3>
                         <p>${sig.description}</p>
                     </div>
-                </div>
+                </button>
             `).join('');
+        }
+
+        function getDefaultSignatureHTML() {
+            return `<table style="WIDTH: 508px; FONT-SIZE: 10pt; FONT-FAMILY: Arial; MARGIN-TOP: 0px; MARGIN-BOTTOM: 5pt" cellspacing="0" cellpadding="0" border="0"><tbody><tr><td style="FONT-SIZE: 10pt; FONT-FAMILY: Arial; PADDING-BOTTOM: 10px" valign="top"><span style="FONT-SIZE: 14pt"><strong><font color="#152979">${userProfile.displayName || Office.context.mailbox.userProfile.displayName}</font></strong></span><br><span style="font-size: 10pt; color: #9a9a9a;">${userProfile.jobTitle || '[Job Title]'}</span><br><br><span style="font-size: 9pt; color: #9a9a9a;">email. <a href="mailto:${userProfile.email || Office.context.mailbox.userProfile.emailAddress}" style="color: #9a9a9a; text-decoration: none;">${userProfile.email || Office.context.mailbox.userProfile.emailAddress}</a></span></td></tr></tbody></table><table cellspacing="0" cellpadding="0" border="0" style="font-size: 10pt; WIDTH: 508px"><tbody><tr><td valign="top" style="padding-bottom: 10px; padding-top: 10px;"><a href="https://www.simo-online.com/"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" border="0" width="150" height="49" alt="SIMO logo" style="display: block;"></a></td></tr><tr><td valign="top" style="padding-bottom: 10px; padding-top: 10px;"><a href="https://www.linkedin.com/company/simo-online" style="text-decoration: none;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/linkedin-icon.png" border="0" width="32" height="32" alt="LinkedIn" style="display: inline-block; margin-right: 8px;"></a><a href="https://teams.microsoft.com/l/chat/0/0?users=${userProfile.email || Office.context.mailbox.userProfile.emailAddress}" style="text-decoration: none;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/teams-icon.png" border="0" width="32" height="32" alt="Microsoft Teams" style="display: inline-block;"></a></td></tr></tbody></table>`;
+        }
+
+        function getAllMailSignatureHTML() {
+            const defaultSig = getDefaultSignatureHTML();
+            return defaultSig + `<hr style="color: rgb(197, 200, 203); margin-top: 20px;"><p style="color: rgb(197, 200, 203); font-size: 8pt; font-family: Arial; margin-top: 5pt;">Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen. Wenn Sie nicht der beabsichtigte Empfaenger sind, informieren Sie bitte sofort den Absender und loeschen Sie diese E-Mail. Das unbefugte Kopieren dieser E-Mail oder die unbefugte Weitergabe der enthaltenen Informationen ist nicht gestattet. /|/ The information contained in this message is confidential or protected by law. If you are not the intended recipient, please contact the sender and delete this message. Any unauthorised copying of this message or unauthorised distribution of the information contained herein is prohibited.</p><hr style="color: rgb(197, 200, 203);"><p style="color: rgb(197, 200, 203); font-size: 8pt; font-family: Arial; margin-top: 5pt;">Legally required information for business correspondence/ Gesetzliche Pflichtangaben fuer Geschaeftskorrespondenz<br>Unternehmen/Company: SIMO GmbH mit Sitz/with registered seat in Aschaffenburg, Amtsgericht/local court Aschaffenburg HRB 15769, Umsatzsteuer-Identifikationsnummer / VAT-ID DE335322803, Geschaeftsanschrift: Würzburger Straße 152, 63743 Aschaffenburg<br>Geschaeftsfuehrung/Management Board: Thomas Wassum und Andreas O. Schwan</p>`;
+        }
+
+        function applySignature(index) {
+            const signatures = [
+                { html: getDefaultSignatureHTML() },
+                { html: getAllMailSignatureHTML() }
+            ];
+
+            const signatureHTML = signatures[index].html;
+
+            Office.context.mailbox.item.body.setSignatureAsync(
+                signatureHTML,
+                { coercionType: Office.CoercionType.Html },
+                function(asyncResult) {
+                    if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                        alert('Error applying signature: ' + asyncResult.error.message);
+                    } else {
+                        alert('Signature applied successfully!');
+                    }
+                }
+            );
+        }
+
+        function showCustomBuilder() {
+            document.getElementById('mainView').classList.remove('active');
+            document.getElementById('builderView').classList.add('active');
+        }
+
+        function showMainView() {
+            document.getElementById('builderView').classList.remove('active');
+            document.getElementById('mainView').classList.add('active');
         }
 
         function renderTemplates() {
@@ -681,7 +588,7 @@
             let html = '<table cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.5;">';
             
             if (components.logo) {
-                html += '<tr><td style="padding-bottom: 10px;"><img src="https://raw.githubusercontent.com/nikolai-SIMO/simo-signature-addon/main/simo_logo.png" alt="SIMO Logo" style="height: 40px; display: block;"></td></tr>';
+                html += '<tr><td style="padding-bottom: 10px;"><img src="https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png" alt="SIMO Logo" style="height: 40px; display: block;"></td></tr>';
             }
 
             if (customTitle) {
@@ -689,23 +596,23 @@
             }
 
             if (components.name) {
-                html += `<tr><td style="font-weight: bold; font-size: 14px; color: #333; padding-bottom: 4px;">${userInfo.displayName || '[Your Name]'}</td></tr>`;
+                html += `<tr><td style="font-weight: bold; font-size: 14px; color: #333; padding-bottom: 4px;">${userProfile.displayName || Office.context.mailbox.userProfile.displayName}</td></tr>`;
             }
 
             if (components.jobTitle) {
-                html += `<tr><td style="color: #666; padding-bottom: 8px;">${userInfo.jobTitle || '[Job Title]'}</td></tr>`;
+                html += `<tr><td style="color: #666; padding-bottom: 8px;">${userProfile.jobTitle || '[Job Title]'}</td></tr>`;
             }
 
             if (components.email) {
-                html += `<tr><td style="padding-bottom: 4px;"><a href="mailto:${userInfo.mail || 'email@example.com'}" style="color: #3d5875; text-decoration: none;">${userInfo.mail || 'email@example.com'}</a></td></tr>`;
+                html += `<tr><td style="padding-bottom: 4px;"><a href="mailto:${userProfile.email || Office.context.mailbox.userProfile.emailAddress}" style="color: #3d5875; text-decoration: none;">${userProfile.email || Office.context.mailbox.userProfile.emailAddress}</a></td></tr>`;
             }
 
-            if (components.mobilePhone && userInfo.mobilePhone) {
-                html += `<tr><td style="padding-bottom: 4px;">📱 ${userInfo.mobilePhone}</td></tr>`;
+            if (components.mobilePhone && userProfile.mobilePhone) {
+                html += `<tr><td style="padding-bottom: 4px;">📱 ${userProfile.mobilePhone}</td></tr>`;
             }
 
-            if (components.businessPhone && userInfo.businessPhones?.[0]) {
-                html += `<tr><td style="padding-bottom: 4px;">☎️ ${userInfo.businessPhones[0]}</td></tr>`;
+            if (components.businessPhone && userProfile.businessPhones?.[0]) {
+                html += `<tr><td style="padding-bottom: 4px;">☎️ ${userProfile.businessPhones[0]}</td></tr>`;
             }
 
             if (customText) {
@@ -727,22 +634,7 @@
             return html;
         }
 
-        function showCustomBuilder() {
-            document.getElementById('mainView').classList.remove('active');
-            document.getElementById('builderView').classList.add('active');
-            
-            // Initialize preview if template already selected
-            if (selectedTemplate) {
-                updatePreview();
-            }
-        }
-
-        function showMainView() {
-            document.getElementById('builderView').classList.remove('active');
-            document.getElementById('mainView').classList.add('active');
-        }
-
-        async function applyCustomSignature() {
+        function applyCustomSignature() {
             if (!selectedTemplate) {
                 showStatus('Please select a template first', 'error');
                 return;
@@ -752,65 +644,18 @@
             const customText = document.getElementById('customText').value;
             const signatureHTML = generateSignatureHTML(selectedTemplate, selectedComponents, customTitle, customText);
 
-            try {
-                Office.context.mailbox.item.body.setSignatureAsync(
-                    signatureHTML,
-                    { coercionType: Office.CoercionType.Html },
-                    (result) => {
-                        if (result.status === Office.AsyncResultStatus.Succeeded) {
-                            showStatus('✓ Custom signature applied successfully!', 'success');
-                            setTimeout(showMainView, 2000);
-                        } else {
-                            showStatus('❌ Failed to apply signature', 'error');
-                        }
+            Office.context.mailbox.item.body.setSignatureAsync(
+                signatureHTML,
+                { coercionType: Office.CoercionType.Html },
+                function(result) {
+                    if (result.status === Office.AsyncResultStatus.Succeeded) {
+                        showStatus('✓ Custom signature applied successfully!', 'success');
+                        setTimeout(showMainView, 2000);
+                    } else {
+                        showStatus('❌ Failed to apply signature', 'error');
                     }
-                );
-            } catch (error) {
-                showStatus('❌ Error: ' + error.message, 'error');
-            }
-        }
-
-        async function applySignature(index) {
-            const signature = signatures[index];
-            let html = signature.html;
-
-            // Replace placeholders with actual user data
-            const replacements = {
-                '[First name]': userInfo.givenName || '',
-                '[Last name]': userInfo.surname || '',
-                '[Full name]': userInfo.displayName || '',
-                '[Job title]': userInfo.jobTitle || '',
-                '[Email]': userInfo.mail || '',
-                '[Mobile]': userInfo.mobilePhone || '',
-                '[Business phone]': userInfo.businessPhones?.[0] || ''
-            };
-
-            Object.keys(replacements).forEach(placeholder => {
-                html = html.replace(new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), replacements[placeholder]);
-            });
-
-            try {
-                Office.context.mailbox.item.body.setSignatureAsync(
-                    html,
-                    { coercionType: Office.CoercionType.Html },
-                    (result) => {
-                        if (result.status === Office.AsyncResultStatus.Succeeded) {
-                            const statusEl = document.getElementById('mainStatus');
-                            statusEl.className = 'status-bar success';
-                            statusEl.innerHTML = `✓ "${signature.name}" applied successfully!`;
-                            setTimeout(() => updateMainStatus('ready'), 3000);
-                        } else {
-                            const statusEl = document.getElementById('mainStatus');
-                            statusEl.className = 'status-bar error';
-                            statusEl.innerHTML = '❌ Failed to apply signature';
-                        }
-                    }
-                );
-            } catch (error) {
-                const statusEl = document.getElementById('mainStatus');
-                statusEl.className = 'status-bar error';
-                statusEl.innerHTML = '❌ Error: ' + error.message;
-            }
+                }
+            );
         }
 
         function showStatus(message, type) {
