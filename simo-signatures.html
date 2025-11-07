@@ -410,14 +410,6 @@
                             </div>
                             <div class="toggle-switch active" id="toggleSocialMedia" onclick="toggleSetting('showSocialMedia')"></div>
                         </div>
-
-                        <div class="toggle-group">
-                            <div>
-                                <div class="toggle-label">Show Legal Disclaimer</div>
-                                <div class="toggle-description">Include company legal information</div>
-                            </div>
-                            <div class="toggle-switch active" id="toggleLegalDisclaimer" onclick="toggleSetting('showLegalDisclaimer')"></div>
-                        </div>
                     </div>
 
                     <button class="btn btn-primary" onclick="saveSettings()">
@@ -448,8 +440,7 @@
             showPersonalMobile: false,
             showCompanyLandline: true,
             showPersonalEmail: false,
-            showSocialMedia: true,
-            showLegalDisclaimer: true
+            showSocialMedia: true
         };
 
         // Company Constants
@@ -651,7 +642,6 @@
             updateToggle('toggleCompanyLandline', userSettings.showCompanyLandline);
             updateToggle('togglePersonalEmail', userSettings.showPersonalEmail);
             updateToggle('toggleSocialMedia', userSettings.showSocialMedia);
-            updateToggle('toggleLegalDisclaimer', userSettings.showLegalDisclaimer);
         }
 
         function updateToggle(elementId, isActive) {
@@ -714,13 +704,13 @@
             if (userSettings.showCompanyLandline && userSettings.companyLandline) {
                 html += `<span style="color: #9a9a9a;"><a href="tel:${userSettings.companyLandline.replace(/\s/g, '')}" style="color: #9a9a9a; text-decoration: none;">${userSettings.companyLandline}</a></span><br>`;
             }
+            html += `<span style="color: #9a9a9a;">+49 (0)6021 3274550 (Fax)</span><br>`;
             html += `<span style="color: #9a9a9a;"><a href="mailto:${COMPANY_INFO.email}" style="color: #9a9a9a; text-decoration: none;">${COMPANY_INFO.email}</a></span>`;
             html += '</td></tr>';
             
             // Social Media Icons (if enabled)
             if (userSettings.showSocialMedia) {
                 html += '<tr><td style="padding-top: 10px; padding-bottom: 10px;">';
-                html += '<span style="color: #9a9a9a; font-size: 9pt;">Social Media Kanäle SIMO als Icon:</span><br>';
                 html += '<div style="padding-top: 8px; line-height: 0;">';
                 
                 // LinkedIn - using simple PNG
@@ -747,14 +737,6 @@
             }
             
             html += '</tbody></table>';
-            
-            // Legal Disclaimer (if enabled)
-            if (userSettings.showLegalDisclaimer) {
-                html += '<hr style="border: none; border-top: 1px solid #c5c8cb; margin: 20px 0;">';
-                html += `<p style="color: #c5c8cb; font-size: 8pt; font-family: Arial, sans-serif; margin: 5pt 0;">${COMPANY_INFO.legal.confidentiality}</p>`;
-                html += '<hr style="border: none; border-top: 1px solid #c5c8cb; margin: 20px 0;">';
-                html += `<p style="color: #c5c8cb; font-size: 8pt; font-family: Arial, sans-serif; margin: 5pt 0;">${COMPANY_INFO.legal.companyDetails}</p>`;
-            }
             
             return html;
         }
