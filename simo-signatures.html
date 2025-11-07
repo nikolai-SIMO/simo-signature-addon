@@ -38,10 +38,10 @@
 
         .container {
             padding: 20px;
-            padding-bottom: 80px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        /* Loading Screen */
         .loading-screen {
             display: flex;
             flex-direction: column;
@@ -70,163 +70,222 @@
             color: #666;
         }
 
-        /* Tab Navigation */
-        .tab-nav {
-            display: flex;
-            background: white;
-            border: 1px solid #e1e4e8;
-            border-radius: 8px 8px 0 0;
-            overflow: hidden;
-            margin-bottom: 0;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 14px 16px;
-            border: none;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: #666;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .tab-btn:hover {
-            background: #f6f8fa;
-        }
-
-        .tab-btn.active {
-            color: #3d5875;
-            border-bottom-color: #3d5875;
-            background: #fafbfc;
-        }
-
-        /* Views */
-        .view {
+        /* Page Views */
+        .page {
             display: none;
-            background: white;
-            border: 1px solid #e1e4e8;
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            padding: 20px;
         }
 
-        .view.active {
+        .page.active {
             display: block;
         }
 
-        /* Signature Section */
-        .section {
-            background: #fafbfc;
+        /* Card Styles */
+        .card {
+            background: white;
             border: 1px solid #e1e4e8;
             border-radius: 8px;
+            padding: 24px;
             margin-bottom: 20px;
-            overflow: hidden;
         }
 
-        .section-header {
-            background: #f6f8fa;
-            border-bottom: 1px solid #e1e4e8;
-            padding: 12px 16px;
+        .card-title {
+            font-size: 18px;
             font-weight: 600;
-            font-size: 14px;
+            margin-bottom: 16px;
+            color: #3d5875;
         }
 
-        #signatureList {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .signature-btn {
-            background: white;
+        /* Buttons */
+        .btn {
+            padding: 14px 24px;
             border: none;
-            border-bottom: 1px solid #e1e4e8;
-            padding: 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            text-align: left;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        .signature-btn:last-child {
-            border-bottom: none;
-        }
-
-        .signature-btn:hover {
-            background: #f6f8fa;
-        }
-
-        .signature-btn:active {
-            background: #e8f4f8;
-        }
-
-        .signature-icon {
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-
-        .signature-info {
-            flex: 1;
-        }
-
-        .signature-info h3 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: #333;
-        }
-
-        .signature-info p {
-            font-size: 12px;
-            color: #666;
+            gap: 8px;
+            text-decoration: none;
         }
 
         .btn-primary {
             background: #3d5875;
             color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
             width: 100%;
-            transition: background 0.2s;
+            justify-content: center;
         }
 
         .btn-primary:hover {
             background: #2a3f54;
         }
 
+        .btn-secondary {
+            background: white;
+            color: #3d5875;
+            border: 2px solid #3d5875;
+            width: 100%;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #f6f8fa;
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        /* Preview Box */
         .preview-box {
             border: 1px solid #e1e4e8;
             border-radius: 6px;
-            padding: 16px;
-            background: white;
-            max-height: 300px;
+            padding: 20px;
+            background: #fafbfc;
+            margin-top: 16px;
+            max-height: 500px;
             overflow-y: auto;
         }
 
+        .preview-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #666;
+        }
+
+        /* Settings Form */
+        .settings-section {
+            margin-bottom: 32px;
+        }
+
+        .settings-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3d5875;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3d5875;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f9fafb;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .toggle-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch.active {
+            background: #3d5875;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+
+        /* Save Indicator */
         .save-indicator {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: #28a745;
             color: white;
-            padding: 10px 16px;
+            padding: 12px 20px;
             border-radius: 6px;
-            font-size: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             opacity: 0;
             transition: opacity 0.3s;
+            z-index: 1000;
         }
 
         .save-indicator.show {
             opacity: 1;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1565c0;
         }
     </style>
 </head>
@@ -243,215 +302,504 @@
             <div class="loading-text">Initializing add-in...</div>
         </div>
 
-        <!-- Main Content (hidden until Office.js loads) -->
+        <!-- Main Content -->
         <div id="mainContent" style="display: none;">
-            <!-- Tab Navigation -->
-            <div class="tab-nav">
-                <button class="tab-btn active" onclick="switchTab('signatures')">📧 Signatures</button>
+            
+            <!-- Main Page -->
+            <div id="mainPage" class="page active">
+                <div class="card">
+                    <div class="card-title">Your Email Signature</div>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+                        Apply your personalized SIMO signature to your emails. Customize it in Settings.
+                    </p>
+                    
+                    <button class="btn btn-primary" onclick="applySignature()">
+                        <span>📧</span>
+                        <span>Apply Signature</span>
+                    </button>
+                    
+                    <button class="btn btn-secondary" onclick="showSettings()">
+                        <span>⚙️</span>
+                        <span>Signature Settings</span>
+                    </button>
+                </div>
+
+                <!-- Preview Section (Test Mode Only) -->
+                <div id="previewSection" style="display: none;">
+                    <div class="card">
+                        <div class="preview-label">Preview:</div>
+                        <div class="preview-box" id="previewBox"></div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Signatures View -->
-            <div id="signaturesView" class="view active">
-                <div class="section">
-                    <div class="section-header">Pre-configured Signatures</div>
-                    <div id="signatureList">
-                        <!-- Buttons will be added here by JavaScript -->
+            <!-- Settings Page -->
+            <div id="settingsPage" class="page">
+                <button class="btn btn-back" onclick="showMain()">
+                    <span>←</span>
+                    <span>Back to Main</span>
+                </button>
+
+                <div class="card">
+                    <div class="card-title">Signature Settings</div>
+                    
+                    <div class="info-box">
+                        💡 Your name, title, and profile picture are automatically loaded from your Microsoft 365 profile.
                     </div>
+
+                    <!-- Personal Contact Information -->
+                    <div class="settings-section">
+                        <div class="settings-section-title">📞 Contact Information</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Personal Mobile Number</label>
+                            <input type="tel" class="form-input" id="personalMobile" placeholder="e.g., 015758302294">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Company Landline Number</label>
+                            <input type="tel" class="form-input" id="companyLandline" placeholder="e.g., +49 (0)6021 3274550">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Personal Email (if different from Microsoft 365)</label>
+                            <input type="email" class="form-input" id="personalEmail" placeholder="e.g., firstname.lastname@simo-online.com">
+                        </div>
+                    </div>
+
+                    <!-- Toggle Options -->
+                    <div class="settings-section">
+                        <div class="settings-section-title">✨ Signature Elements</div>
+                        
+                        <div class="toggle-group">
+                            <div>
+                                <div class="toggle-label">Show Profile Picture</div>
+                                <div class="toggle-description">Display your Microsoft 365 profile photo</div>
+                            </div>
+                            <div class="toggle-switch" id="toggleProfilePic" onclick="toggleSetting('showProfilePic')"></div>
+                        </div>
+
+                        <div class="toggle-group">
+                            <div>
+                                <div class="toggle-label">Show Personal Mobile</div>
+                                <div class="toggle-description">Display your personal mobile number</div>
+                            </div>
+                            <div class="toggle-switch" id="togglePersonalMobile" onclick="toggleSetting('showPersonalMobile')"></div>
+                        </div>
+
+                        <div class="toggle-group">
+                            <div>
+                                <div class="toggle-label">Show Company Landline</div>
+                                <div class="toggle-description">Display company phone number</div>
+                            </div>
+                            <div class="toggle-switch" id="toggleCompanyLandline" onclick="toggleSetting('showCompanyLandline')"></div>
+                        </div>
+
+                        <div class="toggle-group">
+                            <div>
+                                <div class="toggle-label">Show Personal Email</div>
+                                <div class="toggle-description">Use personal email instead of Microsoft 365 email</div>
+                            </div>
+                            <div class="toggle-switch" id="togglePersonalEmail" onclick="toggleSetting('showPersonalEmail')"></div>
+                        </div>
+
+                        <div class="toggle-group">
+                            <div>
+                                <div class="toggle-label">Show Social Media Icons</div>
+                                <div class="toggle-description">LinkedIn, Teams, Facebook, Instagram, YouTube, TikTok</div>
+                            </div>
+                            <div class="toggle-switch active" id="toggleSocialMedia" onclick="toggleSetting('showSocialMedia')"></div>
+                        </div>
+
+                        <div class="toggle-group">
+                            <div>
+                                <div class="toggle-label">Show Legal Disclaimer</div>
+                                <div class="toggle-description">Include company legal information</div>
+                            </div>
+                            <div class="toggle-switch active" id="toggleLegalDisclaimer" onclick="toggleSetting('showLegalDisclaimer')"></div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="saveSettings()">
+                        <span>💾</span>
+                        <span>Save Settings</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="save-indicator" id="saveIndicator">✓ Signature applied</div>
+    <div class="save-indicator" id="saveIndicator">✓ Settings saved</div>
 
     <script>
         let userProfile = {};
         let isOfficeReady = false;
+        let isTestMode = false;
 
-        // Default settings
+        // User Settings with defaults
         let userSettings = {
-            jobTitle: '',
-            includePhone: false,
-            phone: '',
-            mobile: '',
-            font: 'Arial',
-            nameSize: '14pt',
-            bodySize: '10pt',
-            nameColor: '#152979',
-            titleColor: '#9a9a9a',
-            contactColor: '#9a9a9a',
-            showLinkedIn: true,
-            showTeams: true
+            // Contact Info
+            personalMobile: '',
+            companyLandline: '+49 (0)6021 3274550',
+            personalEmail: '',
+            
+            // Toggle Options
+            showProfilePic: true,
+            showPersonalMobile: false,
+            showCompanyLandline: true,
+            showPersonalEmail: false,
+            showSocialMedia: true,
+            showLegalDisclaimer: true
         };
 
-        // CRITICAL: Dual initialization approach for maximum compatibility
-        Office.onReady(function(info) {
-            console.log('Office.onReady fired', info);
-            initializeAddin();
-        });
-
-        // Fallback for older Office versions
-        Office.initialize = function(reason) {
-            console.log('Office.initialize fired', reason);
-            if (!isOfficeReady) {
-                initializeAddin();
+        // Company Constants
+        const COMPANY_INFO = {
+            name: 'SIMO GmbH',
+            address: 'Würzburger Straße 152',
+            city: '63743 Aschaffenburg',
+            phone: '+49 (0)6021 3274550',
+            email: 'info@simo-online.com',
+            website: 'https://www.simo-online.com',
+            logoUrl: 'https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png',
+            
+            // Social Media Links
+            social: {
+                linkedin: 'https://www.linkedin.com/company/69697053/admin/dashboard/',
+                teams: '', // Will be user-specific
+                facebook: 'https://www.facebook.com/simomakedataeasy',
+                instagram: 'https://www.instagram.com/simo_makedataeasy/',
+                youtube: 'https://www.youtube.com/@SIMOMakeDataEasy',
+                tiktok: 'https://www.tiktok.com/@simo.makedataeasy'
+            },
+            
+            // Legal Info
+            legal: {
+                confidentiality: 'Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen. Wenn Sie nicht der beabsichtigte Empfaenger sind, informieren Sie bitte sofort den Absender und loeschen Sie diese E-Mail. Das unbefugte Kopieren dieser E-Mail oder die unbefugte Weitergabe der enthaltenen Informationen ist nicht gestattet. /|/ The information contained in this message is confidential or protected by law. If you are not the intended recipient, please contact the sender and delete this message. Any unauthorised copying of this message or unauthorised distribution of the information contained herein is prohibited.',
+                
+                companyDetails: 'Legally required information for business correspondence/ Gesetzliche Pflichtangaben fuer Geschaeftskorrespondenz<br>Unternehmen/Company: SIMO GmbH mit Sitz/with registered seat in Aschaffenburg, Amtsgericht/local court Aschaffenburg HRB 15769, Umsatzsteuer-Identifikationsnummer / VAT-ID DE335322803, Geschaeftsanschrift: Würzburger Straße 152, 63743 Aschaffenburg<br>Geschaeftsfuehrung/Management Board: Thomas Wassum und Andreas O. Schwan'
             }
         };
+
+        // ========================================
+        // Environment Detection
+        // ========================================
+        function detectEnvironment() {
+            if (typeof Office !== 'undefined' && Office.context && Office.context.mailbox) {
+                console.log('✅ Running in Outlook');
+                isTestMode = false;
+                return true;
+            } else {
+                console.log('🧪 Running in Browser - Test Mode');
+                isTestMode = true;
+                return false;
+            }
+        }
+
+        // Initialize
+        if (typeof Office !== 'undefined') {
+            Office.onReady(function(info) {
+                if (detectEnvironment()) {
+                    initializeAddin();
+                }
+            });
+
+            Office.initialize = function(reason) {
+                if (!isOfficeReady && detectEnvironment()) {
+                    initializeAddin();
+                }
+            };
+
+            setTimeout(function() {
+                if (!isOfficeReady) {
+                    isTestMode = true;
+                    initializeTestMode();
+                }
+            }, 2000);
+        } else {
+            isTestMode = true;
+            setTimeout(initializeTestMode, 500);
+        }
 
         function initializeAddin() {
             try {
                 isOfficeReady = true;
-                console.log('Initializing SIMO Signatures add-in...');
+                console.log('Initializing in Outlook mode...');
                 
-                // Hide loading, show content
                 document.getElementById('loadingScreen').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
                 
                 loadSettings();
                 getUserProfile();
-                loadSignatures();
+                updateSettingsUI();
                 
                 console.log('Add-in initialized successfully');
             } catch (error) {
-                console.error('Error initializing add-in:', error);
-                document.getElementById('loadingScreen').innerHTML = `
-                    <div style="text-align: center; color: #dc3545;">
-                        <h3>Error Loading Add-in</h3>
-                        <p>${error.message}</p>
-                    </div>
-                `;
+                console.error('Error initializing:', error);
+                isTestMode = true;
+                initializeTestMode();
             }
         }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function initializeTestMode() {
+            console.log('Initializing TEST MODE...');
+            
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('previewSection').style.display = 'block';
+            
+            loadMockUserProfile();
+            loadSettings();
+            updateSettingsUI();
+            
+            console.log('✅ Test mode initialized');
+        }
 
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-            if (tab === 'signatures') {
-                document.getElementById('signaturesView').classList.add('active');
-            }
+        function loadMockUserProfile() {
+            // Mock data for browser testing only - shows generic placeholder
+            // In production, this will be replaced with real Azure profile data
+            userProfile = {
+                displayName: '[Your Name]',
+                jobTitle: '[Your Job Title]',
+                email: '[your.email@simo-online.com]',
+                photoUrl: '' // No photo in test mode
+            };
         }
 
         function getUserProfile() {
             try {
                 userProfile = {
-                    displayName: Office.context.mailbox.userProfile.displayName || '[Your Name]',
-                    email: Office.context.mailbox.userProfile.emailAddress || '[email@example.com]'
+                    displayName: Office.context.mailbox.userProfile.displayName || '',
+                    jobTitle: '', // Will be populated from Microsoft Graph API
+                    email: Office.context.mailbox.userProfile.emailAddress || '',
+                    photoUrl: '' // Will be populated from Microsoft Graph API
                 };
-                console.log('User profile loaded:', userProfile);
+                
+                // Note: Job title and photo need Microsoft Graph API access
+                // These will be empty until Graph API integration is added
+                
+                console.log('User profile loaded from Azure:', userProfile);
             } catch (error) {
-                console.error('Error getting user profile:', error);
+                console.error('Error getting profile:', error);
                 userProfile = {
-                    displayName: '[Your Name]',
-                    email: '[email@example.com]'
+                    displayName: '',
+                    jobTitle: '',
+                    email: '',
+                    photoUrl: ''
                 };
             }
         }
 
+        // ========================================
+        // Navigation
+        // ========================================
+        function showMain() {
+            document.getElementById('mainPage').classList.add('active');
+            document.getElementById('settingsPage').classList.remove('active');
+        }
+
+        function showSettings() {
+            document.getElementById('mainPage').classList.remove('active');
+            document.getElementById('settingsPage').classList.add('active');
+        }
+
+        // ========================================
+        // Settings Management
+        // ========================================
         function loadSettings() {
             try {
                 const saved = localStorage.getItem('simoSignatureSettings');
                 if (saved) {
-                    userSettings = JSON.parse(saved);
+                    userSettings = {...userSettings, ...JSON.parse(saved)};
                 }
             } catch (error) {
                 console.error('Error loading settings:', error);
             }
         }
 
-        function loadSignatures() {
-            const signatureList = document.getElementById('signatureList');
-            
-            const signatures = [
-                {
-                    name: 'Default Signature',
-                    description: 'Standard SIMO employee signature',
-                    icon: '📧'
-                },
-                {
-                    name: 'All Mail Signature',
-                    description: 'Signature with legal disclaimer',
-                    icon: '📄'
-                }
-            ];
-
-            signatureList.innerHTML = signatures.map((sig, index) => `
-                <button class="signature-btn" onclick="applySignature(${index})">
-                    <div class="signature-icon">${sig.icon}</div>
-                    <div class="signature-info">
-                        <h3>${sig.name}</h3>
-                        <p>${sig.description}</p>
-                    </div>
-                </button>
-            `).join('');
-        }
-
-        function getDefaultSignatureHTML() {
-            const jobTitle = userSettings.jobTitle || '[Job Title]';
-            const phone = userSettings.phone || '[Phone]';
-            const mobile = userSettings.mobile || '[Mobile]';
-            
-            let phoneHTML = '';
-            if (userSettings.includePhone) {
-                if (userSettings.phone) {
-                    phoneHTML += `phone. <a href="tel:${phone}" style="color: ${userSettings.contactColor}; text-decoration: none;">${phone}</a><br>`;
-                }
-                if (userSettings.mobile) {
-                    phoneHTML += `mobile. <a href="tel:${mobile}" style="color: ${userSettings.contactColor}; text-decoration: none;">${mobile}</a><br>`;
-                }
-            }
-
-            let socialHTML = '';
-            if (userSettings.showLinkedIn || userSettings.showTeams) {
-                socialHTML = '<tr><td valign="top" style="padding-bottom: 10px; padding-top: 10px;">';
-                if (userSettings.showLinkedIn) {
-                    socialHTML += '<a href="https://www.linkedin.com/company/simo-online" style="text-decoration: none;"><img src="https://nikolai-simo.github.io/simo-signature-addon/linkedin-icon.png" border="0" width="32" height="32" alt="LinkedIn" style="display: inline-block; margin-right: 8px;"></a>';
-                }
-                if (userSettings.showTeams) {
-                    socialHTML += `<a href="https://teams.microsoft.com/l/chat/0/0?users=${userProfile.email}" style="text-decoration: none;"><img src="https://nikolai-simo.github.io/simo-signature-addon/teams-icon.png" border="0" width="32" height="32" alt="Microsoft Teams" style="display: inline-block;"></a>`;
-                }
-                socialHTML += '</td></tr>';
-            }
-
-            return `<table style="WIDTH: 508px; FONT-SIZE: ${userSettings.bodySize}; FONT-FAMILY: ${userSettings.font}; MARGIN-TOP: 0px; MARGIN-BOTTOM: 5pt" cellspacing="0" cellpadding="0" border="0"><tbody><tr><td style="FONT-SIZE: ${userSettings.bodySize}; FONT-FAMILY: ${userSettings.font}; PADDING-BOTTOM: 10px" valign="top"><span style="FONT-SIZE: ${userSettings.nameSize}"><strong><font color="${userSettings.nameColor}">${userProfile.displayName}</font></strong></span><br><span style="font-size: ${userSettings.bodySize}; color: ${userSettings.titleColor};">${jobTitle}</span><br><br><span style="font-size: ${userSettings.bodySize}; color: ${userSettings.contactColor};">${phoneHTML}email. <a href="mailto:${userProfile.email}" style="color: ${userSettings.contactColor}; text-decoration: none;">${userProfile.email}</a></span></td></tr></tbody></table><table cellspacing="0" cellpadding="0" border="0" style="font-size: ${userSettings.bodySize}; WIDTH: 508px"><tbody><tr><td valign="top" style="padding-bottom: 10px; padding-top: 10px;"><a href="https://www.simo-online.com/"><img src="https://nikolai-simo.github.io/simo-signature-addon/simo-logo.png" border="0" width="150" height="49" alt="SIMO logo" style="display: block;"></a></td></tr>${socialHTML}</tbody></table>`;
-        }
-
-        function getAllMailSignatureHTML() {
-            const defaultSig = getDefaultSignatureHTML();
-            return defaultSig + `<hr style="color: rgb(197, 200, 203); margin-top: 20px;"><p style="color: rgb(197, 200, 203); font-size: 8pt; font-family: ${userSettings.font}; margin-top: 5pt;">Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen. Wenn Sie nicht der beabsichtigte Empfaenger sind, informieren Sie bitte sofort den Absender und loeschen Sie diese E-Mail. Das unbefugte Kopieren dieser E-Mail oder die unbefugte Weitergabe der enthaltenen Informationen ist nicht gestattet. /|/ The information contained in this message is confidential or protected by law. If you are not the intended recipient, please contact the sender and delete this message. Any unauthorised copying of this message or unauthorised distribution of the information contained herein is prohibited.</p><hr style="color: rgb(197, 200, 203);"><p style="color: rgb(197, 200, 203); font-size: 8pt; font-family: ${userSettings.font}; margin-top: 5pt;">Legally required information for business correspondence/ Gesetzliche Pflichtangaben fuer Geschaeftskorrespondenz<br>Unternehmen/Company: SIMO GmbH mit Sitz/with registered seat in Aschaffenburg, Amtsgericht/local court Aschaffenburg HRB 15769, Umsatzsteuer-Identifikationsnummer / VAT-ID DE335322803, Geschaeftsanschrift: Würzburger Straße 152, 63743 Aschaffenburg<br>Geschaeftsfuehrung/Management Board: Thomas Wassum und Andreas O. Schwan</p>`;
-        }
-
-        function applySignature(index) {
-            if (!isOfficeReady) {
-                alert('Add-in is still loading. Please wait...');
-                return;
-            }
-
+        function saveSettings() {
             try {
-                const signatures = [
-                    { html: getDefaultSignatureHTML() },
-                    { html: getAllMailSignatureHTML() }
-                ];
-
-                const signatureHTML = signatures[index].html;
-
-                Office.context.mailbox.item.body.setSignatureAsync(
-                    signatureHTML,
-                    { coercionType: Office.CoercionType.Html },
-                    function(asyncResult) {
-                        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-                            alert('Error applying signature: ' + asyncResult.error.message);
-                        } else {
-                            const indicator = document.getElementById('saveIndicator');
-                            indicator.classList.add('show');
-                            setTimeout(() => indicator.classList.remove('show'), 2000);
-                        }
-                    }
-                );
+                // Get form values
+                userSettings.personalMobile = document.getElementById('personalMobile').value;
+                userSettings.companyLandline = document.getElementById('companyLandline').value;
+                userSettings.personalEmail = document.getElementById('personalEmail').value;
+                
+                // Save to localStorage
+                localStorage.setItem('simoSignatureSettings', JSON.stringify(userSettings));
+                
+                // Show success indicator
+                const indicator = document.getElementById('saveIndicator');
+                indicator.textContent = '✓ Settings saved';
+                indicator.classList.add('show');
+                setTimeout(() => indicator.classList.remove('show'), 2000);
+                
+                console.log('Settings saved:', userSettings);
             } catch (error) {
-                alert('Error: ' + error.message);
-                console.error('Error applying signature:', error);
+                console.error('Error saving settings:', error);
+                alert('Error saving settings: ' + error.message);
+            }
+        }
+
+        function updateSettingsUI() {
+            // Update form inputs
+            document.getElementById('personalMobile').value = userSettings.personalMobile || '';
+            document.getElementById('companyLandline').value = userSettings.companyLandline || '';
+            document.getElementById('personalEmail').value = userSettings.personalEmail || '';
+            
+            // Update toggle switches
+            updateToggle('toggleProfilePic', userSettings.showProfilePic);
+            updateToggle('togglePersonalMobile', userSettings.showPersonalMobile);
+            updateToggle('toggleCompanyLandline', userSettings.showCompanyLandline);
+            updateToggle('togglePersonalEmail', userSettings.showPersonalEmail);
+            updateToggle('toggleSocialMedia', userSettings.showSocialMedia);
+            updateToggle('toggleLegalDisclaimer', userSettings.showLegalDisclaimer);
+        }
+
+        function updateToggle(elementId, isActive) {
+            const element = document.getElementById(elementId);
+            if (isActive) {
+                element.classList.add('active');
+            } else {
+                element.classList.remove('active');
+            }
+        }
+
+        function toggleSetting(settingName) {
+            userSettings[settingName] = !userSettings[settingName];
+            updateSettingsUI();
+        }
+
+        // ========================================
+        // Signature Generation
+        // ========================================
+        function generateSignatureHTML() {
+            const displayEmail = userSettings.showPersonalEmail && userSettings.personalEmail 
+                ? userSettings.personalEmail 
+                : userProfile.email;
+            
+            let html = '<table cellspacing="0" cellpadding="0" border="0" style="font-family: Arial, sans-serif; font-size: 10pt;">';
+            html += '<tbody>';
+            
+            // Name and Title
+            html += '<tr><td style="padding-bottom: 10px;">';
+            html += `<span style="font-size: 14pt; color: #152979; font-weight: bold;">${userProfile.displayName}</span><br>`;
+            if (userProfile.jobTitle) {
+                html += `<span style="color: #9a9a9a;">${userProfile.jobTitle}</span><br>`;
+            }
+            html += '</td></tr>';
+            
+            // Profile Picture (if enabled)
+            if (userSettings.showProfilePic && userProfile.photoUrl) {
+                html += '<tr><td style="padding-bottom: 10px;">';
+                html += `<img src="${userProfile.photoUrl}" width="80" height="80" style="border-radius: 50%; display: block;" alt="Profile Photo">`;
+                html += '</td></tr>';
+            }
+            
+            // Contact Information
+            html += '<tr><td style="padding-bottom: 10px;">';
+            html += `<span style="color: #9a9a9a;">email. <a href="mailto:${displayEmail}" style="color: #9a9a9a; text-decoration: none;">${displayEmail}</a></span><br>`;
+            
+            if (userSettings.showPersonalMobile && userSettings.personalMobile) {
+                html += `<span style="color: #9a9a9a;">mobile. <a href="tel:${userSettings.personalMobile}" style="color: #9a9a9a; text-decoration: none;">${userSettings.personalMobile}</a></span><br>`;
+            }
+            html += '</td></tr>';
+            
+            // Company Logo
+            html += '<tr><td style="padding-top: 10px; padding-bottom: 10px;">';
+            html += `<a href="${COMPANY_INFO.website}"><img src="${COMPANY_INFO.logoUrl}" width="150" height="49" alt="SIMO Logo" style="display: block;" border="0"></a>`;
+            html += '</td></tr>';
+            
+            // Company Address and Phone
+            html += '<tr><td style="padding-bottom: 10px;">';
+            html += `<span style="color: #9a9a9a;">${COMPANY_INFO.address}<br>${COMPANY_INFO.city}</span><br>`;
+            if (userSettings.showCompanyLandline && userSettings.companyLandline) {
+                html += `<span style="color: #9a9a9a;"><a href="tel:${userSettings.companyLandline.replace(/\s/g, '')}" style="color: #9a9a9a; text-decoration: none;">${userSettings.companyLandline}</a></span><br>`;
+            }
+            html += `<span style="color: #9a9a9a;"><a href="mailto:${COMPANY_INFO.email}" style="color: #9a9a9a; text-decoration: none;">${COMPANY_INFO.email}</a></span>`;
+            html += '</td></tr>';
+            
+            // Social Media Icons (if enabled)
+            if (userSettings.showSocialMedia) {
+                html += '<tr><td style="padding-top: 10px; padding-bottom: 10px;">';
+                html += '<span style="color: #9a9a9a; font-size: 9pt;">Social Media Kanäle SIMO als Icon:</span><br>';
+                html += '<div style="padding-top: 8px; line-height: 0;">';
+                
+                // LinkedIn - using simple PNG
+                html += `<a href="${COMPANY_INFO.social.linkedin}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" width="32" height="32" alt="LinkedIn" border="0" style="vertical-align: middle;"></a>`;
+                
+                // Teams (user-specific) - using emoji fallback if icon fails
+                const teamsLink = `https://teams.microsoft.com/l/chat/0/0?users=${userProfile.email}`;
+                html += `<a href="${teamsLink}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/microsoft-teams.png" width="32" height="32" alt="Microsoft Teams" border="0" style="vertical-align: middle;"></a>`;
+                
+                // Facebook
+                html += `<a href="${COMPANY_INFO.social.facebook}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/facebook-new.png" width="32" height="32" alt="Facebook" border="0" style="vertical-align: middle;"></a>`;
+                
+                // Instagram
+                html += `<a href="${COMPANY_INFO.social.instagram}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/instagram-new.png" width="32" height="32" alt="Instagram" border="0" style="vertical-align: middle;"></a>`;
+                
+                // YouTube
+                html += `<a href="${COMPANY_INFO.social.youtube}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/youtube-play.png" width="32" height="32" alt="YouTube" border="0" style="vertical-align: middle;"></a>`;
+                
+                // TikTok
+                html += `<a href="${COMPANY_INFO.social.tiktok}" style="text-decoration: none; display: inline-block;"><img src="https://img.icons8.com/color/48/tiktok.png" width="32" height="32" alt="TikTok" border="0" style="vertical-align: middle;"></a>`;
+                
+                html += '</div>';
+                html += '</td></tr>';
+            }
+            
+            html += '</tbody></table>';
+            
+            // Legal Disclaimer (if enabled)
+            if (userSettings.showLegalDisclaimer) {
+                html += '<hr style="border: none; border-top: 1px solid #c5c8cb; margin: 20px 0;">';
+                html += `<p style="color: #c5c8cb; font-size: 8pt; font-family: Arial, sans-serif; margin: 5pt 0;">${COMPANY_INFO.legal.confidentiality}</p>`;
+                html += '<hr style="border: none; border-top: 1px solid #c5c8cb; margin: 20px 0;">';
+                html += `<p style="color: #c5c8cb; font-size: 8pt; font-family: Arial, sans-serif; margin: 5pt 0;">${COMPANY_INFO.legal.companyDetails}</p>`;
+            }
+            
+            return html;
+        }
+
+        // ========================================
+        // Apply Signature
+        // ========================================
+        function applySignature() {
+            const signatureHTML = generateSignatureHTML();
+
+            if (isTestMode) {
+                // TEST MODE: Show preview
+                console.log('Test mode: Showing preview');
+                document.getElementById('previewBox').innerHTML = signatureHTML;
+                
+                const indicator = document.getElementById('saveIndicator');
+                indicator.textContent = '👁️ Preview updated';
+                indicator.classList.add('show');
+                setTimeout(() => indicator.classList.remove('show'), 2000);
+            } else {
+                // OUTLOOK MODE: Apply signature
+                if (!isOfficeReady) {
+                    alert('Add-in is still loading. Please wait...');
+                    return;
+                }
+
+                try {
+                    Office.context.mailbox.item.body.setSignatureAsync(
+                        signatureHTML,
+                        { coercionType: Office.CoercionType.Html },
+                        function(asyncResult) {
+                            if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                                alert('Error applying signature: ' + asyncResult.error.message);
+                            } else {
+                                const indicator = document.getElementById('saveIndicator');
+                                indicator.textContent = '✓ Signature applied';
+                                indicator.classList.add('show');
+                                setTimeout(() => indicator.classList.remove('show'), 2000);
+                            }
+                        }
+                    );
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                    console.error('Error applying signature:', error);
+                }
             }
         }
     </script>
