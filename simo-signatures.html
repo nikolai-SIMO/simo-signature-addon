@@ -304,7 +304,7 @@
 
         <!-- Main Content -->
         <div id="mainContent" style="display: none;">
-            
+
             <!-- Main Page -->
             <div id="mainPage" class="page active">
                 <div class="card">
@@ -312,12 +312,12 @@
                     <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
                         Apply your personalized SIMO signature to your emails. Customize it in Settings.
                     </p>
-                    
+
                     <button class="btn btn-primary" onclick="applySignature()">
                         <span>📧</span>
                         <span>Apply Signature</span>
                     </button>
-                    
+
                     <button class="btn btn-secondary" onclick="showSettings()">
                         <span>⚙️</span>
                         <span>Signature Settings</span>
@@ -342,7 +342,7 @@
 
                 <div class="card">
                     <div class="card-title">Signature Settings</div>
-                    
+
                     <div class="info-box">
                         💡 Your name, title, and profile picture are automatically loaded from your Microsoft 365 profile.
                     </div>
@@ -350,7 +350,7 @@
                     <!-- Personal Contact Information -->
                     <div class="settings-section">
                         <div class="settings-section-title">📞 Contact Information</div>
-                        
+
                         <div class="form-group">
                             <label class="form-label">Personal Mobile Number</label>
                             <input type="tel" class="form-input" id="personalMobile" placeholder="e.g., 015758302294">
@@ -370,7 +370,7 @@
                     <!-- Toggle Options -->
                     <div class="settings-section">
                         <div class="settings-section-title">✨ Signature Elements</div>
-                        
+
                         <div class="toggle-group">
                             <div>
                                 <div class="toggle-label">Show Profile Picture</div>
@@ -434,7 +434,7 @@
             personalMobile: '',
             companyLandline: '+49 (0)6021 3274550',
             personalEmail: '',
-            
+
             // Toggle Options
             showProfilePic: true,
             showPersonalMobile: false,
@@ -452,7 +452,7 @@
             email: 'info@simo-online.com',
             website: 'https://www.simo-online.com',
             logoUrl: 'https://nikolai-SIMO.github.io/simo-signature-addon/simo-logo.png',
-            
+
             // Social Media Links
             social: {
                 linkedin: 'https://www.linkedin.com/company/69697053/admin/dashboard/',
@@ -462,11 +462,11 @@
                 youtube: 'https://www.youtube.com/@SIMOMakeDataEasy',
                 tiktok: 'https://www.tiktok.com/@simo.makedataeasy'
             },
-            
+
             // Legal Info
             legal: {
                 confidentiality: 'Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen. Wenn Sie nicht der beabsichtigte Empfaenger sind, informieren Sie bitte sofort den Absender und loeschen Sie diese E-Mail. Das unbefugte Kopieren dieser E-Mail oder die unbefugte Weitergabe der enthaltenen Informationen ist nicht gestattet. /|/ The information contained in this message is confidential or protected by law. If you are not the intended recipient, please contact the sender and delete this message. Any unauthorised copying of this message or unauthorised distribution of the information contained herein is prohibited.',
-                
+
                 companyDetails: 'Legally required information for business correspondence/ Gesetzliche Pflichtangaben fuer Geschaeftskorrespondenz<br>Unternehmen/Company: SIMO GmbH mit Sitz/with registered seat in Aschaffenburg, Amtsgericht/local court Aschaffenburg HRB 15769, Umsatzsteuer-Identifikationsnummer / VAT-ID DE335322803, Geschaeftsanschrift: Würzburger Straße 152, 63743 Aschaffenburg<br>Geschaeftsfuehrung/Management Board: Thomas Wassum und Andreas O. Schwan'
             }
         };
@@ -515,14 +515,14 @@
             try {
                 isOfficeReady = true;
                 console.log('Initializing in Outlook mode...');
-                
+
                 document.getElementById('loadingScreen').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
-                
+
                 loadSettings();
                 getUserProfile();
                 updateSettingsUI();
-                
+
                 console.log('Add-in initialized successfully');
             } catch (error) {
                 console.error('Error initializing:', error);
@@ -533,15 +533,15 @@
 
         function initializeTestMode() {
             console.log('Initializing TEST MODE...');
-            
+
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
             document.getElementById('previewSection').style.display = 'block';
-            
+
             loadMockUserProfile();
             loadSettings();
             updateSettingsUI();
-            
+
             console.log('✅ Test mode initialized');
         }
 
@@ -564,10 +564,10 @@
                     email: Office.context.mailbox.userProfile.emailAddress || '',
                     photoUrl: '' // Will be populated from Microsoft Graph API
                 };
-                
+
                 // Note: Job title and photo need Microsoft Graph API access
                 // These will be empty until Graph API integration is added
-                
+
                 console.log('User profile loaded from Azure:', userProfile);
             } catch (error) {
                 console.error('Error getting profile:', error);
@@ -613,16 +613,16 @@
                 userSettings.personalMobile = document.getElementById('personalMobile').value;
                 userSettings.companyLandline = document.getElementById('companyLandline').value;
                 userSettings.personalEmail = document.getElementById('personalEmail').value;
-                
+
                 // Save to localStorage
                 localStorage.setItem('simoSignatureSettings', JSON.stringify(userSettings));
-                
+
                 // Show success indicator
                 const indicator = document.getElementById('saveIndicator');
                 indicator.textContent = '✓ Settings saved';
                 indicator.classList.add('show');
                 setTimeout(() => indicator.classList.remove('show'), 2000);
-                
+
                 console.log('Settings saved:', userSettings);
             } catch (error) {
                 console.error('Error saving settings:', error);
@@ -635,7 +635,7 @@
             document.getElementById('personalMobile').value = userSettings.personalMobile || '';
             document.getElementById('companyLandline').value = userSettings.companyLandline || '';
             document.getElementById('personalEmail').value = userSettings.personalEmail || '';
-            
+
             // Update toggle switches
             updateToggle('toggleProfilePic', userSettings.showProfilePic);
             updateToggle('togglePersonalMobile', userSettings.showPersonalMobile);
@@ -662,87 +662,87 @@
         // Signature Generation
         // ========================================
         function generateSignatureHTML() {
-            const displayEmail = userSettings.showPersonalEmail && userSettings.personalEmail 
-                ? userSettings.personalEmail 
+            const displayEmail = userSettings.showPersonalEmail && userSettings.personalEmail
+                ? userSettings.personalEmail
                 : userProfile.email;
-            
+
             let html = '<table cellspacing="0" cellpadding="0" border="0" style="font-family: Arial, sans-serif; font-size: 10pt;">';
             html += '<tbody>';
-            
+
             // Name and Title
             html += '<tr><td style="padding-bottom: 10px;">';
-            html += `<span style="font-size: 14pt; color: #152979; font-weight: bold;">${userProfile.displayName}</span><br>`;
+            html += '<span style="font-size: 14pt; color: #152979; font-weight: bold;">' + userProfile.displayName + '</span><br>';
             if (userProfile.jobTitle) {
-                html += `<span style="color: #9a9a9a;">${userProfile.jobTitle}</span><br>`;
+                html += '<span style="color: #9a9a9a;">' + userProfile.jobTitle + '</span><br>';
             }
             html += '</td></tr>';
-            
+
             // Profile Picture (if enabled)
             if (userSettings.showProfilePic && userProfile.photoUrl) {
                 html += '<tr><td style="padding-bottom: 10px;">';
-                html += `<img src="${userProfile.photoUrl}" width="80" height="80" style="border-radius: 50%; display: block;" alt="Profile Photo">`;
+                html += '<img src="' + userProfile.photoUrl + '" width="80" height="80" style="border-radius: 50%; display: block;" alt="Profile Photo">';
                 html += '</td></tr>';
             }
-            
+
             // Contact Information
             html += '<tr><td style="padding-bottom: 10px;">';
-            html += `<span style="color: #9a9a9a;">email. <a href="mailto:${displayEmail}" style="color: #9a9a9a; text-decoration: none;">${displayEmail}</a></span><br>`;
-            
+            html += '<span style="color: #9a9a9a;">email. <a href="mailto:' + displayEmail + '" style="color: #9a9a9a; text-decoration: none;">' + displayEmail + '</a></span><br>';
+
             if (userSettings.showPersonalMobile && userSettings.personalMobile) {
-                html += `<span style="color: #9a9a9a;">mobile. <a href="tel:${userSettings.personalMobile}" style="color: #9a9a9a; text-decoration: none;">${userSettings.personalMobile}</a></span><br>`;
+                html += '<span style="color: #9a9a9a;">mobile. <a href="tel:' + userSettings.personalMobile + '" style="color: #9a9a9a; text-decoration: none;">' + userSettings.personalMobile + '</a></span><br>';
             }
             html += '</td></tr>';
-            
+
             // Company Logo
             html += '<tr><td style="padding-top: 10px; padding-bottom: 10px;">';
-            html += `<a href="${COMPANY_INFO.website}"><img src="${COMPANY_INFO.logoUrl}" width="150" height="49" alt="SIMO Logo" style="display: block;" border="0"></a>`;
+            html += '<a href="' + COMPANY_INFO.website + '"><img src="' + COMPANY_INFO.logoUrl + '" width="150" height="49" alt="SIMO Logo" style="display: block;" border="0"></a>';
             html += '</td></tr>';
-            
+
             // Company Address and Phone
             html += '<tr><td style="padding-bottom: 10px;">';
-            html += `<span style="color: #9a9a9a;">${COMPANY_INFO.address}<br>${COMPANY_INFO.city}</span><br>`;
+            html += '<span style="color: #9a9a9a;">' + COMPANY_INFO.address + '<br>' + COMPANY_INFO.city + '</span><br>';
             if (userSettings.showCompanyLandline && userSettings.companyLandline) {
-                html += `<span style="color: #9a9a9a;"><a href="tel:${userSettings.companyLandline.replace(/\s/g, '')}" style="color: #9a9a9a; text-decoration: none;">${userSettings.companyLandline}</a></span><br>`;
+                html += '<span style="color: #9a9a9a;"><a href="tel:' + userSettings.companyLandline.replace(/\s/g, '') + '" style="color: #9a9a9a; text-decoration: none;">' + userSettings.companyLandline + '</a></span><br>';
             }
-            html += `<span style="color: #9a9a9a;">+49 (0)6021 3274560 (Fax)</span><br>`;
-            html += `<span style="color: #9a9a9a;"><a href="mailto:${COMPANY_INFO.email}" style="color: #9a9a9a; text-decoration: none;">${COMPANY_INFO.email}</a></span>`;
+            html += '<span style="color: #9a9a9a;">+49 (0)6021 3274560 (Fax)</span><br>';
+            html += '<span style="color: #9a9a9a;"><a href="mailto:' + COMPANY_INFO.email + '" style="color: #9a9a9a; text-decoration: none;">' + COMPANY_INFO.email + '</a></span>';
             html += '</td></tr>';
-            
+
             // Social Media Icons (if enabled)
             if (userSettings.showSocialMedia) {
                 html += '<tr><td style="padding-top: 10px; padding-bottom: 10px;">';
                 html += '<div style="padding-top: 8px; line-height: 0;">';
-                
-                // LinkedIn - using simple PNG
-                html += `<a href="${COMPANY_INFO.social.linkedin}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" width="32" height="32" alt="LinkedIn" border="0" style="vertical-align: middle;"></a>`;
-                
-                // Teams (user-specific) - using emoji fallback if icon fails
-                const teamsLink = `https://teams.microsoft.com/l/chat/0/0?users=${userProfile.email}`;
-                html += `<a href="${teamsLink}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/microsoft-teams.png" width="32" height="32" alt="Microsoft Teams" border="0" style="vertical-align: middle;"></a>`;
-                
+
+                // LinkedIn
+                html += '<a href="' + COMPANY_INFO.social.linkedin + '" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" width="32" height="32" alt="LinkedIn" border="0" style="vertical-align: middle;"></a>';
+
+                // Teams (user-specific)
+                var teamsLink = 'https://teams.microsoft.com/l/chat/0/0?users=' + userProfile.email;
+                html += '<a href="' + teamsLink + '" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/microsoft-teams.png" width="32" height="32" alt="Microsoft Teams" border="0" style="vertical-align: middle;"></a>';
+
                 // Facebook
-                html += `<a href="${COMPANY_INFO.social.facebook}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/facebook-new.png" width="32" height="32" alt="Facebook" border="0" style="vertical-align: middle;"></a>`;
-                
+                html += '<a href="' + COMPANY_INFO.social.facebook + '" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/facebook-new.png" width="32" height="32" alt="Facebook" border="0" style="vertical-align: middle;"></a>';
+
                 // Instagram
-                html += `<a href="${COMPANY_INFO.social.instagram}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/instagram-new.png" width="32" height="32" alt="Instagram" border="0" style="vertical-align: middle;"></a>`;
-                
+                html += '<a href="' + COMPANY_INFO.social.instagram + '" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/instagram-new.png" width="32" height="32" alt="Instagram" border="0" style="vertical-align: middle;"></a>';
+
                 // YouTube
-                html += `<a href="${COMPANY_INFO.social.youtube}" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/youtube-play.png" width="32" height="32" alt="YouTube" border="0" style="vertical-align: middle;"></a>`;
-                
+                html += '<a href="' + COMPANY_INFO.social.youtube + '" style="text-decoration: none; display: inline-block; margin-right: 8px;"><img src="https://img.icons8.com/color/48/youtube-play.png" width="32" height="32" alt="YouTube" border="0" style="vertical-align: middle;"></a>';
+
                 // TikTok
-                html += `<a href="${COMPANY_INFO.social.tiktok}" style="text-decoration: none; display: inline-block;"><img src="https://img.icons8.com/color/48/tiktok.png" width="32" height="32" alt="TikTok" border="0" style="vertical-align: middle;"></a>`;
-                
+                html += '<a href="' + COMPANY_INFO.social.tiktok + '" style="text-decoration: none; display: inline-block;"><img src="https://img.icons8.com/color/48/tiktok.png" width="32" height="32" alt="TikTok" border="0" style="vertical-align: middle;"></a>';
+
                 html += '</div>';
                 html += '</td></tr>';
             }
-            
+
             html += '</tbody></table>';
-            
+
             return html;
         }
 
         // ========================================
-        // Apply Signature
+        // Apply Signature - FIXED VERSION
         // ========================================
         function applySignature() {
             const signatureHTML = generateSignatureHTML();
@@ -751,7 +751,7 @@
                 // TEST MODE: Show preview
                 console.log('Test mode: Showing preview');
                 document.getElementById('previewBox').innerHTML = signatureHTML;
-                
+
                 const indicator = document.getElementById('saveIndicator');
                 indicator.textContent = '👁️ Preview updated';
                 indicator.classList.add('show');
@@ -764,7 +764,10 @@
                 }
 
                 try {
-                    Office.context.mailbox.item.body.setSignatureAsync(
+                    // FIXED: Changed from setSignatureAsync to setSelectedDataAsync
+                    // setSignatureAsync = sets default signature in Outlook settings (WRONG)
+                    // setSelectedDataAsync = inserts at cursor position in email (CORRECT)
+                    Office.context.mailbox.item.body.setSelectedDataAsync(
                         signatureHTML,
                         { coercionType: Office.CoercionType.Html },
                         function(asyncResult) {
