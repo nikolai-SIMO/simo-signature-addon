@@ -361,6 +361,9 @@
                     </div>
 
                     <!-- Debug Panel -->
+                    <button id="debugToggleBtn" class="btn btn-secondary" type="button" style="margin-top: 20px; font-size: 12px; padding: 8px 12px;">
+                        Show Debug Log
+                    </button>
                     <div id="debugPanel" class="debug-panel" role="log" aria-label="Debug information">
                         <strong>Debug Log:</strong><br>
                         <div id="debugLog"></div>
@@ -509,7 +512,7 @@
             PHOTO_SIZE: 80,
             ICON_SIZE: 32,
             STORAGE_KEY: 'simoSignatureSettings',
-            VERSION: '1.0.0.10'
+            VERSION: '1.0.0.11'
         });
 
         var COMPANY_INFO = Object.freeze({
@@ -604,6 +607,7 @@
                 showPersonalEmail: document.getElementById('togglePersonalEmail'),
                 showSocialMedia: document.getElementById('toggleSocialMedia')
             };
+            DOM.debugToggleBtn = document.getElementById('debugToggleBtn');
         }
 
         // ==================== DEBUG LOGGING ====================
@@ -1244,15 +1248,15 @@
                 }
             });
 
-            // Debug panel shortcut
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-                    e.preventDefault();
+            // Debug panel toggle button
+            if (DOM.debugToggleBtn) {
+                DOM.debugToggleBtn.addEventListener('click', function() {
                     if (DOM.debugPanel) {
-                        DOM.debugPanel.classList.toggle('show');
+                        var isShowing = DOM.debugPanel.classList.toggle('show');
+                        DOM.debugToggleBtn.textContent = isShowing ? 'Hide Debug Log' : 'Show Debug Log';
                     }
-                }
-            });
+                });
+            }
         }
 
         // ==================== START ====================
