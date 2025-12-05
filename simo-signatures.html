@@ -509,7 +509,7 @@
             PHOTO_SIZE: 80,
             ICON_SIZE: 32,
             STORAGE_KEY: 'simoSignatureSettings',
-            VERSION: '1.0.0.8'
+            VERSION: '1.0.0.9'
         });
 
         var COMPANY_INFO = Object.freeze({
@@ -961,29 +961,72 @@
 
                 var item = Office.context.mailbox.item;
 
-                if (!item.body || typeof item.body.setSelectedDataAsync !== 'function') {
+                if (!item.body) {
                     throw new Error('Email body API not available. This may be a permissions issue.');
                 }
 
-                item.body.setSelectedDataAsync(
-                    signatureHTML,
-                    { coercionType: Office.CoercionType.Html },
-                    function(asyncResult) {
-                        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                            log('Signature inserted successfully');
-                            showToast('Signature applied!');
-                        } else {
-                            var errorMsg = asyncResult.error ? asyncResult.error.message : 'Unknown error';
-                            log('Failed to insert signature: ' + errorMsg, 'error');
-                            showError('Could not apply signature: ' + errorMsg);
-                            showToast('Failed to apply signature', 'error');
+                // Add separator before signature
+                var signatureWithSeparator = '<br><br>--<br>' + signatureHTML;
+
+                // Try different methods in order of preference
+                // Method 1: prependAsync (adds to end - despite the name, with End location)
+                if (typeof item.body.prependAsync === 'function') {
+                    log('Using prependAsync method...');
+                    item.body.prependAsync(
+                        signatureWithSeparator,
+                        { coercionType: Office.CoercionType.Html },
+                        handleInsertResult
+                    );
+                }
+                // Method 2: setSelectedDataAsync (inserts at cursor)
+                else if (typeof item.body.setSelectedDataAsync === 'function') {
+                    log('Using setSelectedDataAsync method...');
+                    item.body.setSelectedDataAsync(
+                        signatureWithSeparator,
+                        { coercionType: Office.CoercionType.Html },
+                        handleInsertResult
+                    );
+                }
+                // Method 3: getAsync + setAsync (get current body, append signature)
+                else if (typeof item.body.getAsync === 'function' && typeof item.body.setAsync === 'function') {
+                    log('Using getAsync + setAsync method...');
+                    item.body.getAsync(
+                        Office.CoercionType.Html,
+                        function(getResult) {
+                            if (getResult.status === Office.AsyncResultStatus.Succeeded) {
+                                var currentBody = getResult.value || '';
+                                var newBody = currentBody + signatureWithSeparator;
+                                item.body.setAsync(
+                                    newBody,
+                                    { coercionType: Office.CoercionType.Html },
+                                    handleInsertResult
+                                );
+                            } else {
+                                handleInsertResult(getResult);
+                            }
                         }
-                    }
-                );
+                    );
+                }
+                else {
+                    throw new Error('No supported method available to insert signature. Please try a different Outlook version.');
+                }
+
             } catch (e) {
                 log('Exception in applySignature: ' + e.message, 'error');
                 showError(e.message);
                 showToast('Error: ' + e.message, 'error');
+            }
+        }
+
+        function handleInsertResult(asyncResult) {
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+                log('Signature inserted successfully');
+                showToast('Signature applied!');
+            } else {
+                var errorMsg = asyncResult.error ? asyncResult.error.message : 'Unknown error';
+                log('Failed to insert signature: ' + errorMsg, 'error');
+                showError('Could not apply signature: ' + errorMsg);
+                showToast('Failed to apply signature', 'error');
             }
         }
 
