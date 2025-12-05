@@ -503,13 +503,13 @@
 
         // ==================== CONFIGURATION ====================
         var CONFIG = Object.freeze({
-            INIT_TIMEOUT: 5000,
+            INIT_TIMEOUT: 10000,
             TOAST_DURATION: 3000,
             MAX_LOG_ENTRIES: 20,
             PHOTO_SIZE: 80,
             ICON_SIZE: 32,
             STORAGE_KEY: 'simoSignatureSettings',
-            VERSION: '1.0.0.5'
+            VERSION: '1.0.0.7'
         });
 
         var COMPANY_INFO = Object.freeze({
@@ -1051,14 +1051,24 @@
             updatePreview();
             showMainContent();
 
-            showToast('Running in Test Mode - signatures will show in preview only', 'warning');
-            log('Test mode initialization complete');
+            // Don't show intrusive toast, just log it
+            log('Test mode initialization complete - signatures will show in preview only');
         }
 
         function attemptFallbackInit() {
             log('Attempting fallback initialization...');
 
             try {
+                // Log diagnostic info
+                log('Office defined: ' + (typeof Office !== 'undefined'));
+                if (typeof Office !== 'undefined') {
+                    log('Office.context defined: ' + (typeof Office.context !== 'undefined'));
+                    if (Office.context) {
+                        log('Office.context.mailbox defined: ' + (typeof Office.context.mailbox !== 'undefined'));
+                        log('Office.context.host: ' + (Office.context.host || 'undefined'));
+                    }
+                }
+
                 if (typeof Office !== 'undefined' && Office.context && Office.context.mailbox) {
                     log('Office.context.mailbox available via fallback');
                     initializeOutlookMode();
@@ -1090,10 +1100,29 @@
             Office.onReady(function(info) {
                 log('Office.onReady fired. Host: ' + (info.host || 'unknown') + ', Platform: ' + (info.platform || 'unknown'));
 
-                if (info.host === Office.HostType.Outlook) {
+                // Check for Outlook host - handle both string and enum comparison
+                var isOutlook = false;
+                if (info.host) {
+                    // Check string value
+                    if (info.host === 'Outlook' || info.host === 'outlook') {
+                        isOutlook = true;
+                    }
+                    // Check Office.HostType enum if available
+                    if (typeof Office.HostType !== 'undefined' && info.host === Office.HostType.Outlook) {
+                        isOutlook = true;
+                    }
+                }
+
+                // Also check if mailbox context is available (indicates Outlook)
+                if (!isOutlook && Office.context && Office.context.mailbox) {
+                    log('Mailbox context detected, assuming Outlook host');
+                    isOutlook = true;
+                }
+
+                if (isOutlook) {
                     initializeOutlookMode();
                 } else {
-                    log('Not running in Outlook host, starting test mode', 'warn');
+                    log('Not running in Outlook host (host=' + info.host + '), starting test mode', 'warn');
                     initializeTestMode();
                 }
             });
