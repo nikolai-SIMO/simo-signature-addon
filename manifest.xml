@@ -52,7 +52,6 @@
     <Form xsi:type="ItemEdit">
       <DesktopSettings>
         <SourceLocation DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/simo-signatures.html"/>
-        <RequestedHeight>600</RequestedHeight>
       </DesktopSettings>
     </Form>
   </FormSettings>
