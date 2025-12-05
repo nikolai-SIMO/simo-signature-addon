@@ -9,7 +9,7 @@
   <Id>a7f2c8d9-3e4b-4c6d-8f9a-2b5c7d8e9f0a</Id>
 
   <!-- Version - INCREMENT ON EACH UPDATE -->
-  <Version>1.0.0.4</Version>
+  <Version>1.0.0.5</Version>
 
   <!-- Provider Information -->
   <ProviderName>IT-SIMO - Nikolai Noethling</ProviderName>
@@ -57,8 +57,8 @@
     </Form>
   </FormSettings>
 
-  <!-- Permissions -->
-  <Permissions>ReadWriteItem</Permissions>
+  <!-- Permissions - ReadWriteMailbox needed for REST API access to fetch profile photo -->
+  <Permissions>ReadWriteMailbox</Permissions>
 
   <!-- Activation Rule - Compose Mode Only -->
   <Rule xsi:type="RuleCollection" Mode="Or">

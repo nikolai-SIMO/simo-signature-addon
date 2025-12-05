@@ -249,6 +249,116 @@
             }
         });
 
+        // ==================== MICROSOFT GRAPH API ====================
+        function getGraphAccessToken() {
+            return new Promise(function(resolve, reject) {
+                if (typeof Office === 'undefined' || !Office.context || !Office.context.auth) {
+                    log('Office.context.auth not available', 'warn');
+                    reject(new Error('SSO not available'));
+                    return;
+                }
+
+                Office.context.auth.getAccessTokenAsync({ allowSignInPrompt: true, allowConsentPrompt: true }, function(result) {
+                    if (result.status === 'succeeded') {
+                        log('Got SSO token');
+                        resolve(result.value);
+                    } else {
+                        log('SSO token failed: ' + result.error.message, 'error');
+                        reject(new Error(result.error.message));
+                    }
+                });
+            });
+        }
+
+        function fetchUserPhoto() {
+            log('Fetching user photo from Microsoft Graph...');
+
+            getGraphAccessToken()
+                .then(function(bootstrapToken) {
+                    // Exchange bootstrap token for Graph token via your backend
+                    // For now, we'll try using the EWS token approach
+                    return fetchPhotoWithEwsToken();
+                })
+                .catch(function(error) {
+                    log('SSO failed, trying EWS callback token...', 'warn');
+                    return fetchPhotoWithEwsToken();
+                });
+        }
+
+        function fetchPhotoWithEwsToken() {
+            return new Promise(function(resolve, reject) {
+                if (!Office.context || !Office.context.mailbox) {
+                    reject(new Error('Mailbox not available'));
+                    return;
+                }
+
+                // Try to get callback token for REST API
+                Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
+                    if (result.status === 'succeeded') {
+                        var accessToken = result.value;
+                        var restUrl = Office.context.mailbox.restUrl;
+
+                        log('Got REST callback token, fetching photo...');
+
+                        // Fetch user photo
+                        fetch(restUrl + '/v2.0/me/photo/$value', {
+                            headers: {
+                                'Authorization': 'Bearer ' + accessToken
+                            }
+                        })
+                        .then(function(response) {
+                            if (response.ok) {
+                                return response.blob();
+                            } else {
+                                throw new Error('Photo not found (status ' + response.status + ')');
+                            }
+                        })
+                        .then(function(blob) {
+                            var reader = new FileReader();
+                            reader.onloadend = function() {
+                                userProfile.photoUrl = reader.result;
+                                log('Photo loaded successfully');
+                                updatePreview();
+                                resolve(reader.result);
+                            };
+                            reader.readAsDataURL(blob);
+                        })
+                        .catch(function(error) {
+                            log('Error fetching photo: ' + error.message, 'warn');
+                            reject(error);
+                        });
+
+                        // Also fetch job title
+                        fetch(restUrl + '/v2.0/me', {
+                            headers: {
+                                'Authorization': 'Bearer ' + accessToken
+                            }
+                        })
+                        .then(function(response) {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error('Profile fetch failed');
+                        })
+                        .then(function(data) {
+                            if (data.jobTitle) {
+                                userProfile.jobTitle = data.jobTitle;
+                                log('Job title loaded: ' + data.jobTitle);
+                                updatePreview();
+                            }
+                        })
+                        .catch(function(error) {
+                            log('Could not fetch job title: ' + error.message, 'warn');
+                        });
+
+                    } else {
+                        log('Failed to get callback token: ' + result.error.message, 'error');
+                        reject(new Error(result.error.message));
+                    }
+                });
+            });
+        }
+
         // ==================== INITIALIZATION ====================
         function updateStatus(status, text) {
             var badge = document.getElementById('statusBadge');
@@ -371,6 +481,9 @@
             updatePreview();
             showMainContent();
             log('Outlook mode initialization complete');
+
+            // Fetch photo and job title from Microsoft Graph (async)
+            fetchUserPhoto();
         }
 
         function initializeTestMode() {
