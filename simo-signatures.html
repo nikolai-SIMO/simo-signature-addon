@@ -1,229 +1,610 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://appsforoffice.microsoft.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https:;">
     <title>SIMO Email Signatures</title>
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: #f5f7fa; color: #333; }
-        .header { background: #3d5875; color: white; padding: 16px 24px; border-bottom: 3px solid #2a3f54; }
+        /* ==================== CSS VARIABLES ==================== */
+        :root {
+            --color-primary: #3d5875;
+            --color-primary-dark: #2a3f54;
+            --color-secondary: #6c757d;
+            --color-success: #28a745;
+            --color-error: #dc3545;
+            --color-warning: #ffc107;
+            --color-info: #2196f3;
+            --color-text: #333333;
+            --color-text-muted: #666666;
+            --color-text-light: #9a9a9a;
+            --color-background: #f5f7fa;
+            --color-card: #ffffff;
+            --color-border: #e1e4e8;
+            --color-toggle-off: #d1d5db;
+            --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            --border-radius: 6px;
+            --border-radius-lg: 8px;
+            --transition-fast: 0.2s ease;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --focus-ring: 0 0 0 3px rgba(61, 88, 117, 0.3);
+        }
+
+        /* ==================== RESET & BASE ==================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+
+        /* ==================== FOCUS STATES (Accessibility) ==================== */
+        :focus { outline: none; }
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* ==================== SKIP LINK (Accessibility) ==================== */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-primary);
+            color: white;
+            padding: 8px 16px;
+            z-index: 100;
+            transition: top var(--transition-fast);
+        }
+        .skip-link:focus { top: 0; }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            background: var(--color-primary);
+            color: white;
+            padding: 16px 24px;
+            border-bottom: 3px solid var(--color-primary-dark);
+        }
         .header h1 { font-size: 20px; font-weight: 600; }
         .header p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+
+        /* ==================== LAYOUT ==================== */
         .container { padding: 20px; max-width: 800px; margin: 0 auto; }
-        .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 20px; }
-        .spinner { width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #3d5875; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-text { font-size: 14px; color: #666; }
+
+        .loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--color-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text { font-size: 14px; color: var(--color-text-muted); }
+
+        /* ==================== PAGES ==================== */
         .page { display: none; }
         .page.active { display: block; }
-        .card { background: white; border: 1px solid #e1e4e8; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
-        .card-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: #3d5875; }
-        .btn { padding: 14px 24px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-        .btn-primary { background: #3d5875; color: white; width: 100%; justify-content: center; }
-        .btn-primary:hover { background: #2a3f54; }
+
+        /* ==================== CARDS ==================== */
+        .card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--color-primary);
+        }
+
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            width: 100%;
+        }
+        .btn:focus-visible { box-shadow: var(--focus-ring); }
+
+        .btn-primary { background: var(--color-primary); color: white; }
+        .btn-primary:hover { background: var(--color-primary-dark); }
         .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
-        .btn-secondary { background: white; color: #3d5875; border: 2px solid #3d5875; width: 100%; justify-content: center; margin-top: 12px; }
+
+        .btn-secondary {
+            background: var(--color-card);
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            margin-top: 12px;
+        }
         .btn-secondary:hover { background: #f6f8fa; }
-        .btn-back { background: #6c757d; color: white; margin-bottom: 20px; }
+
+        .btn-back {
+            background: var(--color-secondary);
+            color: white;
+            margin-bottom: 20px;
+            width: auto;
+        }
         .btn-back:hover { background: #5a6268; }
-        .preview-box { border: 1px solid #e1e4e8; border-radius: 6px; padding: 20px; background: #fafbfc; margin-top: 16px; max-height: 500px; overflow-y: auto; }
-        .preview-label { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #666; }
+
+        /* ==================== PREVIEW ==================== */
+        .preview-box {
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            background: #fafbfc;
+            margin-top: 16px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        /* ==================== FORMS ==================== */
         .settings-section { margin-bottom: 32px; }
-        .settings-section-title { font-size: 16px; font-weight: 600; color: #3d5875; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e1e4e8; }
+        .settings-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--color-border);
+        }
+
         .form-group { margin-bottom: 16px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #333; }
-        .form-input { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; transition: border-color 0.2s; }
-        .form-input:focus { outline: none; border-color: #3d5875; }
-        .toggle-group { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f9fafb; border: 1px solid #e1e4e8; border-radius: 6px; margin-bottom: 8px; }
-        .toggle-label { font-size: 14px; font-weight: 500; color: #333; }
-        .toggle-description { font-size: 12px; color: #666; margin-top: 2px; }
-        .toggle-switch { position: relative; width: 48px; height: 24px; background: #d1d5db; border-radius: 12px; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
-        .toggle-switch.active { background: #3d5875; }
-        .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.2s; }
-        .toggle-switch.active::after { transform: translateX(24px); }
-        .save-indicator { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 12px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.3s; z-index: 1000; }
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--color-text);
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--color-toggle-off);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: border-color var(--transition-fast);
+        }
+        .form-input:focus { border-color: var(--color-primary); }
+
+        /* ==================== TOGGLE SWITCHES (Accessible) ==================== */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f9fafb;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+        }
+        .toggle-info { flex: 1; }
+        .toggle-label { font-size: 14px; font-weight: 500; color: var(--color-text); }
+        .toggle-description { font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: var(--color-toggle-off);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            flex-shrink: 0;
+            border: none;
+            padding: 0;
+        }
+        .toggle-switch:focus-visible { box-shadow: var(--focus-ring); }
+        .toggle-switch[aria-checked="true"] { background: var(--color-primary); }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+        .toggle-switch[aria-checked="true"]::after { transform: translateX(24px); }
+
+        /* ==================== NOTIFICATIONS ==================== */
+        .save-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--color-success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            role: status;
+            aria-live: polite;
+        }
         .save-indicator.show { opacity: 1; }
-        .save-indicator.error { background: #dc3545; }
-        .info-box { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; color: #1565c0; }
-        .warning-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; color: #856404; }
-        .error-box { background: #f8d7da; border-left: 4px solid #dc3545; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; color: #721c24; }
-        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+        .save-indicator.error { background: var(--color-error); }
+
+        /* ==================== ALERT BOXES ==================== */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            border-left: 4px solid;
+        }
+        .alert-info { background: #e3f2fd; border-color: var(--color-info); color: #1565c0; }
+        .alert-warning { background: #fff3cd; border-color: var(--color-warning); color: #856404; }
+        .alert-error { background: #f8d7da; border-color: var(--color-error); color: #721c24; display: none; }
+
+        /* ==================== STATUS BADGE ==================== */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
         .status-badge.ready { background: #d4edda; color: #155724; }
         .status-badge.loading { background: #fff3cd; color: #856404; }
         .status-badge.error { background: #f8d7da; color: #721c24; }
         .status-badge.test { background: #cce5ff; color: #004085; }
-        .debug-panel { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-top: 20px; font-size: 12px; font-family: monospace; max-height: 150px; overflow-y: auto; display: none; }
+
+        /* ==================== DEBUG PANEL ==================== */
+        .debug-panel {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
         .debug-panel.show { display: block; }
+
+        /* ==================== SCREEN READER ONLY ==================== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>SIMO Email Signatures <span id="statusBadge" class="status-badge loading">Loading...</span></h1>
+    <!-- Skip Link for Accessibility -->
+    <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+    <header class="header" role="banner">
+        <h1>SIMO Email Signatures <span id="statusBadge" class="status-badge loading" role="status" aria-live="polite">Loading...</span></h1>
         <p>Professional signatures for your organization</p>
-    </div>
+    </header>
 
-    <div id="loadingScreen" class="loading-screen">
-        <div class="spinner"></div>
-        <div class="loading-text" id="loadingText">Initializing add-in...</div>
-    </div>
+    <main id="mainContent" role="main">
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="loading-screen" aria-busy="true" aria-label="Loading application">
+            <div class="spinner" role="img" aria-label="Loading spinner"></div>
+            <div class="loading-text" id="loadingText" aria-live="polite">Initializing add-in...</div>
+        </div>
 
-    <div id="mainContent" style="display: none;">
-        <div class="container">
-            <!-- Error Display -->
-            <div id="errorDisplay" class="error-box" style="display: none;"></div>
+        <!-- Application Content -->
+        <div id="appContent" style="display: none;">
+            <div class="container">
+                <!-- Error Display -->
+                <div id="errorDisplay" class="alert alert-error" role="alert" aria-live="assertive"></div>
 
-            <!-- Main Page -->
-            <div id="mainPage" class="page active">
-                <div class="card">
-                    <h2 class="card-title">Your Email Signature</h2>
-                    <p style="margin-bottom: 16px;">Apply your personalized SIMO signature to your emails. Customize it in Settings.</p>
-                    <button id="applyBtn" class="btn btn-primary" onclick="applySignature()">Apply Signature</button>
-                    <button class="btn btn-secondary" onclick="showSettings()">Signature Settings</button>
-                </div>
-
-                <div class="card">
-                    <h3 class="card-title">Preview</h3>
-                    <div class="preview-box" id="previewBox">
-                        <p style="color: #666; font-style: italic;">Click "Apply Signature" to see preview</p>
-                    </div>
-                </div>
-
-                <!-- Debug Panel (hidden by default, toggle with Ctrl+Shift+D) -->
-                <div id="debugPanel" class="debug-panel">
-                    <strong>Debug Log:</strong><br>
-                    <div id="debugLog"></div>
-                </div>
-            </div>
-
-            <!-- Settings Page -->
-            <div id="settingsPage" class="page">
-                <button class="btn btn-back" onclick="showMain()">Back to Main</button>
-
-                <div class="card">
-                    <h2 class="card-title">Signature Settings</h2>
-
-                    <div class="info-box">
-                        Your name and email are automatically loaded from your Microsoft 365 profile.
+                <!-- Main Page -->
+                <section id="mainPage" class="page active" aria-labelledby="mainPageTitle">
+                    <div class="card">
+                        <h2 id="mainPageTitle" class="card-title">Your Email Signature</h2>
+                        <p style="margin-bottom: 16px;">Apply your personalized SIMO signature to your emails. Customize it in Settings.</p>
+                        <button id="applyBtn" class="btn btn-primary" type="button" aria-describedby="applyBtnDesc">
+                            Apply Signature
+                        </button>
+                        <span id="applyBtnDesc" class="sr-only">Insert your signature into the current email</span>
+                        <button id="settingsBtn" class="btn btn-secondary" type="button">
+                            Signature Settings
+                        </button>
                     </div>
 
-                    <!-- Contact Information Section -->
-                    <div class="settings-section">
-                        <h3 class="settings-section-title">Contact Information</h3>
-
-                        <div class="form-group">
-                            <label class="form-label">Personal Mobile Number</label>
-                            <input type="tel" id="personalMobile" class="form-input" placeholder="+49 (0)123 456789">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Company Landline Number</label>
-                            <input type="tel" id="companyLandline" class="form-input" placeholder="+49 (0)6021 3274550">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Personal Email (if different from Microsoft 365)</label>
-                            <input type="email" id="personalEmail" class="form-input" placeholder="your.email@example.com">
+                    <div class="card">
+                        <h3 class="card-title">Preview</h3>
+                        <div id="previewBox" class="preview-box" role="region" aria-label="Signature preview" aria-live="polite">
+                            <p style="color: #666; font-style: italic;">Loading signature preview...</p>
                         </div>
                     </div>
 
-                    <!-- Signature Elements Section -->
-                    <div class="settings-section">
-                        <h3 class="settings-section-title">Signature Elements</h3>
-
-                        <div class="toggle-group">
-                            <div>
-                                <div class="toggle-label">Show Profile Picture</div>
-                                <div class="toggle-description">Display your Microsoft 365 profile photo</div>
-                            </div>
-                            <div id="toggleProfilePic" class="toggle-switch" onclick="toggleSetting('showProfilePic')"></div>
-                        </div>
-
-                        <div class="toggle-group">
-                            <div>
-                                <div class="toggle-label">Show Personal Mobile</div>
-                                <div class="toggle-description">Display your personal mobile number</div>
-                            </div>
-                            <div id="togglePersonalMobile" class="toggle-switch" onclick="toggleSetting('showPersonalMobile')"></div>
-                        </div>
-
-                        <div class="toggle-group">
-                            <div>
-                                <div class="toggle-label">Show Company Landline</div>
-                                <div class="toggle-description">Display company phone number</div>
-                            </div>
-                            <div id="toggleCompanyLandline" class="toggle-switch" onclick="toggleSetting('showCompanyLandline')"></div>
-                        </div>
-
-                        <div class="toggle-group">
-                            <div>
-                                <div class="toggle-label">Show Personal Email</div>
-                                <div class="toggle-description">Use personal email instead of Microsoft 365 email</div>
-                            </div>
-                            <div id="togglePersonalEmail" class="toggle-switch" onclick="toggleSetting('showPersonalEmail')"></div>
-                        </div>
-
-                        <div class="toggle-group">
-                            <div>
-                                <div class="toggle-label">Show Social Media Icons</div>
-                                <div class="toggle-description">LinkedIn, Teams, Facebook, Instagram, YouTube, TikTok</div>
-                            </div>
-                            <div id="toggleSocialMedia" class="toggle-switch" onclick="toggleSetting('showSocialMedia')"></div>
-                        </div>
+                    <!-- Debug Panel -->
+                    <div id="debugPanel" class="debug-panel" role="log" aria-label="Debug information">
+                        <strong>Debug Log:</strong><br>
+                        <div id="debugLog"></div>
                     </div>
+                </section>
 
-                    <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
-                </div>
+                <!-- Settings Page -->
+                <section id="settingsPage" class="page" aria-labelledby="settingsPageTitle">
+                    <button id="backBtn" class="btn btn-back" type="button" aria-label="Go back to main page">
+                        &larr; Back to Main
+                    </button>
+
+                    <div class="card">
+                        <h2 id="settingsPageTitle" class="card-title">Signature Settings</h2>
+
+                        <div class="alert alert-info" role="note">
+                            Your name and email are automatically loaded from your Microsoft 365 profile.
+                        </div>
+
+                        <!-- Contact Information Section -->
+                        <fieldset class="settings-section">
+                            <legend class="settings-section-title">Contact Information</legend>
+
+                            <div class="form-group">
+                                <label class="form-label" for="personalMobile">Personal Mobile Number</label>
+                                <input type="tel"
+                                       id="personalMobile"
+                                       class="form-input"
+                                       placeholder="+49 (0)123 456789"
+                                       autocomplete="tel">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="companyLandline">Company Landline Number</label>
+                                <input type="tel"
+                                       id="companyLandline"
+                                       class="form-input"
+                                       placeholder="+49 (0)6021 3274550"
+                                       autocomplete="tel">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="personalEmail">Personal Email (if different from Microsoft 365)</label>
+                                <input type="email"
+                                       id="personalEmail"
+                                       class="form-input"
+                                       placeholder="your.email@example.com"
+                                       autocomplete="email">
+                            </div>
+                        </fieldset>
+
+                        <!-- Signature Elements Section -->
+                        <fieldset class="settings-section">
+                            <legend class="settings-section-title">Signature Elements</legend>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label" id="labelProfilePic">Show Profile Picture</div>
+                                    <div class="toggle-description">Display your Microsoft 365 profile photo</div>
+                                </div>
+                                <button type="button"
+                                        id="toggleProfilePic"
+                                        class="toggle-switch"
+                                        role="switch"
+                                        aria-checked="true"
+                                        aria-labelledby="labelProfilePic"
+                                        data-setting="showProfilePic"></button>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label" id="labelPersonalMobile">Show Personal Mobile</div>
+                                    <div class="toggle-description">Display your personal mobile number</div>
+                                </div>
+                                <button type="button"
+                                        id="togglePersonalMobile"
+                                        class="toggle-switch"
+                                        role="switch"
+                                        aria-checked="false"
+                                        aria-labelledby="labelPersonalMobile"
+                                        data-setting="showPersonalMobile"></button>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label" id="labelCompanyLandline">Show Company Landline</div>
+                                    <div class="toggle-description">Display company phone number</div>
+                                </div>
+                                <button type="button"
+                                        id="toggleCompanyLandline"
+                                        class="toggle-switch"
+                                        role="switch"
+                                        aria-checked="true"
+                                        aria-labelledby="labelCompanyLandline"
+                                        data-setting="showCompanyLandline"></button>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label" id="labelPersonalEmail">Show Personal Email</div>
+                                    <div class="toggle-description">Use personal email instead of Microsoft 365 email</div>
+                                </div>
+                                <button type="button"
+                                        id="togglePersonalEmail"
+                                        class="toggle-switch"
+                                        role="switch"
+                                        aria-checked="false"
+                                        aria-labelledby="labelPersonalEmail"
+                                        data-setting="showPersonalEmail"></button>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label" id="labelSocialMedia">Show Social Media Icons</div>
+                                    <div class="toggle-description">LinkedIn, Teams, Facebook, Instagram, YouTube, TikTok</div>
+                                </div>
+                                <button type="button"
+                                        id="toggleSocialMedia"
+                                        class="toggle-switch"
+                                        role="switch"
+                                        aria-checked="true"
+                                        aria-labelledby="labelSocialMedia"
+                                        data-setting="showSocialMedia"></button>
+                            </div>
+                        </fieldset>
+
+                        <button id="saveBtn" class="btn btn-primary" type="button">Save Settings</button>
+                    </div>
+                </section>
             </div>
         </div>
-    </div>
+    </main>
 
-    <div id="saveIndicator" class="save-indicator"></div>
+    <!-- Toast Notification -->
+    <div id="saveIndicator" class="save-indicator" role="status" aria-live="polite"></div>
 
     <script>
-        // ==================== GLOBAL STATE ====================
-        var userProfile = {
-            displayName: '',
-            jobTitle: '',
-            email: '',
-            photoUrl: ''
-        };
+    (function() {
+        'use strict';
 
-        var appState = {
-            isOfficeReady: false,
-            isInitialized: false,
-            mode: 'unknown', // 'outlook', 'test', 'error'
-            lastError: null
-        };
+        // ==================== CONFIGURATION ====================
+        var CONFIG = Object.freeze({
+            INIT_TIMEOUT: 5000,
+            TOAST_DURATION: 3000,
+            MAX_LOG_ENTRIES: 20,
+            PHOTO_SIZE: 80,
+            ICON_SIZE: 32,
+            STORAGE_KEY: 'simoSignatureSettings',
+            VERSION: '1.0.0.5'
+        });
 
-        var userSettings = {
-            personalMobile: '',
-            companyLandline: '+49 (0)6021 3274550',
-            personalEmail: '',
-            showProfilePic: true,
-            showPersonalMobile: false,
-            showCompanyLandline: true,
-            showPersonalEmail: false,
-            showSocialMedia: true
-        };
-
-        var COMPANY_INFO = {
+        var COMPANY_INFO = Object.freeze({
             name: 'SIMO GmbH',
             address: 'Wuerzburger Strasse 152',
             city: '63743 Aschaffenburg',
             phone: '+49 (0)6021 3274550',
+            fax: '+49 (0)6021 3274560',
             email: 'info@simo-online.com',
             website: 'https://www.simo-online.com',
             logoUrl: 'https://nikolai-simo.github.io/simo-signature-addon/simo-logo.png',
-            social: {
+            social: Object.freeze({
                 linkedin: 'https://www.linkedin.com/company/69697053/',
                 facebook: 'https://www.facebook.com/simomakedataeasy',
                 instagram: 'https://www.instagram.com/simo_makedataeasy/',
                 youtube: 'https://www.youtube.com/@SIMOMakeDataEasy',
                 tiktok: 'https://www.tiktok.com/@simo.makedataeasy'
+            })
+        });
+
+        var SOCIAL_ICONS = Object.freeze([
+            { id: 'linkedin', url: COMPANY_INFO.social.linkedin, icon: 'https://nikolai-simo.github.io/simo-signature-addon/icons/linkedin.png', alt: 'LinkedIn' },
+            { id: 'teams', url: null, icon: 'https://nikolai-simo.github.io/simo-signature-addon/icons/teams.png', alt: 'Microsoft Teams', dynamic: true },
+            { id: 'facebook', url: COMPANY_INFO.social.facebook, icon: 'https://nikolai-simo.github.io/simo-signature-addon/icons/facebook.png', alt: 'Facebook' },
+            { id: 'instagram', url: COMPANY_INFO.social.instagram, icon: 'https://nikolai-simo.github.io/simo-signature-addon/icons/instagram.png', alt: 'Instagram' },
+            { id: 'youtube', url: COMPANY_INFO.social.youtube, icon: 'https://nikolai-simo.github.io/simo-signature-addon/icons/youtube.png', alt: 'YouTube' },
+            { id: 'tiktok', url: COMPANY_INFO.social.tiktok, icon: 'https://nikolai-simo.github.io/simo-signature-addon/icons/tiktok.png', alt: 'TikTok' }
+        ]);
+
+        // Fallback to icons8 if self-hosted not available
+        var SOCIAL_ICONS_FALLBACK = Object.freeze({
+            linkedin: 'https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg',
+            teams: 'https://img.icons8.com/color/48/microsoft-teams.png',
+            facebook: 'https://img.icons8.com/color/48/facebook-new.png',
+            instagram: 'https://img.icons8.com/color/48/instagram-new.png',
+            youtube: 'https://img.icons8.com/color/48/youtube-play.png',
+            tiktok: 'https://img.icons8.com/color/48/tiktok.png'
+        });
+
+        // ==================== STATE ====================
+        var state = {
+            app: {
+                isOfficeReady: false,
+                isInitialized: false,
+                mode: 'unknown',
+                lastError: null
+            },
+            user: {
+                displayName: '',
+                jobTitle: '',
+                email: '',
+                photoUrl: ''
+            },
+            settings: {
+                personalMobile: '',
+                companyLandline: '+49 (0)6021 3274550',
+                personalEmail: '',
+                showProfilePic: true,
+                showPersonalMobile: false,
+                showCompanyLandline: true,
+                showPersonalEmail: false,
+                showSocialMedia: true
             }
         };
+
+        // ==================== DOM CACHE ====================
+        var DOM = {};
+
+        function cacheDOM() {
+            DOM.loadingScreen = document.getElementById('loadingScreen');
+            DOM.loadingText = document.getElementById('loadingText');
+            DOM.appContent = document.getElementById('appContent');
+            DOM.mainPage = document.getElementById('mainPage');
+            DOM.settingsPage = document.getElementById('settingsPage');
+            DOM.previewBox = document.getElementById('previewBox');
+            DOM.errorDisplay = document.getElementById('errorDisplay');
+            DOM.statusBadge = document.getElementById('statusBadge');
+            DOM.saveIndicator = document.getElementById('saveIndicator');
+            DOM.debugPanel = document.getElementById('debugPanel');
+            DOM.debugLog = document.getElementById('debugLog');
+            DOM.applyBtn = document.getElementById('applyBtn');
+            DOM.settingsBtn = document.getElementById('settingsBtn');
+            DOM.backBtn = document.getElementById('backBtn');
+            DOM.saveBtn = document.getElementById('saveBtn');
+            DOM.personalMobile = document.getElementById('personalMobile');
+            DOM.companyLandline = document.getElementById('companyLandline');
+            DOM.personalEmail = document.getElementById('personalEmail');
+            DOM.toggles = {
+                showProfilePic: document.getElementById('toggleProfilePic'),
+                showPersonalMobile: document.getElementById('togglePersonalMobile'),
+                showCompanyLandline: document.getElementById('toggleCompanyLandline'),
+                showPersonalEmail: document.getElementById('togglePersonalEmail'),
+                showSocialMedia: document.getElementById('toggleSocialMedia')
+            };
+        }
 
         // ==================== DEBUG LOGGING ====================
         var debugLogs = [];
@@ -233,205 +614,452 @@
             var timestamp = new Date().toLocaleTimeString();
             var logEntry = '[' + timestamp + '] [' + type.toUpperCase() + '] ' + message;
             debugLogs.push(logEntry);
+
+            if (debugLogs.length > CONFIG.MAX_LOG_ENTRIES) {
+                debugLogs.shift();
+            }
+
             console.log(logEntry);
-
-            var debugLog = document.getElementById('debugLog');
-            if (debugLog) {
-                debugLog.innerHTML = debugLogs.slice(-20).join('<br>');
-            }
+            updateDebugPanel();
         }
 
-        // Toggle debug panel with Ctrl+Shift+D
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-                var panel = document.getElementById('debugPanel');
-                panel.classList.toggle('show');
+        function updateDebugPanel() {
+            if (!DOM.debugLog) return;
+
+            // Safe DOM update without innerHTML
+            while (DOM.debugLog.firstChild) {
+                DOM.debugLog.removeChild(DOM.debugLog.firstChild);
             }
-        });
 
-        // ==================== MICROSOFT GRAPH API ====================
-        function getGraphAccessToken() {
-            return new Promise(function(resolve, reject) {
-                if (typeof Office === 'undefined' || !Office.context || !Office.context.auth) {
-                    log('Office.context.auth not available', 'warn');
-                    reject(new Error('SSO not available'));
-                    return;
-                }
-
-                Office.context.auth.getAccessTokenAsync({ allowSignInPrompt: true, allowConsentPrompt: true }, function(result) {
-                    if (result.status === 'succeeded') {
-                        log('Got SSO token');
-                        resolve(result.value);
-                    } else {
-                        log('SSO token failed: ' + result.error.message, 'error');
-                        reject(new Error(result.error.message));
-                    }
-                });
+            debugLogs.forEach(function(entry) {
+                var div = document.createElement('div');
+                div.textContent = entry;
+                DOM.debugLog.appendChild(div);
             });
         }
 
-        function fetchUserPhoto() {
-            log('Fetching user photo from Microsoft Graph...');
-
-            getGraphAccessToken()
-                .then(function(bootstrapToken) {
-                    // Exchange bootstrap token for Graph token via your backend
-                    // For now, we'll try using the EWS token approach
-                    return fetchPhotoWithEwsToken();
-                })
-                .catch(function(error) {
-                    log('SSO failed, trying EWS callback token...', 'warn');
-                    return fetchPhotoWithEwsToken();
-                });
+        // ==================== UTILITY FUNCTIONS ====================
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
-        function fetchPhotoWithEwsToken() {
-            return new Promise(function(resolve, reject) {
-                if (!Office.context || !Office.context.mailbox) {
-                    reject(new Error('Mailbox not available'));
-                    return;
-                }
-
-                // Try to get callback token for REST API
-                Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
-                    if (result.status === 'succeeded') {
-                        var accessToken = result.value;
-                        var restUrl = Office.context.mailbox.restUrl;
-
-                        log('Got REST callback token, fetching photo...');
-
-                        // Fetch user photo
-                        fetch(restUrl + '/v2.0/me/photo/$value', {
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken
-                            }
-                        })
-                        .then(function(response) {
-                            if (response.ok) {
-                                return response.blob();
-                            } else {
-                                throw new Error('Photo not found (status ' + response.status + ')');
-                            }
-                        })
-                        .then(function(blob) {
-                            var reader = new FileReader();
-                            reader.onloadend = function() {
-                                userProfile.photoUrl = reader.result;
-                                log('Photo loaded successfully');
-                                updatePreview();
-                                resolve(reader.result);
-                            };
-                            reader.readAsDataURL(blob);
-                        })
-                        .catch(function(error) {
-                            log('Error fetching photo: ' + error.message, 'warn');
-                            reject(error);
-                        });
-
-                        // Also fetch job title
-                        fetch(restUrl + '/v2.0/me', {
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken
-                            }
-                        })
-                        .then(function(response) {
-                            if (response.ok) {
-                                return response.json();
-                            }
-                            throw new Error('Profile fetch failed');
-                        })
-                        .then(function(data) {
-                            if (data.jobTitle) {
-                                userProfile.jobTitle = data.jobTitle;
-                                log('Job title loaded: ' + data.jobTitle);
-                                updatePreview();
-                            }
-                        })
-                        .catch(function(error) {
-                            log('Could not fetch job title: ' + error.message, 'warn');
-                        });
-
-                    } else {
-                        log('Failed to get callback token: ' + result.error.message, 'error');
-                        reject(new Error(result.error.message));
-                    }
-                });
-            });
+        function debounce(func, wait) {
+            var timeout;
+            return function() {
+                var context = this;
+                var args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    func.apply(context, args);
+                }, wait);
+            };
         }
 
-        // ==================== INITIALIZATION ====================
+        function sanitizePhoneNumber(phone) {
+            return phone ? phone.replace(/[^\d+\-\(\)\s]/g, '') : '';
+        }
+
+        // ==================== UI FUNCTIONS ====================
         function updateStatus(status, text) {
-            var badge = document.getElementById('statusBadge');
-            badge.className = 'status-badge ' + status;
-            badge.textContent = text;
+            if (!DOM.statusBadge) return;
+            DOM.statusBadge.className = 'status-badge ' + status;
+            DOM.statusBadge.textContent = text;
         }
 
         function updateLoadingText(text) {
-            var loadingText = document.getElementById('loadingText');
-            if (loadingText) {
-                loadingText.textContent = text;
+            if (DOM.loadingText) {
+                DOM.loadingText.textContent = text;
             }
         }
 
         function showError(message) {
-            var errorDisplay = document.getElementById('errorDisplay');
-            errorDisplay.textContent = message;
-            errorDisplay.style.display = 'block';
+            if (!DOM.errorDisplay) return;
+            DOM.errorDisplay.textContent = message;
+            DOM.errorDisplay.style.display = 'block';
             log(message, 'error');
         }
 
         function hideError() {
-            var errorDisplay = document.getElementById('errorDisplay');
-            errorDisplay.style.display = 'none';
+            if (DOM.errorDisplay) {
+                DOM.errorDisplay.style.display = 'none';
+            }
         }
 
         function showMainContent() {
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
+            if (DOM.loadingScreen) DOM.loadingScreen.style.display = 'none';
+            if (DOM.appContent) DOM.appContent.style.display = 'block';
         }
 
-        // Main initialization function
-        function initialize() {
-            log('Starting initialization...');
-            updateLoadingText('Checking Office.js...');
+        function showPage(pageName) {
+            if (DOM.mainPage) DOM.mainPage.classList.remove('active');
+            if (DOM.settingsPage) DOM.settingsPage.classList.remove('active');
 
-            // Check if Office.js is available
-            if (typeof Office === 'undefined') {
-                log('Office.js not loaded, starting test mode', 'warn');
-                initializeTestMode();
+            if (pageName === 'main' && DOM.mainPage) {
+                DOM.mainPage.classList.add('active');
+                updatePreview();
+            } else if (pageName === 'settings' && DOM.settingsPage) {
+                DOM.settingsPage.classList.add('active');
+            }
+        }
+
+        var toastTimeout;
+        function showToast(message, type) {
+            type = type || 'success';
+            if (!DOM.saveIndicator) return;
+
+            clearTimeout(toastTimeout);
+            DOM.saveIndicator.textContent = message;
+            DOM.saveIndicator.className = 'save-indicator show' + (type === 'error' ? ' error' : '');
+
+            toastTimeout = setTimeout(function() {
+                DOM.saveIndicator.classList.remove('show');
+            }, CONFIG.TOAST_DURATION);
+        }
+
+        // ==================== SETTINGS MANAGEMENT ====================
+        function loadSettings() {
+            try {
+                var saved = localStorage.getItem(CONFIG.STORAGE_KEY);
+                if (saved) {
+                    var parsed = JSON.parse(saved);
+                    Object.keys(parsed).forEach(function(key) {
+                        if (state.settings.hasOwnProperty(key)) {
+                            // Sanitize input
+                            if (key === 'personalMobile' || key === 'companyLandline') {
+                                state.settings[key] = sanitizePhoneNumber(parsed[key]);
+                            } else if (typeof state.settings[key] === 'boolean') {
+                                state.settings[key] = Boolean(parsed[key]);
+                            } else {
+                                state.settings[key] = String(parsed[key] || '');
+                            }
+                        }
+                    });
+                    log('Settings loaded from localStorage');
+                }
+            } catch (e) {
+                log('Error loading settings: ' + e.message, 'error');
+            }
+        }
+
+        function saveSettings() {
+            try {
+                state.settings.personalMobile = sanitizePhoneNumber(DOM.personalMobile.value);
+                state.settings.companyLandline = sanitizePhoneNumber(DOM.companyLandline.value);
+                state.settings.personalEmail = DOM.personalEmail.value.trim();
+
+                localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(state.settings));
+                showToast('Settings saved');
+                log('Settings saved');
+                updatePreview();
+            } catch (e) {
+                log('Error saving settings: ' + e.message, 'error');
+                showToast('Error saving settings', 'error');
+            }
+        }
+
+        function updateSettingsUI() {
+            if (DOM.personalMobile) DOM.personalMobile.value = state.settings.personalMobile || '';
+            if (DOM.companyLandline) DOM.companyLandline.value = state.settings.companyLandline || '';
+            if (DOM.personalEmail) DOM.personalEmail.value = state.settings.personalEmail || '';
+
+            Object.keys(DOM.toggles).forEach(function(key) {
+                var toggle = DOM.toggles[key];
+                if (toggle) {
+                    var isChecked = state.settings[key];
+                    toggle.setAttribute('aria-checked', isChecked ? 'true' : 'false');
+                }
+            });
+        }
+
+        function toggleSetting(settingName) {
+            state.settings[settingName] = !state.settings[settingName];
+            updateSettingsUI();
+            log('Toggled ' + settingName + ' to ' + state.settings[settingName]);
+        }
+
+        // ==================== MICROSOFT GRAPH API ====================
+        function fetchUserPhoto() {
+            log('Fetching user photo from Microsoft Graph...');
+
+            if (!Office.context || !Office.context.mailbox) {
+                log('Mailbox not available for photo fetch', 'warn');
+                return Promise.resolve();
+            }
+
+            return new Promise(function(resolve) {
+                Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
+                    if (result.status !== 'succeeded') {
+                        log('Failed to get callback token: ' + (result.error ? result.error.message : 'Unknown'), 'warn');
+                        resolve();
+                        return;
+                    }
+
+                    var accessToken = result.value;
+                    var restUrl = Office.context.mailbox.restUrl;
+
+                    // Fetch photo
+                    fetch(restUrl + '/v2.0/me/photo/$value', {
+                        headers: { 'Authorization': 'Bearer ' + accessToken }
+                    })
+                    .then(function(response) {
+                        if (!response.ok) throw new Error('Photo not found');
+                        return response.blob();
+                    })
+                    .then(function(blob) {
+                        return new Promise(function(resolveBlob) {
+                            var reader = new FileReader();
+                            reader.onloadend = function() {
+                                state.user.photoUrl = reader.result;
+                                log('Photo loaded successfully');
+                                updatePreview();
+                                resolveBlob();
+                            };
+                            reader.readAsDataURL(blob);
+                        });
+                    })
+                    .catch(function(error) {
+                        log('Photo fetch failed: ' + error.message, 'warn');
+                    });
+
+                    // Fetch job title (parallel)
+                    fetch(restUrl + '/v2.0/me', {
+                        headers: { 'Authorization': 'Bearer ' + accessToken }
+                    })
+                    .then(function(response) {
+                        if (!response.ok) throw new Error('Profile fetch failed');
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        if (data.jobTitle) {
+                            state.user.jobTitle = data.jobTitle;
+                            log('Job title loaded: ' + data.jobTitle);
+                            updatePreview();
+                        }
+                    })
+                    .catch(function(error) {
+                        log('Job title fetch failed: ' + error.message, 'warn');
+                    })
+                    .finally(resolve);
+                });
+            });
+        }
+
+        // ==================== SIGNATURE GENERATION ====================
+        function generateSignatureHTML() {
+            var user = state.user;
+            var settings = state.settings;
+            var displayEmail = (settings.showPersonalEmail && settings.personalEmail)
+                ? settings.personalEmail
+                : user.email;
+
+            var parts = [];
+
+            parts.push('<table cellspacing="0" cellpadding="0" border="0" style="font-family: Arial, sans-serif; font-size: 10pt;">');
+            parts.push('<tbody>');
+
+            // Name and title
+            parts.push('<tr><td style="padding-bottom: 10px;">');
+            parts.push('<span style="font-size: 14pt; color: #152979; font-weight: bold;">' + escapeHtml(user.displayName) + '</span><br>');
+            if (user.jobTitle) {
+                parts.push('<span style="color: #9a9a9a;">' + escapeHtml(user.jobTitle) + '</span><br>');
+            }
+            parts.push('</td></tr>');
+
+            // Profile picture
+            if (settings.showProfilePic && user.photoUrl) {
+                parts.push('<tr><td style="padding-bottom: 10px;">');
+                parts.push('<img src="' + user.photoUrl + '" width="' + CONFIG.PHOTO_SIZE + '" height="' + CONFIG.PHOTO_SIZE + '" style="border-radius: 50%; display: block;" alt="Profile Photo">');
+                parts.push('</td></tr>');
+            }
+
+            // Contact info
+            parts.push('<tr><td style="padding-bottom: 10px;">');
+            parts.push('<span style="color: #9a9a9a;">email. <a href="mailto:' + escapeHtml(displayEmail) + '" style="color: #9a9a9a; text-decoration: none;">' + escapeHtml(displayEmail) + '</a></span><br>');
+            if (settings.showPersonalMobile && settings.personalMobile) {
+                var mobileClean = settings.personalMobile.replace(/\s/g, '');
+                parts.push('<span style="color: #9a9a9a;">mobile. <a href="tel:' + escapeHtml(mobileClean) + '" style="color: #9a9a9a; text-decoration: none;">' + escapeHtml(settings.personalMobile) + '</a></span><br>');
+            }
+            parts.push('</td></tr>');
+
+            // Company logo
+            parts.push('<tr><td style="padding-top: 10px; padding-bottom: 10px;">');
+            parts.push('<a href="' + COMPANY_INFO.website + '"><img src="' + COMPANY_INFO.logoUrl + '" width="150" height="49" alt="SIMO Logo" style="display: block;" border="0"></a>');
+            parts.push('</td></tr>');
+
+            // Company address
+            parts.push('<tr><td style="padding-bottom: 10px;">');
+            parts.push('<span style="color: #9a9a9a;">' + escapeHtml(COMPANY_INFO.address) + '<br>' + escapeHtml(COMPANY_INFO.city) + '</span><br>');
+            if (settings.showCompanyLandline && settings.companyLandline) {
+                var phoneClean = settings.companyLandline.replace(/\s/g, '');
+                parts.push('<span style="color: #9a9a9a;"><a href="tel:' + phoneClean + '" style="color: #9a9a9a; text-decoration: none;">' + escapeHtml(settings.companyLandline) + '</a></span><br>');
+            }
+            parts.push('<span style="color: #9a9a9a;">' + escapeHtml(COMPANY_INFO.fax) + ' (Fax)</span><br>');
+            parts.push('<span style="color: #9a9a9a;"><a href="mailto:' + COMPANY_INFO.email + '" style="color: #9a9a9a; text-decoration: none;">' + COMPANY_INFO.email + '</a></span>');
+            parts.push('</td></tr>');
+
+            // Social media icons
+            if (settings.showSocialMedia) {
+                parts.push('<tr><td style="padding-top: 10px; padding-bottom: 10px;">');
+                parts.push('<div style="padding-top: 8px; line-height: 0;">');
+
+                SOCIAL_ICONS.forEach(function(social) {
+                    var url = social.dynamic
+                        ? 'https://teams.microsoft.com/l/chat/0/0?users=' + encodeURIComponent(user.email)
+                        : social.url;
+                    var iconUrl = SOCIAL_ICONS_FALLBACK[social.id] || social.icon;
+
+                    parts.push('<a href="' + url + '" style="text-decoration: none; display: inline-block; margin-right: 8px;" target="_blank">');
+                    parts.push('<img src="' + iconUrl + '" width="' + CONFIG.ICON_SIZE + '" height="' + CONFIG.ICON_SIZE + '" alt="' + social.alt + '" border="0" style="vertical-align: middle;">');
+                    parts.push('</a>');
+                });
+
+                parts.push('</div>');
+                parts.push('</td></tr>');
+            }
+
+            parts.push('</tbody></table>');
+
+            return parts.join('');
+        }
+
+        var updatePreview = debounce(function() {
+            if (DOM.previewBox) {
+                DOM.previewBox.innerHTML = generateSignatureHTML();
+            }
+        }, 100);
+
+        // ==================== APPLY SIGNATURE ====================
+        function applySignature() {
+            log('applySignature called. Mode: ' + state.app.mode);
+            hideError();
+
+            var signatureHTML = generateSignatureHTML();
+            updatePreview();
+
+            if (state.app.mode === 'test') {
+                log('Test mode - showing preview only');
+                showToast('Preview updated (Test Mode)');
                 return;
             }
 
-            log('Office.js detected, waiting for Office.onReady...');
-            updateLoadingText('Connecting to Outlook...');
+            if (state.app.mode !== 'outlook' || !state.app.isOfficeReady) {
+                log('Office not ready', 'error');
+                showError('Add-in is still loading. Please wait a moment and try again.');
+                showToast('Not ready - please wait', 'error');
+                return;
+            }
 
-            // Use Office.onReady (modern approach)
-            Office.onReady(function(info) {
-                log('Office.onReady fired. Host: ' + (info.host || 'unknown') + ', Platform: ' + (info.platform || 'unknown'));
+            log('Attempting to insert signature into email...');
 
-                if (info.host === Office.HostType.Outlook) {
-                    initializeOutlookMode();
+            try {
+                if (!Office.context || !Office.context.mailbox || !Office.context.mailbox.item) {
+                    throw new Error('No active email compose window detected. Please open a new email first.');
+                }
+
+                var item = Office.context.mailbox.item;
+
+                if (!item.body || typeof item.body.setSelectedDataAsync !== 'function') {
+                    throw new Error('Email body API not available. This may be a permissions issue.');
+                }
+
+                item.body.setSelectedDataAsync(
+                    signatureHTML,
+                    { coercionType: Office.CoercionType.Html },
+                    function(asyncResult) {
+                        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+                            log('Signature inserted successfully');
+                            showToast('Signature applied!');
+                        } else {
+                            var errorMsg = asyncResult.error ? asyncResult.error.message : 'Unknown error';
+                            log('Failed to insert signature: ' + errorMsg, 'error');
+                            showError('Could not apply signature: ' + errorMsg);
+                            showToast('Failed to apply signature', 'error');
+                        }
+                    }
+                );
+            } catch (e) {
+                log('Exception in applySignature: ' + e.message, 'error');
+                showError(e.message);
+                showToast('Error: ' + e.message, 'error');
+            }
+        }
+
+        // ==================== INITIALIZATION ====================
+        function initializeOutlookMode() {
+            if (state.app.isInitialized) {
+                log('Already initialized, skipping');
+                return;
+            }
+
+            log('Initializing Outlook mode...');
+            state.app.mode = 'outlook';
+            state.app.isOfficeReady = true;
+            state.app.isInitialized = true;
+
+            updateStatus('ready', 'Ready');
+            updateLoadingText('Loading user profile...');
+
+            try {
+                var mailbox = Office.context.mailbox;
+                if (mailbox && mailbox.userProfile) {
+                    state.user.displayName = mailbox.userProfile.displayName || '[Your Name]';
+                    state.user.email = mailbox.userProfile.emailAddress || '';
+                    log('User profile loaded: ' + state.user.displayName + ' <' + state.user.email + '>');
                 } else {
-                    log('Not running in Outlook host, starting test mode', 'warn');
-                    initializeTestMode();
+                    log('userProfile not available on mailbox', 'warn');
+                    state.user.displayName = '[Your Name]';
+                    state.user.email = '[your.email@simo-online.com]';
                 }
-            });
+            } catch (e) {
+                log('Error loading user profile: ' + e.message, 'error');
+                state.user.displayName = '[Your Name]';
+                state.user.email = '[your.email@simo-online.com]';
+            }
 
-            // Fallback timeout - if Office.onReady doesn't fire within 5 seconds
-            setTimeout(function() {
-                if (!appState.isInitialized) {
-                    log('Timeout waiting for Office.onReady, attempting fallback...', 'warn');
-                    attemptFallbackInit();
-                }
-            }, 5000);
+            loadSettings();
+            updateSettingsUI();
+            updatePreview();
+            showMainContent();
+            log('Outlook mode initialization complete');
+
+            // Fetch photo and job title async
+            fetchUserPhoto();
+        }
+
+        function initializeTestMode() {
+            if (state.app.isInitialized) {
+                log('Already initialized, skipping');
+                return;
+            }
+
+            log('Initializing Test/Browser mode...');
+            state.app.mode = 'test';
+            state.app.isOfficeReady = false;
+            state.app.isInitialized = true;
+
+            updateStatus('test', 'Test Mode');
+
+            state.user.displayName = '[Your Name]';
+            state.user.jobTitle = '[Your Job Title]';
+            state.user.email = '[your.email@simo-online.com]';
+
+            loadSettings();
+            updateSettingsUI();
+            updatePreview();
+            showMainContent();
+
+            showToast('Running in Test Mode - signatures will show in preview only', 'warning');
+            log('Test mode initialization complete');
         }
 
         function attemptFallbackInit() {
             log('Attempting fallback initialization...');
 
-            // Try to access Office.context directly
             try {
-                if (Office && Office.context && Office.context.mailbox) {
+                if (typeof Office !== 'undefined' && Office.context && Office.context.mailbox) {
                     log('Office.context.mailbox available via fallback');
                     initializeOutlookMode();
                 } else {
@@ -444,340 +1072,90 @@
             }
         }
 
-        function initializeOutlookMode() {
-            if (appState.isInitialized) {
-                log('Already initialized, skipping');
+        function initialize() {
+            log('Starting initialization... (v' + CONFIG.VERSION + ')');
+            cacheDOM();
+            bindEvents();
+            updateLoadingText('Checking Office.js...');
+
+            if (typeof Office === 'undefined') {
+                log('Office.js not loaded, starting test mode', 'warn');
+                initializeTestMode();
                 return;
             }
 
-            log('Initializing Outlook mode...');
-            appState.mode = 'outlook';
-            appState.isOfficeReady = true;
-            appState.isInitialized = true;
+            log('Office.js detected, waiting for Office.onReady...');
+            updateLoadingText('Connecting to Outlook...');
 
-            updateStatus('ready', 'Ready');
-            updateLoadingText('Loading user profile...');
+            Office.onReady(function(info) {
+                log('Office.onReady fired. Host: ' + (info.host || 'unknown') + ', Platform: ' + (info.platform || 'unknown'));
 
-            // Load user profile from Office context
-            try {
-                var mailbox = Office.context.mailbox;
-                if (mailbox && mailbox.userProfile) {
-                    userProfile.displayName = mailbox.userProfile.displayName || '[Your Name]';
-                    userProfile.email = mailbox.userProfile.emailAddress || '';
-                    log('User profile loaded: ' + userProfile.displayName + ' <' + userProfile.email + '>');
+                if (info.host === Office.HostType.Outlook) {
+                    initializeOutlookMode();
                 } else {
-                    log('userProfile not available on mailbox', 'warn');
-                    userProfile.displayName = '[Your Name]';
-                    userProfile.email = '[your.email@simo-online.com]';
+                    log('Not running in Outlook host, starting test mode', 'warn');
+                    initializeTestMode();
                 }
-            } catch (e) {
-                log('Error loading user profile: ' + e.message, 'error');
-                userProfile.displayName = '[Your Name]';
-                userProfile.email = '[your.email@simo-online.com]';
-            }
+            });
 
-            loadSettings();
-            updateSettingsUI();
-            updatePreview();
-            showMainContent();
-            log('Outlook mode initialization complete');
-
-            // Fetch photo and job title from Microsoft Graph (async)
-            fetchUserPhoto();
-        }
-
-        function initializeTestMode() {
-            if (appState.isInitialized) {
-                log('Already initialized, skipping');
-                return;
-            }
-
-            log('Initializing Test/Browser mode...');
-            appState.mode = 'test';
-            appState.isOfficeReady = false;
-            appState.isInitialized = true;
-
-            updateStatus('test', 'Test Mode');
-
-            // Mock user profile
-            userProfile.displayName = '[Your Name]';
-            userProfile.jobTitle = '[Your Job Title]';
-            userProfile.email = '[your.email@simo-online.com]';
-
-            loadSettings();
-            updateSettingsUI();
-            updatePreview();
-            showMainContent();
-
-            showIndicator('Running in Test Mode - signatures will show in preview only', 'warning');
-            log('Test mode initialization complete');
-        }
-
-        // ==================== UI FUNCTIONS ====================
-        function showMain() {
-            document.getElementById('mainPage').classList.add('active');
-            document.getElementById('settingsPage').classList.remove('active');
-            updatePreview();
-        }
-
-        function showSettings() {
-            document.getElementById('mainPage').classList.remove('active');
-            document.getElementById('settingsPage').classList.add('active');
-        }
-
-        function showIndicator(message, type) {
-            type = type || 'success';
-            var indicator = document.getElementById('saveIndicator');
-            indicator.textContent = message;
-            indicator.className = 'save-indicator show' + (type === 'error' ? ' error' : '');
             setTimeout(function() {
-                indicator.classList.remove('show');
-            }, 3000);
+                if (!state.app.isInitialized) {
+                    log('Timeout waiting for Office.onReady, attempting fallback...', 'warn');
+                    attemptFallbackInit();
+                }
+            }, CONFIG.INIT_TIMEOUT);
         }
 
-        // ==================== SETTINGS MANAGEMENT ====================
-        function loadSettings() {
-            try {
-                var saved = localStorage.getItem('simoSignatureSettings');
-                if (saved) {
-                    var parsed = JSON.parse(saved);
-                    for (var key in parsed) {
-                        if (userSettings.hasOwnProperty(key)) {
-                            userSettings[key] = parsed[key];
+        // ==================== EVENT BINDING ====================
+        function bindEvents() {
+            // Button clicks
+            if (DOM.applyBtn) {
+                DOM.applyBtn.addEventListener('click', applySignature);
+            }
+            if (DOM.settingsBtn) {
+                DOM.settingsBtn.addEventListener('click', function() { showPage('settings'); });
+            }
+            if (DOM.backBtn) {
+                DOM.backBtn.addEventListener('click', function() { showPage('main'); });
+            }
+            if (DOM.saveBtn) {
+                DOM.saveBtn.addEventListener('click', saveSettings);
+            }
+
+            // Toggle switches
+            Object.keys(DOM.toggles).forEach(function(key) {
+                var toggle = DOM.toggles[key];
+                if (toggle) {
+                    toggle.addEventListener('click', function() {
+                        toggleSetting(key);
+                    });
+                    toggle.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleSetting(key);
                         }
+                    });
+                }
+            });
+
+            // Debug panel shortcut
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                    e.preventDefault();
+                    if (DOM.debugPanel) {
+                        DOM.debugPanel.classList.toggle('show');
                     }
-                    log('Settings loaded from localStorage');
                 }
-            } catch (e) {
-                log('Error loading settings: ' + e.message, 'error');
-            }
-        }
-
-        function saveSettings() {
-            try {
-                userSettings.personalMobile = document.getElementById('personalMobile').value;
-                userSettings.companyLandline = document.getElementById('companyLandline').value;
-                userSettings.personalEmail = document.getElementById('personalEmail').value;
-
-                localStorage.setItem('simoSignatureSettings', JSON.stringify(userSettings));
-                showIndicator('Settings saved');
-                log('Settings saved');
-            } catch (e) {
-                log('Error saving settings: ' + e.message, 'error');
-                showIndicator('Error saving settings', 'error');
-            }
-        }
-
-        function updateSettingsUI() {
-            document.getElementById('personalMobile').value = userSettings.personalMobile || '';
-            document.getElementById('companyLandline').value = userSettings.companyLandline || '';
-            document.getElementById('personalEmail').value = userSettings.personalEmail || '';
-
-            updateToggle('toggleProfilePic', userSettings.showProfilePic);
-            updateToggle('togglePersonalMobile', userSettings.showPersonalMobile);
-            updateToggle('toggleCompanyLandline', userSettings.showCompanyLandline);
-            updateToggle('togglePersonalEmail', userSettings.showPersonalEmail);
-            updateToggle('toggleSocialMedia', userSettings.showSocialMedia);
-        }
-
-        function updateToggle(elementId, isActive) {
-            var element = document.getElementById(elementId);
-            if (element) {
-                if (isActive) {
-                    element.classList.add('active');
-                } else {
-                    element.classList.remove('active');
-                }
-            }
-        }
-
-        function toggleSetting(settingName) {
-            userSettings[settingName] = !userSettings[settingName];
-            updateSettingsUI();
-            log('Toggled ' + settingName + ' to ' + userSettings[settingName]);
-        }
-
-        // ==================== SIGNATURE GENERATION ====================
-        function generateSignatureHTML() {
-            var displayEmail = (userSettings.showPersonalEmail && userSettings.personalEmail)
-                ? userSettings.personalEmail
-                : userProfile.email;
-
-            var html = '<table cellspacing="0" cellpadding="0" border="0" style="font-family: Arial, sans-serif; font-size: 10pt;">';
-            html += '<tbody>';
-
-            // Name and title
-            html += '<tr><td style="padding-bottom: 10px;">';
-            html += '<span style="font-size: 14pt; color: #152979; font-weight: bold;">' + escapeHtml(userProfile.displayName) + '</span><br>';
-            if (userProfile.jobTitle) {
-                html += '<span style="color: #9a9a9a;">' + escapeHtml(userProfile.jobTitle) + '</span><br>';
-            }
-            html += '</td></tr>';
-
-            // Profile picture
-            if (userSettings.showProfilePic && userProfile.photoUrl) {
-                html += '<tr><td style="padding-bottom: 10px;">';
-                html += '<img src="' + userProfile.photoUrl + '" width="80" height="80" style="border-radius: 50%; display: block;" alt="Profile Photo">';
-                html += '</td></tr>';
-            }
-
-            // Contact info
-            html += '<tr><td style="padding-bottom: 10px;">';
-            html += '<span style="color: #9a9a9a;">email. <a href="mailto:' + escapeHtml(displayEmail) + '" style="color: #9a9a9a; text-decoration: none;">' + escapeHtml(displayEmail) + '</a></span><br>';
-            if (userSettings.showPersonalMobile && userSettings.personalMobile) {
-                html += '<span style="color: #9a9a9a;">mobile. <a href="tel:' + escapeHtml(userSettings.personalMobile) + '" style="color: #9a9a9a; text-decoration: none;">' + escapeHtml(userSettings.personalMobile) + '</a></span><br>';
-            }
-            html += '</td></tr>';
-
-            // Company logo
-            html += '<tr><td style="padding-top: 10px; padding-bottom: 10px;">';
-            html += '<a href="' + COMPANY_INFO.website + '"><img src="' + COMPANY_INFO.logoUrl + '" width="150" height="49" alt="SIMO Logo" style="display: block;" border="0"></a>';
-            html += '</td></tr>';
-
-            // Company address
-            html += '<tr><td style="padding-bottom: 10px;">';
-            html += '<span style="color: #9a9a9a;">' + escapeHtml(COMPANY_INFO.address) + '<br>' + escapeHtml(COMPANY_INFO.city) + '</span><br>';
-            if (userSettings.showCompanyLandline && userSettings.companyLandline) {
-                var phoneClean = userSettings.companyLandline.replace(/\s/g, '');
-                html += '<span style="color: #9a9a9a;"><a href="tel:' + phoneClean + '" style="color: #9a9a9a; text-decoration: none;">' + escapeHtml(userSettings.companyLandline) + '</a></span><br>';
-            }
-            html += '<span style="color: #9a9a9a;">+49 (0)6021 3274560 (Fax)</span><br>';
-            html += '<span style="color: #9a9a9a;"><a href="mailto:' + COMPANY_INFO.email + '" style="color: #9a9a9a; text-decoration: none;">' + COMPANY_INFO.email + '</a></span>';
-            html += '</td></tr>';
-
-            // Social media icons
-            if (userSettings.showSocialMedia) {
-                html += '<tr><td style="padding-top: 10px; padding-bottom: 10px;">';
-                html += '<div style="padding-top: 8px; line-height: 0;">';
-
-                // LinkedIn
-                html += '<a href="' + COMPANY_INFO.social.linkedin + '" style="text-decoration: none; display: inline-block; margin-right: 8px;" target="_blank">';
-                html += '<img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" width="32" height="32" alt="LinkedIn" border="0" style="vertical-align: middle;">';
-                html += '</a>';
-
-                // Teams
-                var teamsLink = 'https://teams.microsoft.com/l/chat/0/0?users=' + encodeURIComponent(userProfile.email);
-                html += '<a href="' + teamsLink + '" style="text-decoration: none; display: inline-block; margin-right: 8px;" target="_blank">';
-                html += '<img src="https://img.icons8.com/color/48/microsoft-teams.png" width="32" height="32" alt="Microsoft Teams" border="0" style="vertical-align: middle;">';
-                html += '</a>';
-
-                // Facebook
-                html += '<a href="' + COMPANY_INFO.social.facebook + '" style="text-decoration: none; display: inline-block; margin-right: 8px;" target="_blank">';
-                html += '<img src="https://img.icons8.com/color/48/facebook-new.png" width="32" height="32" alt="Facebook" border="0" style="vertical-align: middle;">';
-                html += '</a>';
-
-                // Instagram
-                html += '<a href="' + COMPANY_INFO.social.instagram + '" style="text-decoration: none; display: inline-block; margin-right: 8px;" target="_blank">';
-                html += '<img src="https://img.icons8.com/color/48/instagram-new.png" width="32" height="32" alt="Instagram" border="0" style="vertical-align: middle;">';
-                html += '</a>';
-
-                // YouTube
-                html += '<a href="' + COMPANY_INFO.social.youtube + '" style="text-decoration: none; display: inline-block; margin-right: 8px;" target="_blank">';
-                html += '<img src="https://img.icons8.com/color/48/youtube-play.png" width="32" height="32" alt="YouTube" border="0" style="vertical-align: middle;">';
-                html += '</a>';
-
-                // TikTok
-                html += '<a href="' + COMPANY_INFO.social.tiktok + '" style="text-decoration: none; display: inline-block;" target="_blank">';
-                html += '<img src="https://img.icons8.com/color/48/tiktok.png" width="32" height="32" alt="TikTok" border="0" style="vertical-align: middle;">';
-                html += '</a>';
-
-                html += '</div>';
-                html += '</td></tr>';
-            }
-
-            html += '</tbody></table>';
-            return html;
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            var div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function updatePreview() {
-            var previewBox = document.getElementById('previewBox');
-            if (previewBox) {
-                previewBox.innerHTML = generateSignatureHTML();
-            }
-        }
-
-        // ==================== APPLY SIGNATURE ====================
-        function applySignature() {
-            log('applySignature called. Mode: ' + appState.mode + ', isOfficeReady: ' + appState.isOfficeReady);
-            hideError();
-
-            var signatureHTML = generateSignatureHTML();
-
-            // Always update preview
-            updatePreview();
-
-            // Test mode - just show preview
-            if (appState.mode === 'test') {
-                log('Test mode - showing preview only');
-                showIndicator('Preview updated (Test Mode)');
-                return;
-            }
-
-            // Outlook mode - insert into email
-            if (appState.mode === 'outlook') {
-                if (!appState.isOfficeReady) {
-                    log('Office not ready yet', 'error');
-                    showError('Add-in is still loading. Please wait a moment and try again.');
-                    showIndicator('Not ready - please wait', 'error');
-                    return;
-                }
-
-                log('Attempting to insert signature into email...');
-
-                try {
-                    // Check if we have access to the mailbox item
-                    if (!Office.context || !Office.context.mailbox || !Office.context.mailbox.item) {
-                        throw new Error('No active email compose window detected. Please open a new email first.');
-                    }
-
-                    var item = Office.context.mailbox.item;
-
-                    // Check if body API is available
-                    if (!item.body || typeof item.body.setSelectedDataAsync !== 'function') {
-                        throw new Error('Email body API not available. This may be a permissions issue.');
-                    }
-
-                    // Insert signature at cursor position
-                    item.body.setSelectedDataAsync(
-                        signatureHTML,
-                        { coercionType: Office.CoercionType.Html },
-                        function(asyncResult) {
-                            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                                log('Signature inserted successfully');
-                                showIndicator('Signature applied!');
-                            } else {
-                                var errorMsg = asyncResult.error ? asyncResult.error.message : 'Unknown error';
-                                log('Failed to insert signature: ' + errorMsg, 'error');
-                                showError('Could not apply signature: ' + errorMsg);
-                                showIndicator('Failed to apply signature', 'error');
-                            }
-                        }
-                    );
-                } catch (e) {
-                    log('Exception in applySignature: ' + e.message, 'error');
-                    showError(e.message);
-                    showIndicator('Error: ' + e.message, 'error');
-                }
-            } else {
-                log('Unknown mode: ' + appState.mode, 'error');
-                showError('Add-in is in an unknown state. Please reload.');
-            }
+            });
         }
 
         // ==================== START ====================
-        // Start initialization when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initialize);
         } else {
             initialize();
         }
+    })();
     </script>
 </body>
 </html>
