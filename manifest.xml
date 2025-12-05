@@ -2,83 +2,92 @@
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
            xsi:type="MailApp">
-  
-  <!-- Unique Identifier -->
+
+  <!-- Unique Identifier - DO NOT CHANGE -->
   <Id>a7f2c8d9-3e4b-4c6d-8f9a-2b5c7d8e9f0a</Id>
-  
-  <!-- Version - UPDATED -->
-  <Version>1.0.0.1</Version>
-  
+
+  <!-- Version - INCREMENT ON EACH UPDATE -->
+  <Version>1.0.0.4</Version>
+
   <!-- Provider Information -->
-  <ProviderName>IT-SIMO - Nikolai Nöthling</ProviderName>
-  
+  <ProviderName>IT-SIMO - Nikolai Noethling</ProviderName>
+
   <!-- Default Locale -->
   <DefaultLocale>en-US</DefaultLocale>
-  
+
   <!-- Display Name -->
   <DisplayName DefaultValue="SIMO Email Signatures"/>
-  
+
   <!-- Description -->
-  <Description DefaultValue="Manage and apply professional email signatures for SIMO employees. Select from existing templates or create custom signatures."/>
-  
-  <!-- Icon URLs -->
-  <IconUrl DefaultValue="https://nikolai-SIMO.github.io/simo-signature-addon/icon32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://nikolai-SIMO.github.io/simo-signature-addon/icon80.png"/>
-  
+  <Description DefaultValue="Manage and apply professional email signatures for SIMO employees."/>
+
+  <!-- Icon URLs - CONSISTENT LOWERCASE -->
+  <IconUrl DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/icon32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/icon80.png"/>
+
   <!-- Support URL -->
   <SupportUrl DefaultValue="https://github.com/nikolai-SIMO/simo-signature-addon"/>
-  
-  <!-- App Domains -->
+
+  <!-- App Domains - CONSISTENT LOWERCASE for GitHub Pages -->
   <AppDomains>
-    <AppDomain>https://nikolai-SIMO.github.io</AppDomain>
+    <AppDomain>https://nikolai-simo.github.io</AppDomain>
   </AppDomains>
-  
+
   <!-- Hosts Configuration -->
   <Hosts>
     <Host Name="Mailbox"/>
   </Hosts>
-  
-  <!-- Requirements -->
+
+  <!-- Requirements - Minimum API version -->
   <Requirements>
     <Sets>
       <Set Name="Mailbox" MinVersion="1.1"/>
     </Sets>
   </Requirements>
-  
-  <!-- Form Settings - Using ItemEdit for Compose Mode -->
+
+  <!-- Form Settings - Legacy Outlook support -->
   <FormSettings>
     <Form xsi:type="ItemEdit">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://nikolai-SIMO.github.io/simo-signature-addon/simo-signatures.html"/>
+        <SourceLocation DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/simo-signatures.html"/>
+        <RequestedHeight>600</RequestedHeight>
       </DesktopSettings>
     </Form>
   </FormSettings>
-  
+
   <!-- Permissions -->
   <Permissions>ReadWriteItem</Permissions>
-  
+
   <!-- Activation Rule - Compose Mode Only -->
   <Rule xsi:type="RuleCollection" Mode="Or">
     <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
   </Rule>
-  
+
   <!-- Version Overrides for Modern Outlook UI -->
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
-    
+
+    <!-- Requirements for VersionOverrides -->
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox"/>
+      </bt:Sets>
+    </Requirements>
+
     <Hosts>
       <Host xsi:type="MailHost">
-        
+
         <!-- Desktop Form Factor -->
         <DesktopFormFactor>
           <FunctionFile resid="Commands.Url"/>
-          
+
           <!-- Extension Point for Message Compose -->
           <ExtensionPoint xsi:type="MessageComposeCommandSurface">
             <OfficeTab id="TabDefault">
               <Group id="SimoSignaturesGroup">
                 <Label resid="GroupLabel"/>
-                
+
                 <!-- Task Pane Button -->
                 <Control xsi:type="Button" id="SimoSignaturesButton">
                   <Label resid="TaskpaneButton.Label"/>
@@ -99,30 +108,100 @@
             </OfficeTab>
           </ExtensionPoint>
         </DesktopFormFactor>
+
       </Host>
     </Hosts>
-    
+
+    <!-- Resources Section -->
     <Resources>
       <bt:Images>
         <bt:Image id="Icon.16" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/icon16.png"/>
         <bt:Image id="Icon.32" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/icon32.png"/>
         <bt:Image id="Icon.80" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/icon80.png"/>
       </bt:Images>
-      
+
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/simo-signatures.html"/>
         <bt:Url id="Taskpane.Url" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/simo-signatures.html"/>
       </bt:Urls>
-      
+
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="SIMO Signatures"/>
         <bt:String id="TaskpaneButton.Label" DefaultValue="Email Signatures"/>
         <bt:String id="TaskpaneButton.Title" DefaultValue="SIMO Email Signatures"/>
       </bt:ShortStrings>
-      
+
       <bt:LongStrings>
         <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Apply professional email signatures for SIMO employees"/>
       </bt:LongStrings>
     </Resources>
+
+    <!-- VersionOverrides 1.1 for New Outlook support -->
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.5">
+          <bt:Set Name="Mailbox"/>
+        </bt:Sets>
+      </Requirements>
+
+      <Hosts>
+        <Host xsi:type="MailHost">
+
+          <DesktopFormFactor>
+            <FunctionFile resid="Commands.Url"/>
+
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="SimoSignaturesGroup">
+                  <Label resid="GroupLabel"/>
+                  <Control xsi:type="Button" id="SimoSignaturesButton">
+                    <Label resid="TaskpaneButton.Label"/>
+                    <Supertip>
+                      <Title resid="TaskpaneButton.Title"/>
+                      <Description resid="TaskpaneButton.Tooltip"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16"/>
+                      <bt:Image size="32" resid="Icon.32"/>
+                      <bt:Image size="80" resid="Icon.80"/>
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="Taskpane.Url"/>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+
+        </Host>
+      </Hosts>
+
+      <Resources>
+        <bt:Images>
+          <bt:Image id="Icon.16" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/icon16.png"/>
+          <bt:Image id="Icon.32" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/icon32.png"/>
+          <bt:Image id="Icon.80" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/icon80.png"/>
+        </bt:Images>
+
+        <bt:Urls>
+          <bt:Url id="Commands.Url" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/simo-signatures.html"/>
+          <bt:Url id="Taskpane.Url" DefaultValue="https://nikolai-simo.github.io/simo-signature-addon/simo-signatures.html"/>
+        </bt:Urls>
+
+        <bt:ShortStrings>
+          <bt:String id="GroupLabel" DefaultValue="SIMO Signatures"/>
+          <bt:String id="TaskpaneButton.Label" DefaultValue="Email Signatures"/>
+          <bt:String id="TaskpaneButton.Title" DefaultValue="SIMO Email Signatures"/>
+        </bt:ShortStrings>
+
+        <bt:LongStrings>
+          <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Apply professional email signatures for SIMO employees"/>
+        </bt:LongStrings>
+      </Resources>
+
+    </VersionOverrides>
+
   </VersionOverrides>
 </OfficeApp>
