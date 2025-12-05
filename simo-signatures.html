@@ -361,9 +361,14 @@
                     </div>
 
                     <!-- Debug Panel -->
-                    <button id="debugToggleBtn" class="btn btn-secondary" type="button" style="margin-top: 20px; font-size: 12px; padding: 8px 12px;">
-                        Show Debug Log
-                    </button>
+                    <div style="margin-top: 20px; display: flex; gap: 8px;">
+                        <button id="debugToggleBtn" class="btn btn-secondary" type="button" style="font-size: 12px; padding: 8px 12px; margin: 0; width: auto;">
+                            Show Debug Log
+                        </button>
+                        <button id="copyDebugBtn" class="btn btn-secondary" type="button" style="font-size: 12px; padding: 8px 12px; margin: 0; width: auto; display: none;">
+                            Copy Debug Log
+                        </button>
+                    </div>
                     <div id="debugPanel" class="debug-panel" role="log" aria-label="Debug information">
                         <strong>Debug Log:</strong><br>
                         <div id="debugLog"></div>
@@ -512,7 +517,7 @@
             PHOTO_SIZE: 80,
             ICON_SIZE: 32,
             STORAGE_KEY: 'simoSignatureSettings',
-            VERSION: '1.0.0.11'
+            VERSION: '1.0.0.12'
         });
 
         var COMPANY_INFO = Object.freeze({
@@ -608,6 +613,7 @@
                 showSocialMedia: document.getElementById('toggleSocialMedia')
             };
             DOM.debugToggleBtn = document.getElementById('debugToggleBtn');
+            DOM.copyDebugBtn = document.getElementById('copyDebugBtn');
         }
 
         // ==================== DEBUG LOGGING ====================
@@ -1254,7 +1260,37 @@
                     if (DOM.debugPanel) {
                         var isShowing = DOM.debugPanel.classList.toggle('show');
                         DOM.debugToggleBtn.textContent = isShowing ? 'Hide Debug Log' : 'Show Debug Log';
+                        if (DOM.copyDebugBtn) {
+                            DOM.copyDebugBtn.style.display = isShowing ? 'inline-flex' : 'none';
+                        }
                     }
+                });
+            }
+
+            // Copy debug log button
+            if (DOM.copyDebugBtn) {
+                DOM.copyDebugBtn.addEventListener('click', function() {
+                    var logText = 'SIMO Signatures Debug Log (v' + CONFIG.VERSION + ')\n';
+                    logText += 'Timestamp: ' + new Date().toISOString() + '\n';
+                    logText += 'Mode: ' + state.app.mode + '\n';
+                    logText += 'Office Ready: ' + state.app.isOfficeReady + '\n';
+                    logText += 'Initialized: ' + state.app.isInitialized + '\n';
+                    logText += '----------------------------------------\n';
+                    logText += debugLogs.join('\n');
+
+                    navigator.clipboard.writeText(logText).then(function() {
+                        showToast('Debug log copied to clipboard!');
+                    }).catch(function(err) {
+                        log('Failed to copy: ' + err.message, 'error');
+                        // Fallback: select text in a textarea
+                        var textarea = document.createElement('textarea');
+                        textarea.value = logText;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showToast('Debug log copied to clipboard!');
+                    });
                 });
             }
         }
