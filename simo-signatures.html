@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://appsforoffice.microsoft.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://appsforoffice.microsoft.com https://ajax.aspnetcdn.com https://ajax.microsoft.com https://*.office.com https://*.office365.com https://*.microsoft.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https:;">
     <title>SIMO Email Signatures</title>
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <style>
@@ -509,7 +509,7 @@
             PHOTO_SIZE: 80,
             ICON_SIZE: 32,
             STORAGE_KEY: 'simoSignatureSettings',
-            VERSION: '1.0.0.7'
+            VERSION: '1.0.0.8'
         });
 
         var COMPANY_INFO = Object.freeze({
