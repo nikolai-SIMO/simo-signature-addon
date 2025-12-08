@@ -209,6 +209,17 @@
         
         <div id="settingsView" class="view">
             <div class="settings-group">
+                <h3>👤 Profile</h3>
+                <div class="setting-item">
+                    <label>Show Profile Photo</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="showProfilePhoto" checked onchange="saveSettings()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-group">
                 <h3>📞 Contact Information</h3>
                 <div class="setting-item">
                     <label>Show Phone Number</label>
@@ -281,6 +292,16 @@
     </nav>
 
     <script>
+        // Base64 encoded social media icons (24x24 PNG)
+        var ICONS = {
+            linkedin: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABKklEQVR4nO2UPUoDURSFv4wmjRtQG0Gwc0lZWAi6AbUTXICFhYVgZWHhJkTXoJVgIa5ACKI7cAFiSCGk+AlMMpl5Y0bm51UeuNzhnXvuuY8L/+oWA8AngB4wu+FDYBd4+g5J1rAMLAN3pf15YFRVgLUSwHb+AJMVA0yXAJ5yvAFcAGsSAJOlAKPkpn0IzAMPuQDtRIIR4BE4BI6Bq1yApuwEGAXWgC3gLhugrTohpoEDYBK4TAJYBo6AK2A2C3Ak+xSYApYyAXIqDgDDCiA30icLMAccKYBciwNgS7ZRBTAV7wHWKwDSCVoGuMkFyKh4vOKelAaYjPfqAE7FAaBfdyAzkE7wXE1AR1wAy8B+LkBHXABv1QTsxAWwWQvgVLdKUzUBzquxJL0BdAWvMQ7YxYsAAAAASUVORK5CYII=',
+            youtube: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABIUlEQVR4nO2TPU4DMRCFP0gKJHagpaGgoqLkDHAGrsARuAD04QpcABo6CgoKJBokxH9BspIV7Tqbze4mUvKkkTzjeZ73bMP/+jPKAXvAELjrmfvAIXD+lSV9BViqCNC1XgFbNQGm0wD3bdYAmE8DXBf4AHgsgIcmvKoOsJkGuGnDA+BB9ifA00RJSvcl8NAmwDhwCqy0DLAEHALLLQOUpgGwJvsk7RzwnwfMJwEWZD8EngdYA0ZmgGVgBNgfA/wFLjoF3AJWxwG/AwcdAbwBrhsB7gKbNkAXgEvZdxoAfAQ2ugBcAbfW+CnwDDzbJJotwi3gwvrcA542AUYJbJMuwEMSYKsmwGUSYLUmwHwSYKEmwEISYKYmwFQS4E9r/AHZbfCQUiZLfAAAAABJRU5ErkJggg==',
+            instagram: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO2Uu0oDQRiFv3gBa6294AUsLCy8gI2NjY0P4Av4AD6CPoKFhYWFjYWFhYVYiFdUvKBRMSqaRL3gLZpEk43ZODvJbjYbL6AD/zDMnDn/+WdnYOAfP1oeIAmcA3VAOZADrAJ3wBuQFB3HADlyCqQDmcBMUsBhKVAdQ8BsUkCTnOLowXEQHwdcyjQcCTKANe07gcM0AYuB0njCVQMi9WgFNgXx2DExH2BvOgAaIwCWAvVRgPIIwFCEJgkDqAJao6z7E6S1bwPa0gU0RdEcyC48SXwdS5pDATqiFm8EysICJqKAbKArrfNEtKlj4JuHFd+0XQcehdEeGDgObPdkNhCgMwpgJFCX7qYwJ+BLsAvcAXdALdACNAAtwDpwLXgR3B2FGD2aPACvwIngi4Fj4AQ4FRzKfB44ANqjmqYM+As8CR4K7sIGnAJ7wJ7gu+BW9h1AT9TqrcKnwIHgHuwl8Ce4A+iKWr0n5hQ4ABxZgG3ZdwG9UYD9JDCwADuyHwD6ogBHFmBX9oPAYBTgOAkMLMCe7IeA4SjASRIYWIA92Y8Ao1GAsyQwsAAHsh8HxqMAF0lg8A24lP0kMBUFuE4CA/lPuJL9DDAbBbhJAgMLcCv7eWAhCnCXBAb2n3An+yVgOQrwkAQG8h/rE5PGBDh/NjneAAAAAElFTkSuQmCC',
+            x: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA7UlEQVR4nO2UMQ6CQBBF34mewsLCROMBPIEn8Ah6BT2C3sAb2FhYWNhYWFhYGI0lxkQNKoLAzrILGN1kksnu/P/nTwYW/vU3qgJaQDfwPAa0geMgpQm0A/cjICPY7+n6CswCr1WAThAYAsfAcw3gIGjJOKA7AYyAq6DA5SDgD1AxfCewlxDgexAYA3eTAM2AyUSAtYSAdUKAb8HgH7CZEOArMPIHzCcE+AKMkwD2EgJ8Bcb/gJ2EAF+A8SRAPyHAd2CUBHCQEOAbMEwC2EsI8A0YJgEcJAT4BgySAPYSAnwDBkkAewkBvgCDJIA/rRcsqxL2bqgZDgAAAABJRU5ErkJggg==',
+            tiktok: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABcUlEQVR4nO2Uu0oDURCGP0QbsbARC7HwAt7ARrCxsfEFfAEfwUfQR7CwsLCwsbCwsLAQC/GCF9CoaIwaE5O4MXvJbHY3JhcD+sPA7Jw5/z9nZuFPv1IqYBfYBCaBYaAPaANugXvgGWgET0eBXCBXTgU4ygDWswF0RxAwlRWgR07xdOE4jI8DrmQaDgVpwIryneDhNAC1UYByfxqBDUE8dhzMhthLB0BDBMBcoCYKUBEBGIzQJGYAlUBrlHV/gtT2TUBruoD6KJoD2YXHia9jSXMoQHvU4vVAaViAxBhAHtCW1nki2tQx8NXDim/abgD3wugIDBwFtvsy6w/QFgUwHKhLd1OYE/AtWAVugCugGmgAmoE1YEPwJLg5CjF6MHkE3oETwScDx8EJcCp4kPkccAi0RzVNGfAXeBY8FNyGDTgB9oB9wXfBrew7gfao1duFT4F9wQPYi+NvcB/YA/YE3wW3su8EuqJWbxU+Bw4E92AvgT/BHUBnVOu9AJNsW+mDhwizAAAAAElFTkSuQmCC',
+            teams: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABb0lEQVR4nO2UvUoDQRSFv0QbsbARCzH+gE9gY2NjY2PjC/gCPoKPoI9gYWFhYWNhYWFhIRbiD16IGtGosVBj4u5kZ5PdbNRF8MDAXO6ce+bO3cKf/qZUwB6wCUwCw0Af0AbcAvfAM9AIngeCnCBXTgU4zABW0wF0RxAwlRWgR07xdOE4jI8DrmUaDgVpwIryndDhNAC1UYByfxqBdUE8duzPBthLB0BDBMBcoCoKUBEBGIzQJGYAlUBrlHV/gtT2TUBruoD6KJoD2YXHia9jSXMoQHvU4vVAaViAxBhAHtCW1nki2tQx8NXDim/abgD3wugIDBwFtvsy6wvQFgUwHKhLd1OYE/AtuAaugWugGmgAmoE14ErwJLg5CjF6MHkC3oETwScDx8AJcCp4kPk8cAi0RzVNGfAXeBY8EtyGDTgG9oF9wXfBrez7gI6o1duFT4B9wQPYS+BPcD+wB+wLvgteyb4P6IxavVX4HDgQ3IO9OP4ED4A2k3jZYH4AAAAASUVORK5CYII='
+        };
+
         // Company Info
         var COMPANY = {
             name: 'SIMO GmbH',
@@ -310,7 +331,8 @@
             email: '',
             jobTitle: '',
             phone: '',
-            mobile: ''
+            mobile: '',
+            photoBase64: null
         };
 
         // Settings
@@ -319,6 +341,7 @@
             showMobile: true,
             showSocialMedia: true,
             showTeams: true,
+            showProfilePhoto: true,
             customPhone: '',
             customMobile: '',
             font: 'Arial, sans-serif',
@@ -349,6 +372,8 @@
                     '<p>Version: ' + apiInfo.version + '</p>' +
                     '<p>setSelectedData: ' + (apiInfo.hasSetSelectedData ? '✅' : '❌') + '</p>' +
                     '<p>setSignature: ' + (apiInfo.hasSetSignature ? '✅' : '❌') + '</p>' +
+                    '<h4>Profile:</h4>' +
+                    '<p>Photo: ' + (userProfile.photoBase64 ? '✅ Loaded' : '❌ Not loaded') + '</p>' +
                     '<h4>Log:</h4>' +
                     debugLog.slice(-5).map(function(l) { return '<p>' + l + '</p>'; }).join('');
             }
@@ -362,11 +387,59 @@
                 detectAPI();
                 loadProfile();
                 loadSettings();
+                fetchProfilePhoto();
                 showStatus('Ready! Select a signature.', 'ready');
             } else {
                 showStatus('Error: Not in Outlook', 'error');
             }
         });
+
+        function fetchProfilePhoto() {
+            try {
+                if (!Office.context.mailbox || !Office.context.mailbox.restUrl) {
+                    log('REST API not available for photo');
+                    return;
+                }
+
+                Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
+                    if (result.status !== Office.AsyncResultStatus.Succeeded) {
+                        log('Could not get REST token');
+                        return;
+                    }
+
+                    var token = result.value;
+                    var restUrl = Office.context.mailbox.restUrl;
+
+                    // Fetch profile photo
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', restUrl + '/v2.0/me/photo/$value', true);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    xhr.responseType = 'blob';
+                    
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            var reader = new FileReader();
+                            reader.onloadend = function() {
+                                userProfile.photoBase64 = reader.result;
+                                log('Photo loaded');
+                                updateDebug();
+                            };
+                            reader.readAsDataURL(xhr.response);
+                        } else {
+                            log('Photo not available: ' + xhr.status);
+                        }
+                    };
+                    
+                    xhr.onerror = function() {
+                        log('Photo fetch error');
+                    };
+                    
+                    xhr.send();
+                });
+            } catch (e) {
+                log('Photo error: ' + e.message);
+            }
+        }
 
         function detectAPI() {
             try {
@@ -421,6 +494,7 @@
                         }
                     }
                 }
+                document.getElementById('showProfilePhoto').checked = userSettings.showProfilePhoto;
                 document.getElementById('showPhone').checked = userSettings.showPhone;
                 document.getElementById('showMobile').checked = userSettings.showMobile;
                 document.getElementById('showSocialMedia').checked = userSettings.showSocialMedia;
@@ -435,6 +509,7 @@
         }
 
         function saveSettings() {
+            userSettings.showProfilePhoto = document.getElementById('showProfilePhoto').checked;
             userSettings.showPhone = document.getElementById('showPhone').checked;
             userSettings.showMobile = document.getElementById('showMobile').checked;
             userSettings.showSocialMedia = document.getElementById('showSocialMedia').checked;
@@ -462,49 +537,60 @@
                 phoneHTML += 'mobile. <a href="tel:' + mobile.replace(/\s/g, '') + '" style="color:' + userSettings.contactColor + ';text-decoration:none;">' + mobile + '</a><br>';
             }
 
+            // Profile photo HTML
+            var photoHTML = '';
+            if (userSettings.showProfilePhoto && userProfile.photoBase64) {
+                photoHTML = '<td style="padding-right:15px;vertical-align:top;">' +
+                    '<img src="' + userProfile.photoBase64 + '" width="80" height="80" alt="Photo" style="border-radius:50%;display:block;" border="0">' +
+                '</td>';
+            }
+
             var socialHTML = '';
             if (userSettings.showSocialMedia) {
-                socialHTML = '<tr><td style="padding-top:15px;">' +
+                socialHTML = '<tr><td ' + (photoHTML ? 'colspan="2" ' : '') + 'style="padding-top:15px;">' +
                     '<a href="' + COMPANY.social.linkedin + '" style="text-decoration:none;margin-right:6px;">' +
-                        '<img src="https://img.icons8.com/color/24/linkedin.png" width="24" height="24" alt="LinkedIn" style="display:inline-block;vertical-align:middle;" border="0">' +
+                        '<img src="' + ICONS.linkedin + '" width="24" height="24" alt="LinkedIn" style="display:inline-block;vertical-align:middle;" border="0">' +
                     '</a>' +
                     '<a href="' + COMPANY.social.youtube + '" style="text-decoration:none;margin-right:6px;">' +
-                        '<img src="https://img.icons8.com/color/24/youtube-play.png" width="24" height="24" alt="YouTube" style="display:inline-block;vertical-align:middle;" border="0">' +
+                        '<img src="' + ICONS.youtube + '" width="24" height="24" alt="YouTube" style="display:inline-block;vertical-align:middle;" border="0">' +
                     '</a>' +
                     '<a href="' + COMPANY.social.instagram + '" style="text-decoration:none;margin-right:6px;">' +
-                        '<img src="https://img.icons8.com/color/24/instagram-new.png" width="24" height="24" alt="Instagram" style="display:inline-block;vertical-align:middle;" border="0">' +
+                        '<img src="' + ICONS.instagram + '" width="24" height="24" alt="Instagram" style="display:inline-block;vertical-align:middle;" border="0">' +
                     '</a>' +
                     '<a href="' + COMPANY.social.x + '" style="text-decoration:none;margin-right:6px;">' +
-                        '<img src="https://img.icons8.com/color/24/twitterx.png" width="24" height="24" alt="X" style="display:inline-block;vertical-align:middle;" border="0">' +
+                        '<img src="' + ICONS.x + '" width="24" height="24" alt="X" style="display:inline-block;vertical-align:middle;" border="0">' +
                     '</a>' +
                     '<a href="' + COMPANY.social.tiktok + '" style="text-decoration:none;margin-right:6px;">' +
-                        '<img src="https://img.icons8.com/color/24/tiktok.png" width="24" height="24" alt="TikTok" style="display:inline-block;vertical-align:middle;" border="0">' +
+                        '<img src="' + ICONS.tiktok + '" width="24" height="24" alt="TikTok" style="display:inline-block;vertical-align:middle;" border="0">' +
                     '</a>';
                 
                 if (userSettings.showTeams && userProfile.email) {
                     socialHTML += '<a href="https://teams.microsoft.com/l/chat/0/0?users=' + userProfile.email + '" style="text-decoration:none;">' +
-                        '<img src="https://img.icons8.com/color/24/microsoft-teams.png" width="24" height="24" alt="Teams" style="display:inline-block;vertical-align:middle;" border="0">' +
+                        '<img src="' + ICONS.teams + '" width="24" height="24" alt="Teams" style="display:inline-block;vertical-align:middle;" border="0">' +
                     '</a>';
                 }
                 socialHTML += '</td></tr>';
             }
 
             return '<table cellspacing="0" cellpadding="0" border="0" style="font-family:' + userSettings.font + ';font-size:10pt;">' +
-                '<tr><td style="padding-bottom:10px;">' +
-                    '<span style="font-size:12pt;font-weight:bold;color:' + userSettings.nameColor + ';">' + userProfile.displayName + '</span><br>' +
-                    (title ? '<span style="color:' + userSettings.contactColor + ';">' + title + '</span><br>' : '') +
-                    '<br>' +
-                    '<span style="color:' + userSettings.contactColor + ';">' +
-                        phoneHTML +
-                        'email. <a href="mailto:' + userProfile.email + '" style="color:' + userSettings.contactColor + ';text-decoration:none;">' + userProfile.email + '</a>' +
-                    '</span>' +
-                '</td></tr>' +
-                '<tr><td style="padding-top:10px;">' +
+                '<tr>' +
+                    photoHTML +
+                    '<td style="padding-bottom:10px;vertical-align:top;">' +
+                        '<span style="font-size:12pt;font-weight:bold;color:' + userSettings.nameColor + ';">' + userProfile.displayName + '</span><br>' +
+                        (title ? '<span style="color:' + userSettings.contactColor + ';">' + title + '</span><br>' : '') +
+                        '<br>' +
+                        '<span style="color:' + userSettings.contactColor + ';">' +
+                            phoneHTML +
+                            'email. <a href="mailto:' + userProfile.email + '" style="color:' + userSettings.contactColor + ';text-decoration:none;">' + userProfile.email + '</a>' +
+                        '</span>' +
+                    '</td>' +
+                '</tr>' +
+                '<tr><td ' + (photoHTML ? 'colspan="2" ' : '') + 'style="padding-top:10px;">' +
                     '<a href="' + COMPANY.website + '">' +
                         '<img src="' + COMPANY.logo + '" width="150" height="49" alt="SIMO" style="display:block;" border="0">' +
                     '</a>' +
                 '</td></tr>' +
-                '<tr><td style="padding-top:5px;">' +
+                '<tr><td ' + (photoHTML ? 'colspan="2" ' : '') + 'style="padding-top:5px;">' +
                     '<span style="font-size:9pt;color:' + userSettings.contactColor + ';">' + COMPANY.address + ' | ' + COMPANY.city + '</span>' +
                 '</td></tr>' +
                 socialHTML +
