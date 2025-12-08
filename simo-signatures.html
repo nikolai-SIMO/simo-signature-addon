@@ -396,48 +396,98 @@
 
         function fetchProfilePhoto() {
             try {
+                log('Fetching photo via SSO...');
+                
+                // Try SSO first
+                if (Office.auth && Office.auth.getAccessToken) {
+                    Office.auth.getAccessToken({ allowSignInPrompt: true, allowConsentPrompt: true })
+                        .then(function(token) {
+                            log('SSO token obtained');
+                            fetchPhotoFromGraph(token);
+                        })
+                        .catch(function(error) {
+                            log('SSO failed: ' + error.code + ' - ' + error.message);
+                            // Fallback to REST API
+                            tryRestApiPhoto();
+                        });
+                } else {
+                    log('SSO not available, trying REST API...');
+                    tryRestApiPhoto();
+                }
+            } catch (e) {
+                log('Photo error: ' + e.message);
+            }
+        }
+
+        function fetchPhotoFromGraph(token) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://graph.microsoft.com/v1.0/me/photo/$value', true);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+            xhr.responseType = 'blob';
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var reader = new FileReader();
+                    reader.onloadend = function() {
+                        userProfile.photoBase64 = reader.result;
+                        log('Photo loaded via Graph!');
+                        updateDebug();
+                    };
+                    reader.readAsDataURL(xhr.response);
+                } else {
+                    log('Graph photo failed: ' + xhr.status);
+                }
+            };
+            
+            xhr.onerror = function() {
+                log('Graph photo network error');
+            };
+            
+            xhr.send();
+        }
+
+        function tryRestApiPhoto() {
+            try {
                 if (!Office.context.mailbox || !Office.context.mailbox.restUrl) {
-                    log('REST API not available for photo');
+                    log('REST API not available');
                     return;
                 }
 
                 Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
-                    if (result.status !== Office.AsyncResultStatus.Succeeded) {
-                        log('Could not get REST token');
-                        return;
+                    if (result.status === Office.AsyncResultStatus.Succeeded) {
+                        var token = result.value;
+                        var restUrl = Office.context.mailbox.restUrl;
+                        
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('GET', restUrl + '/v2.0/me/photo/$value', true);
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                        xhr.responseType = 'blob';
+                        
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                var reader = new FileReader();
+                                reader.onloadend = function() {
+                                    userProfile.photoBase64 = reader.result;
+                                    log('Photo loaded via REST!');
+                                    updateDebug();
+                                };
+                                reader.readAsDataURL(xhr.response);
+                            } else {
+                                log('REST photo failed: ' + xhr.status);
+                            }
+                        };
+                        
+                        xhr.onerror = function() {
+                            log('REST photo network error');
+                        };
+                        
+                        xhr.send();
+                    } else {
+                        log('REST token failed');
                     }
-
-                    var token = result.value;
-                    var restUrl = Office.context.mailbox.restUrl;
-
-                    // Fetch profile photo
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('GET', restUrl + '/v2.0/me/photo/$value', true);
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                    xhr.responseType = 'blob';
-                    
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            var reader = new FileReader();
-                            reader.onloadend = function() {
-                                userProfile.photoBase64 = reader.result;
-                                log('Photo loaded');
-                                updateDebug();
-                            };
-                            reader.readAsDataURL(xhr.response);
-                        } else {
-                            log('Photo not available: ' + xhr.status);
-                        }
-                    };
-                    
-                    xhr.onerror = function() {
-                        log('Photo fetch error');
-                    };
-                    
-                    xhr.send();
                 });
             } catch (e) {
-                log('Photo error: ' + e.message);
+                log('REST error: ' + e.message);
             }
         }
 
