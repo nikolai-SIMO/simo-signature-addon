@@ -545,25 +545,26 @@
                 '</td>';
             }
 
-            // Social media icons - always included
+            // Social media icons - using GitHub hosted images
+            var iconBase = 'https://nikolai-simo.github.io/simo-signature-addon/';
             var socialHTML = '<tr><td ' + (photoHTML ? 'colspan="2" ' : '') + 'style="padding-top:15px;">' +
                 '<a href="https://www.linkedin.com/company/simo-online" style="text-decoration:none;margin-right:8px;">' +
-                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABKklEQVR4nO2UPUoDURSFv4wmjRtQG0Gwc0lZWAi6AbUTXICFhYVgZWHhJkTXoJVgIa5ACKI7cAFiSCGk+AlMMpl5Y0bm51UeuNzhnXvuuY8L/+oWA8AngB4wu+FDYBd4+g5J1rAMLAN3pf15YFRVgLUSwHb+AJMVA0yXAJ5yvAFcAGsSAJOlAKPkpn0IzAMPuQDtRIIR4BE4BI6Bq1yApuwEGAXWgC3gLhugrTohpoEDYBK4TAJYBo6AK2A2C3Ak+xSYApYyAXIqDgDDCiA30icLMAccKYBciwNgS7ZRBTAV7wHWKwDSCVoGuMkFyKh4vOKelAaYjPfqAE7FAaBfdyAzkE7wXE1AR1wAy8B+LkBHXABv1QTsxAWwWQvgVLdKUzUBzquxJL0BdAWvMQ7YxYsAAAAASUVORK5CYII=" width="24" height="24" alt="LinkedIn" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '<img src="' + iconBase + 'linkedin.png" width="24" height="24" alt="LinkedIn" style="display:inline-block;vertical-align:middle;" border="0">' +
                 '</a>' +
                 '<a href="https://www.youtube.com/@SIMOMakeDataEasy" style="text-decoration:none;margin-right:8px;">' +
-                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABIUlEQVR4nO2TPU4DMRCFP0gKJHagpaGgoqLkDHAGrsARuAD04QpcABo6CgoKJBokxH9BspIV7Tqbze4mUvKkkTzjeZ73bMP/+jPKAXvAELjrmfvAIXD+lSV9BViqCNC1XgFbNQGm0wD3bdYAmE8DXBf4AHgsgIcmvKoOsJkGuGnDA+BB9ifA00RJSvcl8NAmwDhwCqy0DLAEHALLLQOUpgGwJvsk7RzwnwfMJwEWZD8EngdYA0ZmgGVgBNgfA/wFLjoF3AJWxwG/AwcdAbwBrhsB7gKbNkAXgEvZdxoAfAQ2ugBcAbfW+CnwDDzbJJotwi3gwvrcA542AUYJbJMuwEMSYKsmwGUSYLUmwHwSYKEmwEISYKYmwFQS4E9r/AHZbfCQUiZLfAAAAABJRU5ErkJggg==" width="24" height="24" alt="YouTube" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '<img src="' + iconBase + 'youtube.png" width="24" height="24" alt="YouTube" style="display:inline-block;vertical-align:middle;" border="0">' +
                 '</a>' +
                 '<a href="https://www.instagram.com/simo_makedataeasy/" style="text-decoration:none;margin-right:8px;">' +
-                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO2Uu0oDQRiFv3gBa6294AUsLCy8gI2NjY0P4Av4AD6CPoKFhYWFjYWFhYVYiFdUvKBRMSqaRL3gLZpEk43ZODvJbjYbL6AD/zDMnDn/+WdnYOAfP1oeIAmcA3VAOZADrAJ3wBuQFB3HADlyCqQDmcBMUsBhKVAdQ8BsUkCTnOLowXEQHwdcyjQcCTKANe07gcM0AYuB0njCVQMi9WgFNgXx2DExH2BvOgAaIwCWAvVRgPIIwFCEJgkDqAJao6z7E6S1bwPa0gU0RdEcyC48SXwdS5pDATqiFm8EysICJqKAbKArrfNEtKlj4JuHFd+0XQcehdEeGDgObPdkNhCgMwpgJFCX7qYwJ+BLsAvcAXdALdACNAAtwDpwLXgR3B2FGD2aPACvwIngi4Fj4AQ4FRzKfB44ANqjmqYM+As8CR4K7sIGnAJ7wJ7gu+BW9h1AT9TqrcKnwIHgHuwl8Ce4A+iKWr0n5hQ4ABxZgG3ZdwG9UYD9JDCwADuyHwD6ogBHFmBX9oPAYBTgOAkMLMCe7IeA4SjASRIYWIA92Y8Ao1GAsyQwsAAHsh8HxqMAF0lg8A24lP0kMBUFuE4CA/lPuJL9DDAbBbhJAgMLcCv7eWAhCnCXBAb2n3An+yVgOQrwkAQG8h/rE5PGBDh/NjneAAAAAElFTkSuQmCC" width="24" height="24" alt="Instagram" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '<img src="' + iconBase + 'instagram.png" width="24" height="24" alt="Instagram" style="display:inline-block;vertical-align:middle;" border="0">' +
                 '</a>' +
                 '<a href="https://x.com/SIMO_GmbH" style="text-decoration:none;margin-right:8px;">' +
-                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA7UlEQVR4nO2UMQ6CQBBF34mewsLCROMBPIEn8Ah6BT2C3sAb2FhYWNhYWFhYGI0lxkQNKoLAzrILGN1kksnu/P/nTwYW/vU3qgJaQDfwPAa0geMgpQm0A/cjICPY7+n6CswCr1WAThAYAsfAcw3gIGjJOKA7AYyAq6DA5SDgD1AxfCewlxDgexAYA3eTAM2AyUSAtYSAdUKAb8HgH7CZEOArMPIHzCcE+AKMkwD2EgJ8Bcb/gJ2EAF+A8SRAPyHAd2CUBHCQEOAbMEwC2EsI8A0YJgEcJAT4BgySAPYSAnwDBkkAewkBvgCDJIA/rRcsqxL2bqgZDgAAAABJRU5ErkJggg==" width="24" height="24" alt="X" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '<img src="' + iconBase + 'x.png" width="24" height="24" alt="X" style="display:inline-block;vertical-align:middle;" border="0">' +
                 '</a>' +
                 '<a href="https://www.tiktok.com/@simo.makedataeasy" style="text-decoration:none;margin-right:8px;">' +
-                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABcUlEQVR4nO2Uu0oDURCGP0QbsbARC7HwAt7ARrCxsfEFfAEfwUfQR7CwsLCwsbCwsLAQC/GCF9CoaIwaE5O4MXvJbHY3JhcD+sPA7Jw5/z9nZuFPv1IqYBfYBCaBYaAPaANugXvgGWgET0eBXCBXTgU4ygDWswF0RxAwlRWgR07xdOE4jI8DrmQaDgVpwIryneDhNAC1UYByfxqBDUE8dhzMhthLB0BDBMBcoCYKUBEBGIzQJGYAlUBrlHV/gtT2TUBruoD6KJoD2YXHia9jSXMoQHvU4vVAaViAxBhAHtCW1nki2tQx8NXDim/abgD3wugIDBwFtvsy6w/QFgUwHKhLd1OYE/AtWAVugCugGmgAmoE1YEPwJLg5CjF6MHkE3oETwScDx8EJcCp4kPkccAi0RzVNGfAXeBY8FNyGDTgB9oB9wXfBrez7gI6o1duFT4F9wQPYi+NvcB/YA/YE3wW3su8EuqJWbxU+Bw4E92AvgT/BHUBnVOu9AJNsW+mDhwizAAAAAElFTkSuQmCC" width="24" height="24" alt="TikTok" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '<img src="' + iconBase + 'tiktok.png" width="24" height="24" alt="TikTok" style="display:inline-block;vertical-align:middle;" border="0">' +
                 '</a>' +
                 '<a href="https://teams.microsoft.com/l/chat/0/0?users=' + userProfile.email + '" style="text-decoration:none;">' +
-                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABb0lEQVR4nO2UvUoDQRSFv0QbsbARCzH+gE9gY2NjY2PjC/gCPoKPoI9gYWFhYWNhYWFhIRbiD16IGtGosVBj4u5kZ5PdbNRF8MDAXO6ce+bO3cKf/qZUwB6wCUwCw0Af0AbcAvfAM9AIngeCnCBXTgU4zABW0wF0RxAwlRWgR07xdOE4jI8DrmUaDgVpwIryndDhNAC1UYByfxqBdUE8duzPBthLB0BDBMBcoCYKUBEBGIzQJGYAlUBrlHV/gtT2TUBruoD6KJoD2YXHia9jSXMoQHvU4vVAaViAxBhAHtCW1nki2tQx8NXDim/abgD3wugIDBwFtvsy6wvQFgUwHKhLd1OYE/AtuAaugWugGmgAmoE14ErwJLg5CjF6MHkC3oETwScDx8AJcCp4kPk8cAi0RzVNGfAXeBY8EtyGDTgG9oF9wXfBrez7gI6o1duFT4B9wQPYS+BPcD+wB+wLvgteyb4P6IxavVX4HDgQ3IO9OP4ED4A2k3jZYH4AAAAASUVORK5CYII=" width="24" height="24" alt="Teams" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '<img src="' + iconBase + 'teams.png" width="24" height="24" alt="Teams" style="display:inline-block;vertical-align:middle;" border="0">' +
                 '</a>' +
             '</td></tr>';
 
