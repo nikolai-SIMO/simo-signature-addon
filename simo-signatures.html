@@ -217,6 +217,11 @@
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
+                <div class="setting-item column">
+                    <label>Profile Photo URL (hosted image)</label>
+                    <input type="text" class="setting-input" id="customPhotoUrl" placeholder="https://example.com/photo.jpg" onchange="saveSettings()">
+                    <small style="color:#666;font-size:10px;margin-top:4px;">Upload your photo to GitHub or another host and paste the URL here</small>
+                </div>
             </div>
             
             <div class="settings-group">
@@ -332,7 +337,8 @@
             jobTitle: '',
             phone: '',
             mobile: '',
-            photoBase64: null
+            photoBase64: null,
+            photoUrl: null
         };
 
         // Settings
@@ -344,6 +350,7 @@
             showProfilePhoto: true,
             customPhone: '',
             customMobile: '',
+            customPhotoUrl: '',
             font: 'Arial, sans-serif',
             nameColor: '#152979',
             contactColor: '#9a9a9a'
@@ -355,7 +362,8 @@
             hasSetSelectedData: false,
             hasSetSignature: false,
             hasBodySet: false,
-            hasBodyGet: false
+            hasBodyGet: false,
+            hasInlineAttachment: false
         };
 
         var debugLog = [];
@@ -372,8 +380,9 @@
                     '<p>Version: ' + apiInfo.version + '</p>' +
                     '<p>setSelectedData: ' + (apiInfo.hasSetSelectedData ? '✅' : '❌') + '</p>' +
                     '<p>setSignature: ' + (apiInfo.hasSetSignature ? '✅' : '❌') + '</p>' +
+                    '<p>inlineAttachment: ' + (apiInfo.hasInlineAttachment ? '✅' : '❌') + '</p>' +
                     '<h4>Profile:</h4>' +
-                    '<p>Photo: ' + (userProfile.photoBase64 ? '✅ Loaded' : '❌ Not loaded') + '</p>' +
+                    '<p>Photo: ' + (userProfile.photoBase64Raw ? '✅ Loaded' : '❌ Not loaded') + '</p>' +
                     '<h4>Log:</h4>' +
                     debugLog.slice(-5).map(function(l) { return '<p>' + l + '</p>'; }).join('');
             }
@@ -397,12 +406,14 @@
         function fetchProfilePhoto() {
             try {
                 log('Fetching photo via SSO...');
-                
+
                 // Try SSO first
                 if (Office.auth && Office.auth.getAccessToken) {
                     Office.auth.getAccessToken({ allowSignInPrompt: true, allowConsentPrompt: true })
                         .then(function(token) {
                             log('SSO token obtained');
+                            // Store token for photo URL usage
+                            userProfile.graphToken = token;
                             fetchPhotoFromGraph(token);
                         })
                         .catch(function(error) {
@@ -424,12 +435,16 @@
             xhr.open('GET', 'https://graph.microsoft.com/v1.0/me/photo/$value', true);
             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
             xhr.responseType = 'blob';
-            
+
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     var reader = new FileReader();
                     reader.onloadend = function() {
+                        // Store full data URL for preview
                         userProfile.photoBase64 = reader.result;
+                        // Extract just the base64 part (remove "data:image/...;base64," prefix)
+                        var base64Data = reader.result.split(',')[1];
+                        userProfile.photoBase64Raw = base64Data;
                         log('Photo loaded via Graph!');
                         updateDebug();
                     };
@@ -438,11 +453,11 @@
                     log('Graph photo failed: ' + xhr.status);
                 }
             };
-            
+
             xhr.onerror = function() {
                 log('Graph photo network error');
             };
-            
+
             xhr.send();
         }
 
@@ -468,6 +483,9 @@
                                 var reader = new FileReader();
                                 reader.onloadend = function() {
                                     userProfile.photoBase64 = reader.result;
+                                    // Extract just the base64 part
+                                    var base64Data = reader.result.split(',')[1];
+                                    userProfile.photoBase64Raw = base64Data;
                                     log('Photo loaded via REST!');
                                     updateDebug();
                                 };
@@ -506,6 +524,9 @@
                     apiInfo.hasBodySet = typeof Office.context.mailbox.item.body.setAsync === 'function';
                     apiInfo.hasBodyGet = typeof Office.context.mailbox.item.body.getAsync === 'function';
                     apiInfo.hasSetSignature = typeof Office.context.mailbox.item.body.setSignatureAsync === 'function';
+                }
+                if (Office.context.mailbox && Office.context.mailbox.item) {
+                    apiInfo.hasInlineAttachment = typeof Office.context.mailbox.item.addFileAttachmentFromBase64Async === 'function';
                 }
                 log('API v' + apiInfo.version);
             } catch (e) {
@@ -551,8 +572,14 @@
                 document.getElementById('showTeams').checked = userSettings.showTeams;
                 document.getElementById('customPhone').value = userSettings.customPhone || '';
                 document.getElementById('customMobile').value = userSettings.customMobile || '';
+                document.getElementById('customPhotoUrl').value = userSettings.customPhotoUrl || '';
                 document.getElementById('fontFamily').value = userSettings.font;
                 document.getElementById('nameColor').value = userSettings.nameColor;
+
+                // Set photoUrl from saved custom setting
+                if (userSettings.customPhotoUrl) {
+                    userProfile.photoUrl = userSettings.customPhotoUrl;
+                }
             } catch (e) {
                 log('Settings error: ' + e.message);
             }
@@ -566,9 +593,15 @@
             userSettings.showTeams = document.getElementById('showTeams').checked;
             userSettings.customPhone = document.getElementById('customPhone').value;
             userSettings.customMobile = document.getElementById('customMobile').value;
+            userSettings.customPhotoUrl = document.getElementById('customPhotoUrl').value;
             userSettings.font = document.getElementById('fontFamily').value;
             userSettings.nameColor = document.getElementById('nameColor').value;
-            
+
+            // Update photoUrl from custom setting
+            if (userSettings.customPhotoUrl) {
+                userProfile.photoUrl = userSettings.customPhotoUrl;
+            }
+
             try {
                 localStorage.setItem('simoSigSettings', JSON.stringify(userSettings));
             } catch (e) {}
@@ -587,11 +620,20 @@
                 phoneHTML += 'mobile. <a href="tel:' + mobile.replace(/\s/g, '') + '" style="color:' + userSettings.contactColor + ';text-decoration:none;">' + mobile + '</a><br>';
             }
 
-            // Profile photo HTML
+            // Profile photo HTML - use CID for inline attachment, or custom URL
             var photoHTML = '';
-            if (userSettings.showProfilePhoto && userProfile.photoBase64) {
+            var useInlinePhoto = userSettings.showProfilePhoto && userProfile.photoBase64Raw && !userSettings.customPhotoUrl;
+            var useCustomPhoto = userSettings.showProfilePhoto && userSettings.customPhotoUrl;
+
+            if (useInlinePhoto) {
+                // Use CID reference - photo will be attached inline
                 photoHTML = '<td style="padding-right:15px;vertical-align:top;">' +
-                    '<img src="' + userProfile.photoBase64 + '" width="80" height="80" alt="Photo" style="border-radius:50%;display:block;" border="0">' +
+                    '<img src="cid:profile-photo.png" width="80" height="80" alt="Photo" style="border-radius:50%;display:block;object-fit:cover;" border="0">' +
+                '</td>';
+            } else if (useCustomPhoto) {
+                // Use custom URL
+                photoHTML = '<td style="padding-right:15px;vertical-align:top;">' +
+                    '<img src="' + userSettings.customPhotoUrl + '" width="80" height="80" alt="Photo" style="border-radius:50%;display:block;object-fit:cover;" border="0">' +
                 '</td>';
             }
 
@@ -682,6 +724,32 @@
         }
 
         function tryInsert(html) {
+            // Check if we need to attach profile photo inline
+            var needsInlinePhoto = userSettings.showProfilePhoto && userProfile.photoBase64Raw && !userSettings.customPhotoUrl;
+
+            if (needsInlinePhoto) {
+                // First attach the photo as inline attachment, then insert HTML
+                Office.context.mailbox.item.addFileAttachmentFromBase64Async(
+                    userProfile.photoBase64Raw,
+                    'profile-photo.png',
+                    { isInline: true },
+                    function(attachResult) {
+                        if (attachResult.status === Office.AsyncResultStatus.Succeeded) {
+                            log('Photo attached inline');
+                            insertHtmlContent(html);
+                        } else {
+                            log('Failed to attach photo: ' + (attachResult.error ? attachResult.error.message : 'unknown'));
+                            // Continue without photo
+                            insertHtmlContent(html);
+                        }
+                    }
+                );
+            } else {
+                insertHtmlContent(html);
+            }
+        }
+
+        function insertHtmlContent(html) {
             if (apiInfo.hasSetSelectedData) {
                 Office.context.mailbox.item.body.setSelectedDataAsync(
                     html,
@@ -723,29 +791,52 @@
 
         function tryPrepend(html) {
             if (apiInfo.hasBodyGet && apiInfo.hasBodySet) {
-                Office.context.mailbox.item.body.getAsync(
-                    Office.CoercionType.Html,
-                    function(getResult) {
-                        if (getResult.status === Office.AsyncResultStatus.Succeeded) {
-                            var newBody = html + (getResult.value || '');
-                            Office.context.mailbox.item.body.setAsync(
-                                newBody,
-                                { coercionType: Office.CoercionType.Html },
-                                function(setResult) {
-                                    if (setResult.status === Office.AsyncResultStatus.Succeeded) {
-                                        log('Success: prepend');
-                                        showStatus('✓ Signature applied!', 'ready');
-                                    } else {
-                                        log('Failed prepend');
-                                        showStatus('Error applying signature.', 'error');
+                // Check if we need to attach profile photo inline
+                var needsInlinePhoto = userSettings.showProfilePhoto && userProfile.photoBase64Raw && !userSettings.customPhotoUrl;
+
+                var doPrepend = function() {
+                    Office.context.mailbox.item.body.getAsync(
+                        Office.CoercionType.Html,
+                        function(getResult) {
+                            if (getResult.status === Office.AsyncResultStatus.Succeeded) {
+                                var newBody = html + (getResult.value || '');
+                                Office.context.mailbox.item.body.setAsync(
+                                    newBody,
+                                    { coercionType: Office.CoercionType.Html },
+                                    function(setResult) {
+                                        if (setResult.status === Office.AsyncResultStatus.Succeeded) {
+                                            log('Success: prepend');
+                                            showStatus('✓ Signature applied!', 'ready');
+                                        } else {
+                                            log('Failed prepend');
+                                            showStatus('Error applying signature.', 'error');
+                                        }
                                     }
-                                }
-                            );
-                        } else {
-                            showStatus('Error: could not get body.', 'error');
+                                );
+                            } else {
+                                showStatus('Error: could not get body.', 'error');
+                            }
                         }
-                    }
-                );
+                    );
+                };
+
+                if (needsInlinePhoto) {
+                    Office.context.mailbox.item.addFileAttachmentFromBase64Async(
+                        userProfile.photoBase64Raw,
+                        'profile-photo.png',
+                        { isInline: true },
+                        function(attachResult) {
+                            if (attachResult.status === Office.AsyncResultStatus.Succeeded) {
+                                log('Photo attached inline (prepend)');
+                            } else {
+                                log('Failed to attach photo in prepend');
+                            }
+                            doPrepend();
+                        }
+                    );
+                } else {
+                    doPrepend();
+                }
             } else {
                 showStatus('Error: No compatible API.', 'error');
             }
