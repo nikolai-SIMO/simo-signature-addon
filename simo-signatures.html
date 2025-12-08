@@ -478,12 +478,14 @@
                     };
                     reader.readAsDataURL(xhr.response);
                 } else {
-                    log('Graph photo failed: ' + xhr.status);
+                    log('Graph photo failed: ' + xhr.status + ', trying REST API...');
+                    tryRestApiPhoto();
                 }
             };
 
             xhr.onerror = function() {
-                log('Graph photo network error');
+                log('Graph photo network error, trying REST API...');
+                tryRestApiPhoto();
             };
 
             xhr.send();
