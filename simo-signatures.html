@@ -41,7 +41,6 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .content { flex: 1; padding: 15px; overflow-y: auto; padding-bottom: 70px; }
         
-        /* Signature Cards */
         .signature-card {
             background: white;
             border-radius: 8px;
@@ -60,7 +59,6 @@
         .signature-card h3 { font-size: 14px; color: #1a365d; margin-bottom: 5px; }
         .signature-card p { font-size: 11px; color: #666; }
         
-        /* Navigation */
         .nav-bar {
             position: fixed;
             bottom: 0;
@@ -85,11 +83,9 @@
         .nav-btn:hover { background: #f0f0f0; }
         .nav-btn.active { color: #1a365d; font-weight: 600; border-top: 2px solid #1a365d; }
         
-        /* Views */
         .view { display: none; }
         .view.active { display: block; }
         
-        /* Settings */
         .settings-group { 
             background: white; 
             border-radius: 8px; 
@@ -114,7 +110,6 @@
         .setting-item:last-child { border-bottom: none; }
         .setting-item label { font-size: 12px; color: #333; }
         
-        /* Toggle Switch */
         .toggle {
             position: relative;
             width: 44px;
@@ -143,7 +138,6 @@
         .toggle input:checked + .toggle-slider { background-color: #1a365d; }
         .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
         
-        /* Text Input */
         .setting-input {
             width: 100%;
             padding: 8px 10px;
@@ -152,19 +146,10 @@
             font-size: 12px;
             margin-top: 5px;
         }
-        .setting-input:focus {
-            outline: none;
-            border-color: #1a365d;
-        }
-        .setting-item.column {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .setting-item.column label {
-            margin-bottom: 5px;
-        }
+        .setting-input:focus { outline: none; border-color: #1a365d; }
+        .setting-item.column { flex-direction: column; align-items: flex-start; }
+        .setting-item.column label { margin-bottom: 5px; }
         
-        /* Debug Info */
         .debug-info {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -179,34 +164,13 @@
         .debug-info h4 { font-size: 11px; margin-bottom: 5px; color: #1a365d; }
         .debug-info p { margin: 2px 0; }
         
-        /* User Info Card */
         .user-info-card {
             background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
             color: white;
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
         }
-        .user-info-card .user-photo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            overflow: hidden;
-        }
-        .user-info-card .user-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .user-info-card .user-details { flex: 1; }
         .user-info-card h3 { font-size: 14px; margin-bottom: 4px; }
         .user-info-card p { font-size: 11px; opacity: 0.9; margin: 2px 0; }
     </style>
@@ -222,17 +186,11 @@
     </div>
     
     <div class="content">
-        <!-- Signatures View -->
         <div id="signaturesView" class="view active">
             <div id="userInfoCard" class="user-info-card">
-                <div class="user-photo" id="userPhotoContainer">
-                    <span id="userInitials">?</span>
-                </div>
-                <div class="user-details">
-                    <h3 id="userName">Loading...</h3>
-                    <p id="userTitle"></p>
-                    <p id="userEmail"></p>
-                </div>
+                <h3 id="userName">Loading...</h3>
+                <p id="userTitle"></p>
+                <p id="userEmail"></p>
             </div>
             
             <div class="signature-card" onclick="applySignature('default')">
@@ -249,19 +207,7 @@
             </div>
         </div>
         
-        <!-- Settings View -->
         <div id="settingsView" class="view">
-            <div class="settings-group">
-                <h3>👤 Profile Options</h3>
-                <div class="setting-item">
-                    <label>Show Profile Photo</label>
-                    <label class="toggle">
-                        <input type="checkbox" id="showProfilePhoto" checked onchange="saveSettings()">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            
             <div class="settings-group">
                 <h3>📞 Contact Information</h3>
                 <div class="setting-item">
@@ -289,7 +235,7 @@
             </div>
             
             <div class="settings-group">
-                <h3>🔗 Social Media Icons</h3>
+                <h3>🔗 Social Media</h3>
                 <div class="setting-item">
                     <label>Show Social Media Icons</label>
                     <label class="toggle">
@@ -298,7 +244,7 @@
                     </label>
                 </div>
                 <div class="setting-item">
-                    <label>Show Teams (personal link)</label>
+                    <label>Show Teams Link</label>
                     <label class="toggle">
                         <input type="checkbox" id="showTeams" checked onchange="saveSettings()">
                         <span class="toggle-slider"></span>
@@ -314,49 +260,36 @@
                         <option value="Arial, sans-serif">Arial</option>
                         <option value="'Segoe UI', sans-serif">Segoe UI</option>
                         <option value="Calibri, sans-serif">Calibri</option>
-                        <option value="Verdana, sans-serif">Verdana</option>
                     </select>
                 </div>
                 <div class="setting-item column">
                     <label>Name Color</label>
-                    <input type="color" class="setting-input" id="nameColor" value="#152979" onchange="saveSettings()" style="height: 35px; padding: 2px;">
-                </div>
-                <div class="setting-item column">
-                    <label>Contact Color</label>
-                    <input type="color" class="setting-input" id="contactColor" value="#9a9a9a" onchange="saveSettings()" style="height: 35px; padding: 2px;">
+                    <input type="color" class="setting-input" id="nameColor" value="#152979" onchange="saveSettings()" style="height: 35px;">
                 </div>
             </div>
             
             <div class="settings-group">
-                <h3>🔧 Debug Information</h3>
-                <div id="debugInfo" class="debug-info">
-                    <p>Loading...</p>
-                </div>
+                <h3>🔧 Debug</h3>
+                <div id="debugInfo" class="debug-info"><p>Loading...</p></div>
             </div>
         </div>
     </div>
     
     <nav class="nav-bar">
-        <button class="nav-btn active" id="navSignatures" onclick="switchView('signatures')">
-            ✉️ Signatures
-        </button>
-        <button class="nav-btn" id="navSettings" onclick="switchView('settings')">
-            ⚙️ Settings
-        </button>
+        <button class="nav-btn active" id="navSignatures" onclick="switchView('signatures')">✉️ Signatures</button>
+        <button class="nav-btn" id="navSettings" onclick="switchView('settings')">⚙️ Settings</button>
     </nav>
 
     <script>
-        // Company Information (constant)
-        const COMPANY_INFO = {
+        // Company Info
+        var COMPANY = {
             name: 'SIMO GmbH',
             address: 'Würzburger Straße 152',
             city: '63743 Aschaffenburg',
-            country: 'Germany',
             phone: '+49 (0)6021 3274550',
             website: 'https://www.simo-online.com/',
             email: 'info@simo-online.com',
-            logoUrl: 'https://nikolai-simo.github.io/simo-signature-addon/simo-logo.png',
-            // Social Media Links
+            logo: 'https://nikolai-simo.github.io/simo-signature-addon/simo-logo.png',
             social: {
                 linkedin: 'https://www.linkedin.com/company/simo-online',
                 youtube: 'https://www.youtube.com/@SIMOMakeDataEasy',
@@ -364,36 +297,24 @@
                 x: 'https://x.com/SIMO_GmbH',
                 tiktok: 'https://www.tiktok.com/@simo.makedataeasy'
             },
-            // Social Media Icons (hosted on GitHub)
-            icons: {
-                linkedin: 'https://nikolai-simo.github.io/simo-signature-addon/icons/linkedin.png',
-                youtube: 'https://nikolai-simo.github.io/simo-signature-addon/icons/youtube.png',
-                instagram: 'https://nikolai-simo.github.io/simo-signature-addon/icons/instagram.png',
-                x: 'https://nikolai-simo.github.io/simo-signature-addon/icons/x.png',
-                tiktok: 'https://nikolai-simo.github.io/simo-signature-addon/icons/tiktok.png',
-                teams: 'https://nikolai-simo.github.io/simo-signature-addon/icons/teams.png'
-            },
             legal: {
                 court: 'Amtsgericht Aschaffenburg HRB 15769',
                 vatId: 'DE335322803',
-                management: 'Thomas Wassum und Andreas O. Schwan'
+                mgmt: 'Thomas Wassum und Andreas O. Schwan'
             }
         };
 
-        // User profile data (loaded from Office)
-        let userProfile = {
+        // User profile
+        var userProfile = {
             displayName: 'SIMO Employee',
             email: '',
             jobTitle: '',
             phone: '',
-            mobile: '',
-            photoUrl: null,
-            photoBase64: null
+            mobile: ''
         };
 
-        // User settings (persisted)
-        let userSettings = {
-            showProfilePhoto: true,
+        // Settings
+        var userSettings = {
             showPhone: true,
             showMobile: true,
             showSocialMedia: true,
@@ -401,244 +322,105 @@
             customPhone: '',
             customMobile: '',
             font: 'Arial, sans-serif',
-            nameSize: '12pt',
-            bodySize: '10pt',
             nameColor: '#152979',
-            titleColor: '#9a9a9a',
             contactColor: '#9a9a9a'
         };
 
-        // API capabilities
-        let apiCapabilities = {
-            mailboxVersion: 'unknown',
-            hasSetSignatureAsync: false,
-            hasSetSelectedDataAsync: false,
-            hasBodySetAsync: false,
-            hasBodyGetAsync: false,
-            hasRestApi: false,
-            itemAvailable: false,
-            bodyAvailable: false
+        // API info
+        var apiInfo = {
+            version: 'unknown',
+            hasSetSelectedData: false,
+            hasSetSignature: false,
+            hasBodySet: false,
+            hasBodyGet: false
         };
 
-        // Debug log
-        let debugLog = [];
+        var debugLog = [];
 
-        function log(message) {
-            const timestamp = new Date().toLocaleTimeString();
-            debugLog.push(`[${timestamp}] ${message}`);
-            console.log(`[SIMO Signatures] ${message}`);
-            updateDebugDisplay();
+        function log(msg) {
+            debugLog.push('[' + new Date().toLocaleTimeString() + '] ' + msg);
+            console.log('[SIMO] ' + msg);
         }
 
-        function updateDebugDisplay() {
-            const debugEl = document.getElementById('debugInfo');
-            if (debugEl) {
-                debugEl.innerHTML = `
-                    <h4>User Profile:</h4>
-                    <p>Name: ${userProfile.displayName}</p>
-                    <p>Email: ${userProfile.email}</p>
-                    <p>Title: ${userProfile.jobTitle || '(not set)'}</p>
-                    <p>Photo: ${userProfile.photoBase64 ? '✅ Loaded' : '❌ Not available'}</p>
-                    <h4>API Capabilities:</h4>
-                    <p>Mailbox Version: ${apiCapabilities.mailboxVersion}</p>
-                    <p>REST API: ${apiCapabilities.hasRestApi ? '✅' : '❌'}</p>
-                    <p>setSelectedDataAsync: ${apiCapabilities.hasSetSelectedDataAsync ? '✅' : '❌'}</p>
-                    <p>setSignatureAsync: ${apiCapabilities.hasSetSignatureAsync ? '✅' : '❌'}</p>
-                    <h4>Recent Log:</h4>
-                    ${debugLog.slice(-6).map(l => `<p>${l}</p>`).join('')}
-                `;
+        function updateDebug() {
+            var el = document.getElementById('debugInfo');
+            if (el) {
+                el.innerHTML = '<h4>API:</h4>' +
+                    '<p>Version: ' + apiInfo.version + '</p>' +
+                    '<p>setSelectedData: ' + (apiInfo.hasSetSelectedData ? '✅' : '❌') + '</p>' +
+                    '<p>setSignature: ' + (apiInfo.hasSetSignature ? '✅' : '❌') + '</p>' +
+                    '<h4>Log:</h4>' +
+                    debugLog.slice(-5).map(function(l) { return '<p>' + l + '</p>'; }).join('');
             }
         }
 
-        // Initialize Office
+        // Office init
         Office.onReady(function(info) {
-            log(`Office.onReady - Host: ${info.host}, Platform: ${info.platform}`);
+            log('Office ready: ' + info.host);
             
             if (info.host === Office.HostType.Outlook) {
-                detectCapabilities();
-                loadUserProfile();
+                detectAPI();
+                loadProfile();
                 loadSettings();
-                fetchUserPhoto();
-                showStatus('Ready! Select a signature to apply.', 'ready');
+                showStatus('Ready! Select a signature.', 'ready');
             } else {
-                showStatus('Error: Not running in Outlook', 'error');
-                log(`Wrong host type: ${info.host}`);
+                showStatus('Error: Not in Outlook', 'error');
             }
         });
 
-        function detectCapabilities() {
+        function detectAPI() {
             try {
-                // Check mailbox requirement set version
-                if (Office.context.requirements) {
-                    const versions = ['1.14', '1.13', '1.12', '1.11', '1.10', '1.9', '1.8', '1.7', '1.6', '1.5', '1.4', '1.3', '1.2', '1.1'];
-                    for (const v of versions) {
-                        if (Office.context.requirements.isSetSupported('Mailbox', v)) {
-                            apiCapabilities.mailboxVersion = v;
-                            break;
-                        }
+                var versions = ['1.10', '1.9', '1.8', '1.5', '1.3', '1.1'];
+                for (var i = 0; i < versions.length; i++) {
+                    if (Office.context.requirements && Office.context.requirements.isSetSupported('Mailbox', versions[i])) {
+                        apiInfo.version = versions[i];
+                        break;
                     }
                 }
-                log(`Mailbox version: ${apiCapabilities.mailboxVersion}`);
-
-                // Check if item is available
-                if (Office.context.mailbox && Office.context.mailbox.item) {
-                    apiCapabilities.itemAvailable = true;
-
-                    // Check body availability
-                    if (Office.context.mailbox.item.body) {
-                        apiCapabilities.bodyAvailable = true;
-                        apiCapabilities.hasSetSelectedDataAsync = typeof Office.context.mailbox.item.body.setSelectedDataAsync === 'function';
-                        apiCapabilities.hasBodySetAsync = typeof Office.context.mailbox.item.body.setAsync === 'function';
-                        apiCapabilities.hasBodyGetAsync = typeof Office.context.mailbox.item.body.getAsync === 'function';
-                        apiCapabilities.hasSetSignatureAsync = typeof Office.context.mailbox.item.body.setSignatureAsync === 'function';
-                    }
+                
+                if (Office.context.mailbox && Office.context.mailbox.item && Office.context.mailbox.item.body) {
+                    apiInfo.hasSetSelectedData = typeof Office.context.mailbox.item.body.setSelectedDataAsync === 'function';
+                    apiInfo.hasBodySet = typeof Office.context.mailbox.item.body.setAsync === 'function';
+                    apiInfo.hasBodyGet = typeof Office.context.mailbox.item.body.getAsync === 'function';
+                    apiInfo.hasSetSignature = typeof Office.context.mailbox.item.body.setSignatureAsync === 'function';
                 }
-
-                // Check REST API availability
-                if (Office.context.mailbox && Office.context.mailbox.restUrl) {
-                    apiCapabilities.hasRestApi = true;
-                    log('REST API available');
-                }
+                log('API v' + apiInfo.version);
             } catch (e) {
-                log(`Error detecting capabilities: ${e.message}`);
+                log('API detect error: ' + e.message);
             }
-            
-            updateDebugDisplay();
+            updateDebug();
         }
 
-        function loadUserProfile() {
+        function loadProfile() {
             try {
-                const mailbox = Office.context.mailbox;
-                if (mailbox && mailbox.userProfile) {
-                    userProfile.displayName = mailbox.userProfile.displayName || 'SIMO Employee';
-                    userProfile.email = mailbox.userProfile.emailAddress || '';
-                    log(`Loaded profile: ${userProfile.displayName}`);
-                    
-                    // Try to get additional info via EWS/REST if available
-                    fetchUserDetails();
+                if (Office.context.mailbox && Office.context.mailbox.userProfile) {
+                    userProfile.displayName = Office.context.mailbox.userProfile.displayName || 'SIMO Employee';
+                    userProfile.email = Office.context.mailbox.userProfile.emailAddress || '';
+                    log('Profile: ' + userProfile.displayName);
                 }
-                updateUserInfoCard();
+                updateUserCard();
             } catch (e) {
-                log(`Error loading profile: ${e.message}`);
+                log('Profile error: ' + e.message);
             }
         }
 
-        // Fetch additional user details via REST API
-        function fetchUserDetails() {
-            if (!apiCapabilities.hasRestApi) {
-                log('REST API not available for user details');
-                return;
-            }
-
-            try {
-                Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
-                    if (result.status === Office.AsyncResultStatus.Succeeded) {
-                        const accessToken = result.value;
-                        const restUrl = Office.context.mailbox.restUrl;
-                        
-                        // Fetch user profile
-                        fetch(`${restUrl}/v2.0/me`, {
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken,
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.DisplayName) userProfile.displayName = data.DisplayName;
-                            if (data.JobTitle) userProfile.jobTitle = data.JobTitle;
-                            if (data.MobilePhone) userProfile.mobile = data.MobilePhone;
-                            if (data.BusinessPhones && data.BusinessPhones.length > 0) {
-                                userProfile.phone = data.BusinessPhones[0];
-                            }
-                            log(`REST profile loaded: ${userProfile.jobTitle || 'no title'}`);
-                            updateUserInfoCard();
-                        })
-                        .catch(err => log(`REST profile error: ${err.message}`));
-                    } else {
-                        log('Failed to get REST token');
-                    }
-                });
-            } catch (e) {
-                log(`fetchUserDetails error: ${e.message}`);
-            }
-        }
-
-        // Fetch user profile photo
-        function fetchUserPhoto() {
-            if (!apiCapabilities.hasRestApi) {
-                log('REST API not available for photo');
-                return;
-            }
-
-            try {
-                Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
-                    if (result.status === Office.AsyncResultStatus.Succeeded) {
-                        const accessToken = result.value;
-                        const restUrl = Office.context.mailbox.restUrl;
-                        
-                        // Fetch user photo
-                        fetch(`${restUrl}/v2.0/me/photo/$value`, {
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken
-                            }
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                return response.blob();
-                            }
-                            throw new Error('Photo not available');
-                        })
-                        .then(blob => {
-                            const reader = new FileReader();
-                            reader.onloadend = function() {
-                                userProfile.photoBase64 = reader.result;
-                                log('Profile photo loaded');
-                                updateUserInfoCard();
-                                updateDebugDisplay();
-                            };
-                            reader.readAsDataURL(blob);
-                        })
-                        .catch(err => log(`Photo not available: ${err.message}`));
-                    }
-                });
-            } catch (e) {
-                log(`fetchUserPhoto error: ${e.message}`);
-            }
-        }
-
-        function updateUserInfoCard() {
+        function updateUserCard() {
             document.getElementById('userName').textContent = userProfile.displayName;
             document.getElementById('userEmail').textContent = userProfile.email;
             document.getElementById('userTitle').textContent = userProfile.jobTitle || 'SIMO GmbH';
-            
-            // Update photo/initials
-            const photoContainer = document.getElementById('userPhotoContainer');
-            if (userProfile.photoBase64) {
-                photoContainer.innerHTML = `<img src="${userProfile.photoBase64}" alt="Profile Photo">`;
-            } else {
-                // Show initials
-                const initials = userProfile.displayName
-                    .split(' ')
-                    .map(n => n[0])
-                    .join('')
-                    .substring(0, 2)
-                    .toUpperCase();
-                document.getElementById('userInitials').textContent = initials;
-            }
         }
 
         function loadSettings() {
             try {
-                const saved = localStorage.getItem('simoSignatureSettings');
+                var saved = localStorage.getItem('simoSigSettings');
                 if (saved) {
-                    const parsed = JSON.parse(saved);
-                    userSettings = { ...userSettings, ...parsed };
-                    log('Settings loaded');
+                    var parsed = JSON.parse(saved);
+                    for (var key in parsed) {
+                        if (userSettings.hasOwnProperty(key)) {
+                            userSettings[key] = parsed[key];
+                        }
+                    }
                 }
-                
-                // Update UI
-                document.getElementById('showProfilePhoto').checked = userSettings.showProfilePhoto;
                 document.getElementById('showPhone').checked = userSettings.showPhone;
                 document.getElementById('showMobile').checked = userSettings.showMobile;
                 document.getElementById('showSocialMedia').checked = userSettings.showSocialMedia;
@@ -647,14 +429,12 @@
                 document.getElementById('customMobile').value = userSettings.customMobile || '';
                 document.getElementById('fontFamily').value = userSettings.font;
                 document.getElementById('nameColor').value = userSettings.nameColor;
-                document.getElementById('contactColor').value = userSettings.contactColor;
             } catch (e) {
-                log(`Error loading settings: ${e.message}`);
+                log('Settings error: ' + e.message);
             }
         }
 
         function saveSettings() {
-            userSettings.showProfilePhoto = document.getElementById('showProfilePhoto').checked;
             userSettings.showPhone = document.getElementById('showPhone').checked;
             userSettings.showMobile = document.getElementById('showMobile').checked;
             userSettings.showSocialMedia = document.getElementById('showSocialMedia').checked;
@@ -663,321 +443,220 @@
             userSettings.customMobile = document.getElementById('customMobile').value;
             userSettings.font = document.getElementById('fontFamily').value;
             userSettings.nameColor = document.getElementById('nameColor').value;
-            userSettings.contactColor = document.getElementById('contactColor').value;
             
             try {
-                localStorage.setItem('simoSignatureSettings', JSON.stringify(userSettings));
-                log('Settings saved');
-            } catch (e) {
-                log(`Error saving settings: ${e.message}`);
-            }
+                localStorage.setItem('simoSigSettings', JSON.stringify(userSettings));
+            } catch (e) {}
         }
 
-        // Generate Default Signature HTML
-        function getDefaultSignatureHTML() {
-            const phone = userSettings.customPhone || userProfile.phone || COMPANY_INFO.phone;
-            const mobile = userSettings.customMobile || userProfile.mobile;
-            const jobTitle = userProfile.jobTitle || '';
+        function getSignatureHTML() {
+            var phone = userSettings.customPhone || userProfile.phone || COMPANY.phone;
+            var mobile = userSettings.customMobile || userProfile.mobile;
+            var title = userProfile.jobTitle || '';
 
-            // Profile Photo HTML
-            let photoHTML = '';
-            if (userSettings.showProfilePhoto && userProfile.photoBase64) {
-                photoHTML = `<td style="padding-right: 15px; vertical-align: top;">
-                    <img src="${userProfile.photoBase64}" width="80" height="80" style="border-radius: 50%; display: block;" alt="Profile Photo">
-                </td>`;
-            }
-
-            // Phone HTML
-            let phoneHTML = '';
+            var phoneHTML = '';
             if (userSettings.showPhone && phone) {
-                phoneHTML += `phone. <a href="tel:${phone.replace(/\s/g, '')}" style="color: ${userSettings.contactColor}; text-decoration: none;">${phone}</a><br>`;
+                phoneHTML += 'phone. <a href="tel:' + phone.replace(/\s/g, '') + '" style="color:' + userSettings.contactColor + ';text-decoration:none;">' + phone + '</a><br>';
             }
             if (userSettings.showMobile && mobile) {
-                phoneHTML += `mobile. <a href="tel:${mobile.replace(/\s/g, '')}" style="color: ${userSettings.contactColor}; text-decoration: none;">${mobile}</a><br>`;
+                phoneHTML += 'mobile. <a href="tel:' + mobile.replace(/\s/g, '') + '" style="color:' + userSettings.contactColor + ';text-decoration:none;">' + mobile + '</a><br>';
             }
 
-            // Social Media Icons HTML
-            let socialHTML = '';
+            var socialHTML = '';
             if (userSettings.showSocialMedia) {
-                socialHTML = '<tr><td colspan="2" style="padding-top: 15px;">';
-                socialHTML += '<table cellspacing="0" cellpadding="0" border="0"><tr>';
+                socialHTML = '<tr><td style="padding-top:15px;">' +
+                    '<a href="' + COMPANY.social.linkedin + '" style="text-decoration:none;margin-right:6px;">' +
+                        '<img src="https://img.icons8.com/color/24/linkedin.png" width="24" height="24" alt="LinkedIn" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '</a>' +
+                    '<a href="' + COMPANY.social.youtube + '" style="text-decoration:none;margin-right:6px;">' +
+                        '<img src="https://img.icons8.com/color/24/youtube-play.png" width="24" height="24" alt="YouTube" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '</a>' +
+                    '<a href="' + COMPANY.social.instagram + '" style="text-decoration:none;margin-right:6px;">' +
+                        '<img src="https://img.icons8.com/color/24/instagram-new.png" width="24" height="24" alt="Instagram" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '</a>' +
+                    '<a href="' + COMPANY.social.x + '" style="text-decoration:none;margin-right:6px;">' +
+                        '<img src="https://img.icons8.com/color/24/twitterx.png" width="24" height="24" alt="X" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '</a>' +
+                    '<a href="' + COMPANY.social.tiktok + '" style="text-decoration:none;margin-right:6px;">' +
+                        '<img src="https://img.icons8.com/color/24/tiktok.png" width="24" height="24" alt="TikTok" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '</a>';
                 
-                // LinkedIn
-                socialHTML += `<td style="padding-right: 8px;">
-                    <a href="${COMPANY_INFO.social.linkedin}" style="text-decoration: none;">
-                        <img src="${COMPANY_INFO.icons.linkedin}" width="24" height="24" alt="LinkedIn" style="display: block;" border="0">
-                    </a>
-                </td>`;
-                
-                // YouTube
-                socialHTML += `<td style="padding-right: 8px;">
-                    <a href="${COMPANY_INFO.social.youtube}" style="text-decoration: none;">
-                        <img src="${COMPANY_INFO.icons.youtube}" width="24" height="24" alt="YouTube" style="display: block;" border="0">
-                    </a>
-                </td>`;
-                
-                // Instagram
-                socialHTML += `<td style="padding-right: 8px;">
-                    <a href="${COMPANY_INFO.social.instagram}" style="text-decoration: none;">
-                        <img src="${COMPANY_INFO.icons.instagram}" width="24" height="24" alt="Instagram" style="display: block;" border="0">
-                    </a>
-                </td>`;
-                
-                // X (Twitter)
-                socialHTML += `<td style="padding-right: 8px;">
-                    <a href="${COMPANY_INFO.social.x}" style="text-decoration: none;">
-                        <img src="${COMPANY_INFO.icons.x}" width="24" height="24" alt="X" style="display: block;" border="0">
-                    </a>
-                </td>`;
-                
-                // TikTok
-                socialHTML += `<td style="padding-right: 8px;">
-                    <a href="${COMPANY_INFO.social.tiktok}" style="text-decoration: none;">
-                        <img src="${COMPANY_INFO.icons.tiktok}" width="24" height="24" alt="TikTok" style="display: block;" border="0">
-                    </a>
-                </td>`;
-                
-                // Teams (personal link)
                 if (userSettings.showTeams && userProfile.email) {
-                    socialHTML += `<td>
-                        <a href="https://teams.microsoft.com/l/chat/0/0?users=${userProfile.email}" style="text-decoration: none;">
-                            <img src="${COMPANY_INFO.icons.teams}" width="24" height="24" alt="Teams" style="display: block;" border="0">
-                        </a>
-                    </td>`;
+                    socialHTML += '<a href="https://teams.microsoft.com/l/chat/0/0?users=' + userProfile.email + '" style="text-decoration:none;">' +
+                        '<img src="https://img.icons8.com/color/24/microsoft-teams.png" width="24" height="24" alt="Teams" style="display:inline-block;vertical-align:middle;" border="0">' +
+                    '</a>';
                 }
-                
-                socialHTML += '</tr></table></td></tr>';
+                socialHTML += '</td></tr>';
             }
 
-            return `<table cellspacing="0" cellpadding="0" border="0" style="font-family: ${userSettings.font}; font-size: ${userSettings.bodySize};">
-                <tbody>
-                    <tr>
-                        ${photoHTML}
-                        <td style="vertical-align: top;">
-                            <span style="font-size: ${userSettings.nameSize}; font-weight: bold; color: ${userSettings.nameColor};">${userProfile.displayName}</span><br>
-                            ${jobTitle ? `<span style="font-size: ${userSettings.bodySize}; color: ${userSettings.titleColor};">${jobTitle}</span><br>` : ''}
-                            <br>
-                            <span style="font-size: ${userSettings.bodySize}; color: ${userSettings.contactColor};">
-                                ${phoneHTML}
-                                email. <a href="mailto:${userProfile.email}" style="color: ${userSettings.contactColor}; text-decoration: none;">${userProfile.email}</a>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td ${photoHTML ? 'colspan="2"' : ''} style="padding-top: 15px;">
-                            <a href="${COMPANY_INFO.website}">
-                                <img src="${COMPANY_INFO.logoUrl}" width="150" height="49" alt="SIMO Logo" style="display: block;" border="0">
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td ${photoHTML ? 'colspan="2"' : ''} style="padding-top: 5px;">
-                            <span style="font-size: 9pt; color: ${userSettings.contactColor};">
-                                ${COMPANY_INFO.address} | ${COMPANY_INFO.city}
-                            </span>
-                        </td>
-                    </tr>
-                    ${socialHTML}
-                </tbody>
-            </table><br>`;
+            return '<table cellspacing="0" cellpadding="0" border="0" style="font-family:' + userSettings.font + ';font-size:10pt;">' +
+                '<tr><td style="padding-bottom:10px;">' +
+                    '<span style="font-size:12pt;font-weight:bold;color:' + userSettings.nameColor + ';">' + userProfile.displayName + '</span><br>' +
+                    (title ? '<span style="color:' + userSettings.contactColor + ';">' + title + '</span><br>' : '') +
+                    '<br>' +
+                    '<span style="color:' + userSettings.contactColor + ';">' +
+                        phoneHTML +
+                        'email. <a href="mailto:' + userProfile.email + '" style="color:' + userSettings.contactColor + ';text-decoration:none;">' + userProfile.email + '</a>' +
+                    '</span>' +
+                '</td></tr>' +
+                '<tr><td style="padding-top:10px;">' +
+                    '<a href="' + COMPANY.website + '">' +
+                        '<img src="' + COMPANY.logo + '" width="150" height="49" alt="SIMO" style="display:block;" border="0">' +
+                    '</a>' +
+                '</td></tr>' +
+                '<tr><td style="padding-top:5px;">' +
+                    '<span style="font-size:9pt;color:' + userSettings.contactColor + ';">' + COMPANY.address + ' | ' + COMPANY.city + '</span>' +
+                '</td></tr>' +
+                socialHTML +
+            '</table><br>';
         }
 
-        // Generate Legal Footer HTML
-        function getLegalFooterHTML() {
-            return `<hr style="border: none; border-top: 1px solid #c5c8cb; margin-top: 20px;">
-            <p style="color: #c5c8cb; font-size: 8pt; font-family: ${userSettings.font}; margin-top: 5pt; line-height: 1.4;">
-                Diese E-Mail enthält vertrauliche und/oder rechtlich geschützte Informationen. Wenn Sie nicht der beabsichtigte Empfänger sind, informieren Sie bitte sofort den Absender und löschen Sie diese E-Mail. Das unbefugte Kopieren dieser E-Mail oder die unbefugte Weitergabe der enthaltenen Informationen ist nicht gestattet.<br><br>
-                The information contained in this message is confidential or protected by law. If you are not the intended recipient, please contact the sender and delete this message. Any unauthorised copying of this message or unauthorised distribution of the information contained herein is prohibited.
-            </p>
-            <hr style="border: none; border-top: 1px solid #c5c8cb;">
-            <p style="color: #c5c8cb; font-size: 8pt; font-family: ${userSettings.font}; margin-top: 5pt; line-height: 1.4;">
-                <strong>Gesetzliche Pflichtangaben / Legal Information:</strong><br>
-                ${COMPANY_INFO.name} | Sitz: Aschaffenburg | ${COMPANY_INFO.legal.court}<br>
-                USt-IdNr./VAT-ID: ${COMPANY_INFO.legal.vatId} | ${COMPANY_INFO.address}, ${COMPANY_INFO.city}<br>
-                Geschäftsführung: ${COMPANY_INFO.legal.management}
-            </p>`;
+        function getLegalHTML() {
+            return '<hr style="border:none;border-top:1px solid #c5c8cb;margin-top:20px;">' +
+                '<p style="color:#c5c8cb;font-size:8pt;font-family:' + userSettings.font + ';line-height:1.4;">' +
+                'Diese E-Mail enthält vertrauliche und/oder rechtlich geschützte Informationen. Wenn Sie nicht der beabsichtigte Empfänger sind, informieren Sie bitte sofort den Absender und löschen Sie diese E-Mail. Das unbefugte Kopieren dieser E-Mail oder die unbefugte Weitergabe der enthaltenen Informationen ist nicht gestattet.<br><br>' +
+                'The information contained in this message is confidential or protected by law. If you are not the intended recipient, please contact the sender and delete this message. Any unauthorised copying of this message or unauthorised distribution of the information contained herein is prohibited.' +
+                '</p>' +
+                '<hr style="border:none;border-top:1px solid #c5c8cb;">' +
+                '<p style="color:#c5c8cb;font-size:8pt;font-family:' + userSettings.font + ';line-height:1.4;">' +
+                '<strong>Gesetzliche Pflichtangaben / Legal Information:</strong><br>' +
+                COMPANY.name + ' | Sitz: Aschaffenburg | ' + COMPANY.legal.court + '<br>' +
+                'USt-IdNr./VAT-ID: ' + COMPANY.legal.vatId + ' | ' + COMPANY.address + ', ' + COMPANY.city + '<br>' +
+                'Geschäftsführung: ' + COMPANY.legal.mgmt +
+                '</p>';
         }
 
-        // Generate Full Signature (Default + Legal)
-        function getFullSignatureHTML() {
-            return getDefaultSignatureHTML() + getLegalFooterHTML();
-        }
+        function applySignature(type) {
+            showStatus('<div class="spinner"></div><span>Applying...</span>', 'loading');
+            log('Apply: ' + type);
 
-        // Apply Signature
-        async function applySignature(type) {
-            const statusEl = document.getElementById('status');
-            statusEl.className = 'status-bar loading';
-            statusEl.innerHTML = '<div class="spinner"></div><span>Applying signature...</span>';
-            
-            log(`Applying signature type: ${type}`);
+            var html;
+            var append = false;
 
-            let signatureHTML;
-            let insertMethod = 'prepend';
-
-            switch(type) {
-                case 'default':
-                    signatureHTML = getDefaultSignatureHTML();
-                    break;
-                case 'full':
-                    signatureHTML = getFullSignatureHTML();
-                    break;
-                case 'legalonly':
-                    signatureHTML = getLegalFooterHTML();
-                    insertMethod = 'append';
-                    break;
-                default:
-                    signatureHTML = getDefaultSignatureHTML();
+            if (type === 'default') {
+                html = getSignatureHTML();
+            } else if (type === 'full') {
+                html = getSignatureHTML() + getLegalHTML();
+            } else if (type === 'legalonly') {
+                html = getLegalHTML();
+                append = true;
             }
 
-            const methods = [];
-
-            if (insertMethod === 'append') {
-                if (apiCapabilities.hasBodyGetAsync && apiCapabilities.hasBodySetAsync) {
-                    methods.push({
-                        name: 'getAsync+setAsync (append)',
-                        fn: () => tryAppendToBody(signatureHTML)
-                    });
-                }
+            if (append) {
+                tryAppend(html);
             } else {
-                if (apiCapabilities.hasSetSelectedDataAsync) {
-                    methods.push({
-                        name: 'setSelectedDataAsync',
-                        fn: () => trySetSelectedDataAsync(signatureHTML)
-                    });
-                }
-                if (apiCapabilities.hasSetSignatureAsync) {
-                    methods.push({
-                        name: 'setSignatureAsync',
-                        fn: () => trySetSignatureAsync(signatureHTML)
-                    });
-                }
-                if (apiCapabilities.hasBodyGetAsync && apiCapabilities.hasBodySetAsync) {
-                    methods.push({
-                        name: 'getAsync+setAsync (prepend)',
-                        fn: () => tryPrependToBody(signatureHTML)
-                    });
-                }
+                tryInsert(html);
             }
+        }
 
-            if (methods.length === 0) {
-                log('ERROR: No compatible methods');
-                showStatus('Error: No compatible API methods.', 'error');
-                return;
-            }
-
-            for (const method of methods) {
-                log(`Trying: ${method.name}`);
-                try {
-                    const result = await method.fn();
-                    if (result.success) {
-                        log(`SUCCESS: ${method.name}`);
-                        showStatus('✓ Signature applied!', 'ready');
-                        setTimeout(() => showStatus('Ready! Select a signature.', 'ready'), 3000);
-                        return;
-                    } else {
-                        log(`FAILED: ${method.name} - ${result.error}`);
+        function tryInsert(html) {
+            if (apiInfo.hasSetSelectedData) {
+                Office.context.mailbox.item.body.setSelectedDataAsync(
+                    html,
+                    { coercionType: Office.CoercionType.Html },
+                    function(result) {
+                        if (result.status === Office.AsyncResultStatus.Succeeded) {
+                            log('Success: setSelectedData');
+                            showStatus('✓ Signature applied!', 'ready');
+                        } else {
+                            log('Failed setSelectedData: ' + (result.error ? result.error.message : 'unknown'));
+                            tryInsertFallback(html);
+                        }
                     }
-                } catch (e) {
-                    log(`EXCEPTION: ${method.name} - ${e.message}`);
-                }
+                );
+            } else {
+                tryInsertFallback(html);
             }
-
-            showStatus('Could not apply signature. Check Debug.', 'error');
         }
 
-        function trySetSelectedDataAsync(html) {
-            return new Promise((resolve) => {
-                try {
-                    Office.context.mailbox.item.body.setSelectedDataAsync(
-                        html,
-                        { coercionType: Office.CoercionType.Html },
-                        (result) => {
-                            resolve(result.status === Office.AsyncResultStatus.Succeeded 
-                                ? { success: true } 
-                                : { success: false, error: result.error?.message || 'Unknown' });
+        function tryInsertFallback(html) {
+            if (apiInfo.hasSetSignature) {
+                Office.context.mailbox.item.body.setSignatureAsync(
+                    html,
+                    { coercionType: Office.CoercionType.Html },
+                    function(result) {
+                        if (result.status === Office.AsyncResultStatus.Succeeded) {
+                            log('Success: setSignature');
+                            showStatus('✓ Signature applied!', 'ready');
+                        } else {
+                            log('Failed setSignature');
+                            tryPrepend(html);
                         }
-                    );
-                } catch (e) {
-                    resolve({ success: false, error: e.message });
-                }
-            });
+                    }
+                );
+            } else {
+                tryPrepend(html);
+            }
         }
 
-        function trySetSignatureAsync(html) {
-            return new Promise((resolve) => {
-                try {
-                    Office.context.mailbox.item.body.setSignatureAsync(
-                        html,
-                        { coercionType: Office.CoercionType.Html },
-                        (result) => {
-                            resolve(result.status === Office.AsyncResultStatus.Succeeded 
-                                ? { success: true } 
-                                : { success: false, error: result.error?.message || 'Unknown' });
-                        }
-                    );
-                } catch (e) {
-                    resolve({ success: false, error: e.message });
-                }
-            });
-        }
-
-        function tryPrependToBody(html) {
-            return new Promise((resolve) => {
-                try {
-                    Office.context.mailbox.item.body.getAsync(Office.CoercionType.Html, (getResult) => {
+        function tryPrepend(html) {
+            if (apiInfo.hasBodyGet && apiInfo.hasBodySet) {
+                Office.context.mailbox.item.body.getAsync(
+                    Office.CoercionType.Html,
+                    function(getResult) {
                         if (getResult.status === Office.AsyncResultStatus.Succeeded) {
+                            var newBody = html + (getResult.value || '');
                             Office.context.mailbox.item.body.setAsync(
-                                html + (getResult.value || ''),
+                                newBody,
                                 { coercionType: Office.CoercionType.Html },
-                                (setResult) => {
-                                    resolve(setResult.status === Office.AsyncResultStatus.Succeeded 
-                                        ? { success: true } 
-                                        : { success: false, error: setResult.error?.message || 'setAsync failed' });
+                                function(setResult) {
+                                    if (setResult.status === Office.AsyncResultStatus.Succeeded) {
+                                        log('Success: prepend');
+                                        showStatus('✓ Signature applied!', 'ready');
+                                    } else {
+                                        log('Failed prepend');
+                                        showStatus('Error applying signature.', 'error');
+                                    }
                                 }
                             );
                         } else {
-                            resolve({ success: false, error: getResult.error?.message || 'getAsync failed' });
+                            showStatus('Error: could not get body.', 'error');
                         }
-                    });
-                } catch (e) {
-                    resolve({ success: false, error: e.message });
-                }
-            });
+                    }
+                );
+            } else {
+                showStatus('Error: No compatible API.', 'error');
+            }
         }
 
-        function tryAppendToBody(html) {
-            return new Promise((resolve) => {
-                try {
-                    Office.context.mailbox.item.body.getAsync(Office.CoercionType.Html, (getResult) => {
+        function tryAppend(html) {
+            if (apiInfo.hasBodyGet && apiInfo.hasBodySet) {
+                Office.context.mailbox.item.body.getAsync(
+                    Office.CoercionType.Html,
+                    function(getResult) {
                         if (getResult.status === Office.AsyncResultStatus.Succeeded) {
+                            var newBody = (getResult.value || '') + html;
                             Office.context.mailbox.item.body.setAsync(
-                                (getResult.value || '') + html,
+                                newBody,
                                 { coercionType: Office.CoercionType.Html },
-                                (setResult) => {
-                                    resolve(setResult.status === Office.AsyncResultStatus.Succeeded 
-                                        ? { success: true } 
-                                        : { success: false, error: setResult.error?.message || 'setAsync failed' });
+                                function(setResult) {
+                                    if (setResult.status === Office.AsyncResultStatus.Succeeded) {
+                                        log('Success: append');
+                                        showStatus('✓ Legal footer added!', 'ready');
+                                    } else {
+                                        showStatus('Error appending.', 'error');
+                                    }
                                 }
                             );
                         } else {
-                            resolve({ success: false, error: getResult.error?.message || 'getAsync failed' });
+                            showStatus('Error: could not get body.', 'error');
                         }
-                    });
-                } catch (e) {
-                    resolve({ success: false, error: e.message });
-                }
-            });
+                    }
+                );
+            } else {
+                showStatus('Error: No compatible API.', 'error');
+            }
         }
 
-        function showStatus(message, type) {
-            const statusEl = document.getElementById('status');
-            statusEl.className = `status-bar ${type}`;
-            statusEl.innerHTML = message;
+        function showStatus(msg, type) {
+            var el = document.getElementById('status');
+            el.className = 'status-bar ' + type;
+            el.innerHTML = msg;
         }
 
         function switchView(view) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
+            document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
             
             if (view === 'signatures') {
                 document.getElementById('signaturesView').classList.add('active');
@@ -985,7 +664,7 @@
             } else {
                 document.getElementById('settingsView').classList.add('active');
                 document.getElementById('navSettings').classList.add('active');
-                updateDebugDisplay();
+                updateDebug();
             }
         }
     </script>
