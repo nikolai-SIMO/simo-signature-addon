@@ -6,7 +6,10 @@
       "Bash(git checkout:*)",
       "WebSearch",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix profile photo: use inline CID attachment instead of base64\n\n- Profile photo now attaches as inline image using addFileAttachmentFromBase64Async\n- HTML references photo via cid:profile-photo.png instead of embedded base64\n- Added custom photo URL option as fallback\n- Added inlineAttachment API detection in debug panel\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

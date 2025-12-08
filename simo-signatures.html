@@ -382,10 +382,38 @@
                     '<p>setSignature: ' + (apiInfo.hasSetSignature ? '✅' : '❌') + '</p>' +
                     '<p>inlineAttachment: ' + (apiInfo.hasInlineAttachment ? '✅' : '❌') + '</p>' +
                     '<h4>Profile:</h4>' +
-                    '<p>Photo: ' + (userProfile.photoBase64Raw ? '✅ Loaded' : '❌ Not loaded') + '</p>' +
+                    '<p>Photo: ' + (userProfile.photoBase64Raw ? '✅ Loaded (' + Math.round(userProfile.photoBase64Raw.length / 1024) + 'KB)' : '❌ Not loaded') + '</p>' +
                     '<h4>Log:</h4>' +
-                    debugLog.slice(-5).map(function(l) { return '<p>' + l + '</p>'; }).join('');
+                    debugLog.slice(-10).map(function(l) { return '<p>' + l + '</p>'; }).join('') +
+                    '<br><button onclick="copyDebugLog()" style="padding:5px 10px;font-size:11px;">📋 Copy Full Log</button>';
             }
+        }
+
+        function copyDebugLog() {
+            var logText = 'SIMO Signatures Debug Log\\n';
+            logText += '========================\\n\\n';
+            logText += 'API Info:\\n';
+            logText += '  Version: ' + apiInfo.version + '\\n';
+            logText += '  setSelectedData: ' + apiInfo.hasSetSelectedData + '\\n';
+            logText += '  setSignature: ' + apiInfo.hasSetSignature + '\\n';
+            logText += '  bodySet: ' + apiInfo.hasBodySet + '\\n';
+            logText += '  bodyGet: ' + apiInfo.hasBodyGet + '\\n';
+            logText += '  inlineAttachment: ' + apiInfo.hasInlineAttachment + '\\n\\n';
+            logText += 'Profile:\\n';
+            logText += '  Name: ' + userProfile.displayName + '\\n';
+            logText += '  Email: ' + userProfile.email + '\\n';
+            logText += '  Photo loaded: ' + (userProfile.photoBase64Raw ? 'Yes (' + Math.round(userProfile.photoBase64Raw.length / 1024) + 'KB)' : 'No') + '\\n\\n';
+            logText += 'Settings:\\n';
+            logText += '  showProfilePhoto: ' + userSettings.showProfilePhoto + '\\n';
+            logText += '  customPhotoUrl: ' + (userSettings.customPhotoUrl || '(none)') + '\\n\\n';
+            logText += 'Event Log:\\n';
+            debugLog.forEach(function(l) { logText += '  ' + l + '\\n'; });
+
+            navigator.clipboard.writeText(logText).then(function() {
+                alert('Debug log copied to clipboard!');
+            }).catch(function() {
+                prompt('Copy the log below:', logText);
+            });
         }
 
         // Office init
